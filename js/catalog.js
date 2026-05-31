@@ -9,326 +9,6 @@
 /* ── Products Database ────────────────────────────────────── */
 const PRODUCTS_DATA = [
   {
-    id: 'p001',
-    name: 'Robot Aspirador Pro X12',
-    category: 'Electrodomésticos',
-    categorySlug: 'electrodomesticos',
-    price: 189990,
-    priceOld: 249990,
-    badge: 'hot',
-    badgeLabel: 'Más vendido',
-    description: 'Robot aspirador inteligente con navegación láser LiDAR, mapeo de habitaciones, aspirado 4000Pa y autonomía de 180 minutos. Compatible con app y asistentes de voz.',
-    specs: [
-      {
-        label: 'Succión',
-        value: '4000 Pa'
-      },
-      {
-        label: 'Autonomía',
-        value: '180 min'
-      },
-      {
-        label: 'Área máx.',
-        value: '200 m²'
-      },
-      {
-        label: 'Nivel ruido',
-        value: '58 dB'
-      },
-      {
-        label: 'Conectividad',
-        value: 'Wi-Fi / App'
-      }
-    ],
-    image: 'assets/images/robot-aspirador.svg',
-    images: [
-      'assets/images/robot-aspirador.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p002',
-    name: 'Aire Acondicionado Inverter 12000 BTU',
-    category: 'Electrodomésticos',
-    categorySlug: 'electrodomesticos',
-    price: 529990,
-    priceOld: 649990,
-    badge: 'sale',
-    badgeLabel: '-18%',
-    description: 'Sistema Inverter de alta eficiencia energética A++, control Wi-Fi, modo auto, calefacción y enfriamiento ultrasilencioso. Instalación split.',
-    specs: [
-      {
-        label: 'Capacidad',
-        value: '12.000 BTU'
-      },
-      {
-        label: 'Eficiencia',
-        value: 'A++'
-      },
-      {
-        label: 'Área',
-        value: 'Hasta 35 m²'
-      },
-      {
-        label: 'Ruido',
-        value: '19 dB (interior)'
-      },
-      {
-        label: 'Control',
-        value: 'Wi-Fi + IR'
-      }
-    ],
-    image: 'assets/images/ac.svg',
-    images: [
-      'assets/images/ac.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p005',
-    name: 'Smart TV QLED 65\' 4K 144Hz',
-    category: 'Tecnología Hogar',
-    categorySlug: 'tecnologia-hogar',
-    price: 749990,
-    priceOld: 999990,
-    badge: 'hot',
-    badgeLabel: 'Tendencia',
-    description: 'Pantalla QLED Quantum Dot con resolución 4K UHD, frecuencia de 144Hz, HDR10+ Dolby Vision, sistema Android TV 12 y control por voz Google/Alexa.',
-    specs: [
-      {
-        label: 'Pantalla',
-        value: '65\' QLED'
-      },
-      {
-        label: 'Resolución',
-        value: '4K UHD'
-      },
-      {
-        label: 'Frecuencia',
-        value: '144 Hz'
-      },
-      {
-        label: 'HDR',
-        value: 'HDR10+ / Dolby Vision'
-      },
-      {
-        label: 'OS',
-        value: 'Android TV 12'
-      }
-    ],
-    image: 'assets/images/smart-tv.svg',
-    images: [
-      'assets/images/smart-tv.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p006',
-    name: 'Proyector 4K Láser 3000 Lúmenes',
-    category: 'Tecnología Hogar',
-    categorySlug: 'tecnologia-hogar',
-    price: 1199990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Proyector láser tri-color 4K con 3000 lúmenes, 30.000 horas de vida, autoenfoque eléctrico, corrección trapezoidal AI y Android TV integrado.',
-    specs: [
-      {
-        label: 'Resolución',
-        value: '4K UHD (3840×2160)'
-      },
-      {
-        label: 'Brillo',
-        value: '3000 ANSI Lúmenes'
-      },
-      {
-        label: 'Contraste',
-        value: '3.000.000:1'
-      },
-      {
-        label: 'Vida útil',
-        value: '30.000 h'
-      },
-      {
-        label: 'Pantalla máx.',
-        value: '300\''
-      }
-    ],
-    image: 'assets/images/proyector.svg',
-    images: [
-      'assets/images/proyector.svg'
-    ],
-    featured: true,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p009',
-    name: 'Smartwatch Ultra Pro AMOLED',
-    category: 'Gadgets',
-    categorySlug: 'gadgets',
-    price: 129990,
-    priceOld: 179990,
-    badge: 'hot',
-    badgeLabel: 'Top ventas',
-    description: 'Reloj inteligente con pantalla AMOLED 1.96\', GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
-    specs: [
-      {
-        label: 'Pantalla',
-        value: '1.96\' AMOLED'
-      },
-      {
-        label: 'GPS',
-        value: 'Integrado (multi-GNSS)'
-      },
-      {
-        label: 'Autonomía',
-        value: '14 días'
-      },
-      {
-        label: 'Resistencia',
-        value: '5ATM'
-      },
-      {
-        label: 'Sensores',
-        value: 'SpO2, ECG, HR'
-      }
-    ],
-    image: 'assets/images/smartwatch.svg',
-    images: [
-      'assets/images/smartwatch.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p010',
-    name: 'Auriculares TWS ANC Pro 40',
-    category: 'Gadgets',
-    categorySlug: 'gadgets',
-    price: 79990,
-    priceOld: 109990,
-    badge: 'sale',
-    badgeLabel: '-27%',
-    description: 'Earbuds premium con cancelación activa de ruido (ANC) -40dB, drivers de 12mm, Bluetooth 5.3, carga inalámbrica y hasta 36 horas de autonomía total.',
-    specs: [
-      {
-        label: 'Driver',
-        value: '12mm + BA'
-      },
-      {
-        label: 'ANC',
-        value: '-40 dB'
-      },
-      {
-        label: 'Autonomía',
-        value: '8h + 28h (funda)'
-      },
-      {
-        label: 'Bluetooth',
-        value: '5.3 (LDAC)'
-      },
-      {
-        label: 'Carga',
-        value: 'USB-C + Qi'
-      }
-    ],
-    image: 'assets/images/earbuds.svg',
-    images: [
-      'assets/images/earbuds.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p014',
-    name: 'Masajeador Facial LED + EMS',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 49990,
-    priceOld: 69990,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Dispositivo de microcorriente y LED para lifting facial, con 7 luces LED terapéuticas, EMS, calor de 42°C y modos personalizables.',
-    specs: [
-      {
-        label: 'Tecnologías',
-        value: 'LED + EMS + Microcorriente'
-      },
-      {
-        label: 'Luces LED',
-        value: '7 colores'
-      },
-      {
-        label: 'Temperatura',
-        value: '42°C'
-      },
-      {
-        label: 'Modos',
-        value: '5'
-      },
-      {
-        label: 'Carga',
-        value: 'USB-C'
-      }
-    ],
-    image: 'assets/images/masajeador.svg',
-    images: [
-      'assets/images/masajeador.svg'
-    ],
-    featured: true,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p017',
-    name: 'Auto RC Control Remoto 4x4 Offroad',
-    category: 'Juguetes',
-    categorySlug: 'juguetes',
-    price: 49990,
-    priceOld: 69990,
-    badge: 'hot',
-    badgeLabel: 'Popular',
-    description: 'Vehículo todoterreno de control remoto con suspensión independiente, tracción 4x4, velocidad máxima 35 km/h, batería recargable y alcance de 80 metros.',
-    specs: [
-      {
-        label: 'Velocidad',
-        value: '35 km/h'
-      },
-      {
-        label: 'Alcance',
-        value: '80 m'
-      },
-      {
-        label: 'Tracción',
-        value: '4x4'
-      },
-      {
-        label: 'Batería',
-        value: 'Li-Ion 1200 mAh'
-      },
-      {
-        label: 'Autonomía',
-        value: '25 min'
-      }
-    ],
-    image: 'assets/images/auto-rc.svg',
-    images: [
-      'assets/images/auto-rc.svg'
-    ],
-    featured: true,
-    isNew: false,
-    inStock: true
-  },
-  {
     id: 'p018',
     name: 'Kit Robótica Educativa Programable',
     category: 'Juguetes',
@@ -365,7 +45,207 @@ const PRODUCTS_DATA = [
       'assets/images/robot-kit.svg'
     ],
     featured: true,
-    isNew: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p016',
+    name: 'Rizador Automático Inteligente',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 54990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Rizador automático con cámara de cerámica, motor rotacional bidireccional, timer ajustable y 6 tamaños de rizo. Calentamiento en 10 segundos.',
+    specs: [
+      {
+        label: 'Barril',
+        value: 'Cerámica 32mm'
+      },
+      {
+        label: 'Temperatura',
+        value: '130–230°C'
+      },
+      {
+        label: 'Timer',
+        value: '8–18 seg.'
+      },
+      {
+        label: 'Dirección',
+        value: 'Bidireccional auto'
+      },
+      {
+        label: 'Calentamiento',
+        value: '10 segundos'
+      }
+    ],
+    image: 'assets/images/rizador.svg',
+    images: [
+      'assets/images/rizador.svg'
+    ],
+    featured: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p003',
+    name: 'Lavadora Carga Frontal 10kg Inverter',
+    category: 'Electrodomésticos',
+    categorySlug: 'electrodomesticos',
+    price: 449990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Motor Inverter Direct Drive, 14 programas de lavado, vapor antialérgico, pantalla táctil LED y control por app. Clase A+++.',
+    specs: [
+      {
+        label: 'Capacidad',
+        value: '10 kg'
+      },
+      {
+        label: 'Centrifugado',
+        value: '1400 RPM'
+      },
+      {
+        label: 'Eficiencia',
+        value: 'A+++'
+      },
+      {
+        label: 'Programas',
+        value: '14'
+      },
+      {
+        label: 'Control',
+        value: 'App + Panel'
+      }
+    ],
+    image: 'assets/images/lavadora.svg',
+    images: [
+      'assets/images/lavadora.svg'
+    ],
+    featured: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p004',
+    name: 'Frigorífico Side by Side 600L',
+    category: 'Electrodomésticos',
+    categorySlug: 'electrodomesticos',
+    price: 899990,
+    priceOld: 1099990,
+    badge: 'import',
+    badgeLabel: 'Importado',
+    description: 'Refrigerador side by side con dispensador de agua y hielo, panel táctil, sistema No Frost total, zona freshzone y display interior.',
+    specs: [
+      {
+        label: 'Capacidad',
+        value: '600 L total'
+      },
+      {
+        label: 'Refrigerador',
+        value: '370 L'
+      },
+      {
+        label: 'Congelador',
+        value: '230 L'
+      },
+      {
+        label: 'Eficiencia',
+        value: 'A+'
+      },
+      {
+        label: 'Control',
+        value: 'Panel LCD'
+      }
+    ],
+    image: 'assets/images/frigorifico.svg',
+    images: [
+      'assets/images/frigorifico.svg'
+    ],
+    featured: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p011',
+    name: 'Drone 4K Pro con Gimbal 3 Ejes',
+    category: 'Gadgets',
+    categorySlug: 'gadgets',
+    price: 399990,
+    priceOld: 499990,
+    badge: 'import',
+    badgeLabel: 'Exclusivo',
+    description: 'Drone plegable con cámara 4K/60fps, gimbal de 3 ejes, autonomía 40 min, alcance 10km, evitación de obstáculos omnidireccional y modos de vuelo inteligentes.',
+    specs: [
+      {
+        label: 'Cámara',
+        value: '4K 60fps / 48MP'
+      },
+      {
+        label: 'Gimbal',
+        value: '3 ejes'
+      },
+      {
+        label: 'Autonomía',
+        value: '40 minutos'
+      },
+      {
+        label: 'Alcance',
+        value: '10 km'
+      },
+      {
+        label: 'Peso',
+        value: '249 g'
+      }
+    ],
+    image: 'assets/images/drone.svg',
+    images: [
+      'assets/images/drone.svg'
+    ],
+    featured: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p013',
+    name: 'Secador Iónico Profesional 2400W',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 69990,
+    priceOld: 89990,
+    badge: 'hot',
+    badgeLabel: 'Popular',
+    description: 'Secador profesional con tecnología iónica y cerámica, motor DC de alta velocidad, difusor y concentrador incluidos, función frío y 3 velocidades.',
+    specs: [
+      {
+        label: 'Potencia',
+        value: '2400W'
+      },
+      {
+        label: 'Tecnología',
+        value: 'Iónico + Cerámico'
+      },
+      {
+        label: 'Velocidades',
+        value: '3'
+      },
+      {
+        label: 'Temperaturas',
+        value: '3 + frío'
+      },
+      {
+        label: 'Cable',
+        value: '3 metros'
+      }
+    ],
+    image: 'assets/images/secador.svg',
+    images: [
+      'assets/images/secador.svg'
+    ],
+    featured: true,
+    isNew: false,
     inStock: true
   },
   {
@@ -383,7 +263,7 @@ const PRODUCTS_DATA = [
     images: [
       'assets/images/placeholder.svg'
     ],
-    featured: true,
+    featured: false,
     isNew: true,
     inStock: true
   },
@@ -422,46 +302,6 @@ const PRODUCTS_DATA = [
     image: 'assets/images/hub.svg',
     images: [
       'assets/images/hub.svg'
-    ],
-    featured: false,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p003',
-    name: 'Lavadora Carga Frontal 10kg Inverter',
-    category: 'Electrodomésticos',
-    categorySlug: 'electrodomesticos',
-    price: 449990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Motor Inverter Direct Drive, 14 programas de lavado, vapor antialérgico, pantalla táctil LED y control por app. Clase A+++.',
-    specs: [
-      {
-        label: 'Capacidad',
-        value: '10 kg'
-      },
-      {
-        label: 'Centrifugado',
-        value: '1400 RPM'
-      },
-      {
-        label: 'Eficiencia',
-        value: 'A+++'
-      },
-      {
-        label: 'Programas',
-        value: '14'
-      },
-      {
-        label: 'Control',
-        value: 'App + Panel'
-      }
-    ],
-    image: 'assets/images/lavadora.svg',
-    images: [
-      'assets/images/lavadora.svg'
     ],
     featured: false,
     isNew: true,
@@ -508,46 +348,6 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
-    id: 'p016',
-    name: 'Rizador Automático Inteligente',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 54990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Rizador automático con cámara de cerámica, motor rotacional bidireccional, timer ajustable y 6 tamaños de rizo. Calentamiento en 10 segundos.',
-    specs: [
-      {
-        label: 'Barril',
-        value: 'Cerámica 32mm'
-      },
-      {
-        label: 'Temperatura',
-        value: '130–230°C'
-      },
-      {
-        label: 'Timer',
-        value: '8–18 seg.'
-      },
-      {
-        label: 'Dirección',
-        value: 'Bidireccional auto'
-      },
-      {
-        label: 'Calentamiento',
-        value: '10 segundos'
-      }
-    ],
-    image: 'assets/images/rizador.svg',
-    images: [
-      'assets/images/rizador.svg'
-    ],
-    featured: false,
-    isNew: true,
-    inStock: true
-  },
-  {
     id: 'p019',
     name: 'Dron para Niños con Cámara HD 720p',
     category: 'Juguetes',
@@ -588,40 +388,320 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
-    id: 'p004',
-    name: 'Frigorífico Side by Side 600L',
+    id: 'p001',
+    name: 'Robot Aspirador Pro X12',
     category: 'Electrodomésticos',
     categorySlug: 'electrodomesticos',
-    price: 899990,
-    priceOld: 1099990,
-    badge: 'import',
-    badgeLabel: 'Importado',
-    description: 'Refrigerador side by side con dispensador de agua y hielo, panel táctil, sistema No Frost total, zona freshzone y display interior.',
+    price: 189990,
+    priceOld: 249990,
+    badge: 'hot',
+    badgeLabel: 'Más vendido',
+    description: 'Robot aspirador inteligente con navegación láser LiDAR, mapeo de habitaciones, aspirado 4000Pa y autonomía de 180 minutos. Compatible con app y asistentes de voz.',
+    specs: [
+      {
+        label: 'Succión',
+        value: '4000 Pa'
+      },
+      {
+        label: 'Autonomía',
+        value: '180 min'
+      },
+      {
+        label: 'Área máx.',
+        value: '200 m²'
+      },
+      {
+        label: 'Nivel ruido',
+        value: '58 dB'
+      },
+      {
+        label: 'Conectividad',
+        value: 'Wi-Fi / App'
+      }
+    ],
+    image: 'assets/images/robot-aspirador.svg',
+    images: [
+      'assets/images/robot-aspirador.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p002',
+    name: 'Aire Acondicionado Inverter 12000 BTU',
+    category: 'Electrodomésticos',
+    categorySlug: 'electrodomesticos',
+    price: 529990,
+    priceOld: 649990,
+    badge: 'sale',
+    badgeLabel: '-18%',
+    description: 'Sistema Inverter de alta eficiencia energética A++, control Wi-Fi, modo auto, calefacción y enfriamiento ultrasilencioso. Instalación split.',
     specs: [
       {
         label: 'Capacidad',
-        value: '600 L total'
-      },
-      {
-        label: 'Refrigerador',
-        value: '370 L'
-      },
-      {
-        label: 'Congelador',
-        value: '230 L'
+        value: '12.000 BTU'
       },
       {
         label: 'Eficiencia',
-        value: 'A+'
+        value: 'A++'
+      },
+      {
+        label: 'Área',
+        value: 'Hasta 35 m²'
+      },
+      {
+        label: 'Ruido',
+        value: '19 dB (interior)'
       },
       {
         label: 'Control',
-        value: 'Panel LCD'
+        value: 'Wi-Fi + IR'
       }
     ],
-    image: 'assets/images/frigorifico.svg',
+    image: 'assets/images/ac.svg',
     images: [
-      'assets/images/frigorifico.svg'
+      'assets/images/ac.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p005',
+    name: 'Smart TV QLED 65\' 4K 144Hz',
+    category: 'Tecnología Hogar',
+    categorySlug: 'tecnologia-hogar',
+    price: 749990,
+    priceOld: 999990,
+    badge: 'hot',
+    badgeLabel: 'Tendencia',
+    description: 'Pantalla QLED Quantum Dot con resolución 4K UHD, frecuencia de 144Hz, HDR10+ Dolby Vision, sistema Android TV 12 y control por voz Google/Alexa.',
+    specs: [
+      {
+        label: 'Pantalla',
+        value: '65\' QLED'
+      },
+      {
+        label: 'Resolución',
+        value: '4K UHD'
+      },
+      {
+        label: 'Frecuencia',
+        value: '144 Hz'
+      },
+      {
+        label: 'HDR',
+        value: 'HDR10+ / Dolby Vision'
+      },
+      {
+        label: 'OS',
+        value: 'Android TV 12'
+      }
+    ],
+    image: 'assets/images/smart-tv.svg',
+    images: [
+      'assets/images/smart-tv.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p006',
+    name: 'Proyector 4K Láser 3000 Lúmenes',
+    category: 'Tecnología Hogar',
+    categorySlug: 'tecnologia-hogar',
+    price: 1199990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Proyector láser tri-color 4K con 3000 lúmenes, 30.000 horas de vida, autoenfoque eléctrico, corrección trapezoidal AI y Android TV integrado.',
+    specs: [
+      {
+        label: 'Resolución',
+        value: '4K UHD (3840×2160)'
+      },
+      {
+        label: 'Brillo',
+        value: '3000 ANSI Lúmenes'
+      },
+      {
+        label: 'Contraste',
+        value: '3.000.000:1'
+      },
+      {
+        label: 'Vida útil',
+        value: '30.000 h'
+      },
+      {
+        label: 'Pantalla máx.',
+        value: '300\''
+      }
+    ],
+    image: 'assets/images/proyector.svg',
+    images: [
+      'assets/images/proyector.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p009',
+    name: 'Smartwatch Ultra Pro AMOLED',
+    category: 'Gadgets',
+    categorySlug: 'gadgets',
+    price: 129990,
+    priceOld: 179990,
+    badge: 'hot',
+    badgeLabel: 'Top ventas',
+    description: 'Reloj inteligente con pantalla AMOLED 1.96\', GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
+    specs: [
+      {
+        label: 'Pantalla',
+        value: '1.96\' AMOLED'
+      },
+      {
+        label: 'GPS',
+        value: 'Integrado (multi-GNSS)'
+      },
+      {
+        label: 'Autonomía',
+        value: '14 días'
+      },
+      {
+        label: 'Resistencia',
+        value: '5ATM'
+      },
+      {
+        label: 'Sensores',
+        value: 'SpO2, ECG, HR'
+      }
+    ],
+    image: 'assets/images/smartwatch.svg',
+    images: [
+      'assets/images/smartwatch.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p010',
+    name: 'Auriculares TWS ANC Pro 40',
+    category: 'Gadgets',
+    categorySlug: 'gadgets',
+    price: 79990,
+    priceOld: 109990,
+    badge: 'sale',
+    badgeLabel: '-27%',
+    description: 'Earbuds premium con cancelación activa de ruido (ANC) -40dB, drivers de 12mm, Bluetooth 5.3, carga inalámbrica y hasta 36 horas de autonomía total.',
+    specs: [
+      {
+        label: 'Driver',
+        value: '12mm + BA'
+      },
+      {
+        label: 'ANC',
+        value: '-40 dB'
+      },
+      {
+        label: 'Autonomía',
+        value: '8h + 28h (funda)'
+      },
+      {
+        label: 'Bluetooth',
+        value: '5.3 (LDAC)'
+      },
+      {
+        label: 'Carga',
+        value: 'USB-C + Qi'
+      }
+    ],
+    image: 'assets/images/earbuds.svg',
+    images: [
+      'assets/images/earbuds.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p014',
+    name: 'Masajeador Facial LED + EMS',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 49990,
+    priceOld: 69990,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Dispositivo de microcorriente y LED para lifting facial, con 7 luces LED terapéuticas, EMS, calor de 42°C y modos personalizables.',
+    specs: [
+      {
+        label: 'Tecnologías',
+        value: 'LED + EMS + Microcorriente'
+      },
+      {
+        label: 'Luces LED',
+        value: '7 colores'
+      },
+      {
+        label: 'Temperatura',
+        value: '42°C'
+      },
+      {
+        label: 'Modos',
+        value: '5'
+      },
+      {
+        label: 'Carga',
+        value: 'USB-C'
+      }
+    ],
+    image: 'assets/images/masajeador.svg',
+    images: [
+      'assets/images/masajeador.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p017',
+    name: 'Auto RC Control Remoto 4x4 Offroad',
+    category: 'Juguetes',
+    categorySlug: 'juguetes',
+    price: 49990,
+    priceOld: 69990,
+    badge: 'hot',
+    badgeLabel: 'Popular',
+    description: 'Vehículo todoterreno de control remoto con suspensión independiente, tracción 4x4, velocidad máxima 35 km/h, batería recargable y alcance de 80 metros.',
+    specs: [
+      {
+        label: 'Velocidad',
+        value: '35 km/h'
+      },
+      {
+        label: 'Alcance',
+        value: '80 m'
+      },
+      {
+        label: 'Tracción',
+        value: '4x4'
+      },
+      {
+        label: 'Batería',
+        value: 'Li-Ion 1200 mAh'
+      },
+      {
+        label: 'Autonomía',
+        value: '25 min'
+      }
+    ],
+    image: 'assets/images/auto-rc.svg',
+    images: [
+      'assets/images/auto-rc.svg'
     ],
     featured: false,
     isNew: false,
@@ -662,86 +742,6 @@ const PRODUCTS_DATA = [
     image: 'assets/images/bocina.svg',
     images: [
       'assets/images/bocina.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p011',
-    name: 'Drone 4K Pro con Gimbal 3 Ejes',
-    category: 'Gadgets',
-    categorySlug: 'gadgets',
-    price: 399990,
-    priceOld: 499990,
-    badge: 'import',
-    badgeLabel: 'Exclusivo',
-    description: 'Drone plegable con cámara 4K/60fps, gimbal de 3 ejes, autonomía 40 min, alcance 10km, evitación de obstáculos omnidireccional y modos de vuelo inteligentes.',
-    specs: [
-      {
-        label: 'Cámara',
-        value: '4K 60fps / 48MP'
-      },
-      {
-        label: 'Gimbal',
-        value: '3 ejes'
-      },
-      {
-        label: 'Autonomía',
-        value: '40 minutos'
-      },
-      {
-        label: 'Alcance',
-        value: '10 km'
-      },
-      {
-        label: 'Peso',
-        value: '249 g'
-      }
-    ],
-    image: 'assets/images/drone.svg',
-    images: [
-      'assets/images/drone.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p013',
-    name: 'Secador Iónico Profesional 2400W',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 69990,
-    priceOld: 89990,
-    badge: 'hot',
-    badgeLabel: 'Popular',
-    description: 'Secador profesional con tecnología iónica y cerámica, motor DC de alta velocidad, difusor y concentrador incluidos, función frío y 3 velocidades.',
-    specs: [
-      {
-        label: 'Potencia',
-        value: '2400W'
-      },
-      {
-        label: 'Tecnología',
-        value: 'Iónico + Cerámico'
-      },
-      {
-        label: 'Velocidades',
-        value: '3'
-      },
-      {
-        label: 'Temperaturas',
-        value: '3 + frío'
-      },
-      {
-        label: 'Cable',
-        value: '3 metros'
-      }
-    ],
-    image: 'assets/images/secador.svg',
-    images: [
-      'assets/images/secador.svg'
     ],
     featured: false,
     isNew: false,
