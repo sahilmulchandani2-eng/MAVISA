@@ -1567,11 +1567,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 .ticker-track {
   display: flex;
-  gap: 64px;
+  gap: 48px;
   animation: ticker-scroll 5s linear infinite;
   white-space: nowrap;
   width: max-content;
-  min-width: 200%;
   flex-shrink: 0;
 }
 .ticker-item {
