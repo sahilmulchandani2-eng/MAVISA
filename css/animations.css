@@ -1,0 +1,391 @@
+/* ============================================================
+   MAVISA — Animations & Scroll Effects  v2.0
+   Paleta: --navy #1C3461 · --accent #E8303F · blanco · crema
+   ============================================================ */
+
+/* ── Scroll Reveal Base ───────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-48px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.visible  { opacity: 1; transform: translateX(0); }
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(48px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* Clip-path title reveal */
+.reveal-clip {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease;
+}
+.reveal-clip.visible {
+  clip-path: inset(0 0 0% 0);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Hero Animations ──────────────────────────────────────── */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(52px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes hero-scale-up {
+  from { opacity: 0; transform: scale(0.84); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes hero-slide-right {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.hero-animate-1 { animation: hero-fade-up 0.95s cubic-bezier(0.16,1,0.3,1) 0.10s both; }
+.hero-animate-2 { animation: hero-fade-up 0.95s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
+.hero-animate-3 { animation: hero-fade-up 0.95s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
+.hero-animate-4 { animation: hero-fade-up 0.95s cubic-bezier(0.16,1,0.3,1) 0.58s both; }
+.hero-animate-5 { animation: hero-scale-up 1s cubic-bezier(0.16,1,0.3,1) 0.32s both; }
+.hero-animate-fade { animation: hero-fade-in 1.3s ease 0.2s both; }
+
+/* ── Background Keyframes ─────────────────────────────────── */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%       { opacity: 0.75; transform: scale(1.06); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
+}
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-12px) rotate(3deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Scroll Progress Bar ──────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #ff6b7a);
+  z-index: 10000;
+  transition: width 0.1s linear;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(232,48,63,0.5);
+}
+
+/* ── Ripple Effect ────────────────────────────────────────── */
+@keyframes ripple-expand {
+  from { transform: scale(0); opacity: 0.35; }
+  to   { transform: scale(4); opacity: 0; }
+}
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  pointer-events: none;
+  animation: ripple-expand 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+/* Ensure buttons can host ripples */
+.btn, .nav-cotizar, button[type="submit"] {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Pulse Rings — eliminado, usa pulse-whatsapp en style.css */
+
+/* ── 3D Card Tilt ─────────────────────────────────────────── */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease, box-shadow 0.25s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow: 0 24px 60px rgba(28,52,97,0.18);
+}
+.tilt-card .tilt-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%),
+    rgba(255,255,255,0.14) 0%,
+    transparent 65%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  z-index: 2;
+}
+.tilt-card:hover .tilt-shine { opacity: 1; }
+
+/* ── Magnetic Button ──────────────────────────────────────── */
+.magnetic {
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  will-change: transform;
+}
+
+/* ── Stagger Children ─────────────────────────────────────── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+}
+.stagger-children.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:0.00s; }
+.stagger-children.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:0.10s; }
+.stagger-children.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:0.20s; }
+.stagger-children.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:0.30s; }
+.stagger-children.visible > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:0.40s; }
+.stagger-children.visible > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay:0.50s; }
+.stagger-children.visible > *:nth-child(7) { opacity:1; transform:translateY(0); transition-delay:0.60s; }
+.stagger-children.visible > *:nth-child(8) { opacity:1; transform:translateY(0); transition-delay:0.70s; }
+
+/* ── Skeleton Loader ──────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--color-surface) 25%,
+    rgba(255,255,255,0.06) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Particles Canvas ─────────────────────────────────────── */
+#particles-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Number Counter ───────────────────────────────────────── */
+.counter-value {
+  display: inline-block;
+  transition: all 0.1s;
+}
+
+/* ── Typed Text ───────────────────────────────────────────── */
+.typed-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Gradient Text Animation ──────────────────────────────── */
+.gradient-animated {
+  background: linear-gradient(270deg, #E8303F, #1C3461, #C9A84C, #E8303F);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* ── Glowing Border ───────────────────────────────────────── */
+.glow-border {
+  position: relative;
+}
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent), var(--navy));
+  opacity: 0;
+  transition: opacity var(--dur-med);
+  z-index: -1;
+  filter: blur(8px);
+}
+.glow-border:hover::before { opacity: 0.5; }
+
+/* ── Loading Spinner ──────────────────────────────────────── */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2.5px solid rgba(232,48,63,0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin-slow 0.7s linear infinite;
+  display: inline-block;
+}
+
+/* ── Progress Bar ─────────────────────────────────────────── */
+.progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--navy));
+  border-radius: var(--radius-full);
+  transition: width 1s var(--ease-out);
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Hover Link Arrow ─────────────────────────────────────── */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.9rem;
+  transition: gap var(--dur-fast);
+}
+.link-arrow:hover { gap: 10px; }
+.link-arrow svg { width: 16px; height: 16px; }
+
+/* ── Hero BG Orbs — Paleta navy/rojo ─────────────────────── */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.bg-orb-1 {
+  width: 600px; height: 600px;
+  background: rgba(28, 52, 97, 0.18);
+  top: -100px; left: -100px;
+  animation: glow-pulse 9s ease-in-out infinite;
+}
+.bg-orb-2 {
+  width: 500px; height: 500px;
+  background: rgba(232, 48, 63, 0.10);
+  bottom: -80px; right: -80px;
+  animation: glow-pulse 11s ease-in-out 2s infinite;
+}
+.bg-orb-3 {
+  width: 300px; height: 300px;
+  background: rgba(201, 168, 76, 0.07);
+  top: 40%; left: 40%;
+  transform: translate(-50%, -50%);
+  animation: glow-pulse 7s ease-in-out 1s infinite;
+}
+
+/* ── Grid Lines Background ────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Image hover zoom ─────────────────────────────────────── */
+.img-zoom {
+  overflow: hidden;
+  border-radius: inherit;
+}
+.img-zoom img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.img-zoom:hover img { transform: scale(1.08); }
+
+/* ── Filter Tabs ──────────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.filter-tab {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all var(--dur-fast);
+}
+.filter-tab:hover {
+  border-color: rgba(232,48,63,0.3);
+  color: var(--text-primary);
+  background: rgba(232,48,63,0.05);
+}
+.filter-tab.active {
+  background: linear-gradient(135deg, var(--accent), var(--navy));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(232,48,63,0.3);
+}
+
+/* ── Parallax Container ───────────────────────────────────── */
+.parallax-container { overflow: hidden; }
+.parallax-element { will-change: transform; }
+
+/* ── Page Transition — solo fade de salida vía JS ─────────── */
+.page-transition { display: none; }

@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mavisa — Vista Previa del Sitio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #070710;
+      --bg2:      #0D0D1E;
+      --surface:  #12122A;
+      --card:     #16162E;
+      --border:   rgba(255,255,255,0.07);
+      --accent:   #00D4FF;
+      --accent2:  #7B2FBE;
+      --accent3:  #FFB800;
+      --text:     #FFFFFF;
+      --muted:    #8892A4;
+      --grad:     linear-gradient(135deg, #00D4FF, #7B2FBE);
+      --grad-text: linear-gradient(135deg, #00D4FF, #A855F7);
+      --font:     'Inter', sans-serif;
+      --heading:  'Space Grotesk', sans-serif;
+      --radius:   16px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(var(--accent), var(--accent2)); border-radius: 99px; }
+
+    /* ── Layout ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Gradient text ── */
+    .gt {
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--grad);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .topbar span { opacity: 0.85; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    /* grid bg */
+    .hero {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 99px;
+      padding: 6px 14px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--heading);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 99px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-grad {
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,212,255,0.25);
+    }
+    .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,212,255,0.35); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.09); transform: translateY(-2px); }
+    .btn-green {
+      background: #25D366;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+    }
+    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(37,211,102,0.45); }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+    /* ── Section label ── */
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.18);
+      border-radius: 99px;
+      padding: 5px 12px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Page cards ── */
+    .pages-section { padding: 60px 0; }
+    .pages-section h2 {
+      font-family: var(--heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .pages-section > .container > p {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .page-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--grad);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .page-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,212,255,0.3);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(0,212,255,0.1);
+    }
+    .page-card:hover::before { opacity: 0.04; }
+    .page-card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .page-card-name {
+      font-family: var(--heading);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .page-card-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      position: relative;
+    }
+    .page-card-url {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 99px;
+      padding: 3px 10px;
+      margin-top: 12px;
+      position: relative;
+    }
+    .page-card .arrow {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.2s;
+    }
+    .page-card:hover .arrow { opacity: 1; transform: translateX(0); color: var(--accent); }
+
+    /* ── Preview iframe section ── */
+    .preview-section { padding: 0 0 60px; }
+    .preview-section h2 {
+      font-family: var(--heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .preview-section > .container > p {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+    }
+    .browser-frame {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    }
+    .browser-bar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+    .bd-r { background: #FF5F57; }
+    .bd-y { background: #FEBC2E; }
+    .bd-g { background: #28C840; }
+    .browser-url {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browser-url span { color: var(--accent); }
+    .browser-tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .btab {
+      font-size: 0.75rem;
+      padding: 5px 14px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btab.active, .btab:hover {
+      background: rgba(0,212,255,0.1);
+      border-color: rgba(0,212,255,0.2);
+      color: var(--accent);
+    }
+    .iframe-wrap {
+      position: relative;
+      height: 600px;
+    }
+    .preview-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .iframe-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      font-size: 0.9rem;
+      color: var(--muted);
+      gap: 10px;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
+    .iframe-loading.hidden { opacity: 0; }
+    .spin {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,212,255,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Deploy guide section ── */
+    .deploy-section { padding: 60px 0; background: var(--bg2); border-top: 1px solid var(--border); }
+    .deploy-section h2 {
+      font-family: var(--heading);
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .deploy-section > .container > p {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 16px; max-width: 800px; margin: 0 auto 48px; }
+    .step {
+      display: flex;
+      gap: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: rgba(0,212,255,0.2); }
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--heading);
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,212,255,0.25);
+    }
+    .step-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .step-content p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .step-content code {
+      display: inline-block;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+    .step-content .cmd {
+      display: block;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.82rem;
+      color: #7FDBCA;
+      margin-top: 10px;
+      position: relative;
+      cursor: pointer;
+    }
+    .step-content .cmd::before {
+      content: '$ ';
+      color: var(--accent);
+    }
+    .step-content .cmd:hover { background: rgba(0,212,255,0.06); }
+    .step-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+    .badge-optional { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+    .badge-required { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+    /* ── Methods tabs ── */
+    .methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto 48px;
+    }
+    .method-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .method-card:hover { border-color: rgba(0,212,255,0.2); transform: translateY(-3px); }
+    .method-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .method-rec {
+      font-size: 0.68rem;
+      background: rgba(0,212,255,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 99px;
+      padding: 2px 8px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .method-card p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .method-card ol {
+      padding-left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .method-card ol li {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    .method-card ol li strong { color: var(--text); }
+
+    /* ── Domain section ── */
+    .domain-card {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 20px;
+      padding: 36px;
+    }
+    .domain-card h3 {
+      font-family: var(--heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .domain-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .dns-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .dns-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .dns-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dns-table tr:last-child td { border-bottom: none; }
+    .dns-table code {
+      background: rgba(0,212,255,0.08);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    /* ── Checklist ── */
+    .checklist {
+      max-width: 700px;
+      margin: 40px auto 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .checklist h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-icon { font-size: 1rem; flex-shrink: 0; }
+    .check-done { color: #25D366; }
+    .check-todo { color: var(--accent); }
+
+    /* ── Footer ── */
+    .foot {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .methods { grid-template-columns: 1fr; }
+      .pages-grid { grid-template-columns: 1fr 1fr; }
+      .iframe-wrap { height: 420px; }
+      .browser-tabs { display: none; }
+    }
+    @media (max-width: 480px) {
+      .pages-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  🚀 <span>Mavisa — Panel de Vista Previa & Deploy · Sitio listo para producción</span>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-chip">🎨 Vista previa del sitio web</div>
+    <h1>Tu sitio <span class="gt">Mavisa</span> está listo<br>para el mundo</h1>
+    <p>Navega por cada página aquí abajo, revisa el diseño y cuando estés listo sigue la guía para subirlo a Vercel con tu dominio de NIC.</p>
+    <div class="btn-group">
+      <a href="index.html" class="btn btn-grad" target="_blank">🌐 Abrir sitio en pestaña →</a>
+      <a href="#deploy" class="btn btn-ghost">📦 Ver guía de deploy</a>
+    </div>
+  </div>
+</section>
+
+<!-- Pages grid -->
+<section class="pages-section">
+  <div class="container">
+    <div class="label">📄 Páginas del sitio</div>
+    <h2>Haz clic para <span class="gt">abrir cada página</span></h2>
+    <p style="color:var(--muted);text-align:center;margin-bottom:40px;">5 páginas completas listas para producción</p>
+    <div class="pages-grid">
+      <a href="index.html" target="_blank" class="page-card" onclick="loadPage('index.html','🏠 mavisa.cl')">
+        <span class="arrow">↗</span>
+        <div class="page-card-icon">🏠</div>
+        <div class="page-card-name">Inicio</div>
+        <div class="page-card-desc">Hero animado, categorías, productos destacados, beneficios ZOFRI</div>
+        <div class="page-card-url">/</div>
+      </a>
+      <a href="catalogo.html" target="_blank" class="page-card" onclick="loadPage('catalogo.html','🛍 mavisa.cl/catalogo')">
+        <span class="arrow">↗</span>
+        <div class="page-card-icon">🛍</div>
+        <div class="page-card-name">Catálogo</div>
+        <div class="page-card-desc">16 productos con filtros, búsqueda, quick view y paginación</div>
+        <div class="page-card-url">/catalogo</div>
+      </a>
+      <a href="producto.html?id=p001" target="_blank" class="page-card" onclick="loadPage('producto.html?id=p001','📦 mavisa.cl/producto')">
+        <span class="arrow">↗</span>
+        <div class="page-card-icon">📦</div>
+        <div class="page-card-name">Producto</div>
+        <div class="page-card-desc">Galería, specs técnicas, CTA WhatsApp y productos relacionados</div>
+        <div class="page-card-url">/producto?id=p001</div>
+      </a>
+      <a href="contacto.html" target="_blank" class="page-card" onclick="loadPage('contacto.html','📞 mavisa.cl/contacto')">
+        <span class="arrow">↗</span>
+        <div class="page-card-icon">📞</div>
+        <div class="page-card-name">Contacto</div>
+        <div class="page-card-desc">Formulario, WhatsApp, mapa ZOFRI, redes sociales, FAQ</div>
+        <div class="page-card-url">/contacto</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- iframe preview -->
+<section class="preview-section">
+  <div class="container">
+    <div class="label" style="display:block;text-align:center;margin-bottom:10px;">👁 Vista previa en vivo</div>
+    <h2>Navega el sitio <span class="gt">aquí mismo</span></h2>
+    <p>Usa los tabs para cambiar de página sin salir de este panel</p>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot bd-r"></div>
+          <div class="browser-dot bd-y"></div>
+          <div class="browser-dot bd-g"></div>
+        </div>
+        <div class="browser-url" id="url-bar">
+          🔒 <span id="url-text">mavisa.cl</span> / <span style="color:var(--muted)">index.html</span>
+        </div>
+        <div class="browser-tabs">
+          <div class="btab active" onclick="loadPage('index.html','mavisa.cl')">🏠 Inicio</div>
+          <div class="btab" onclick="loadPage('catalogo.html','mavisa.cl/catalogo')">🛍 Catálogo</div>
+          <div class="btab" onclick="loadPage('producto.html?id=p009','mavisa.cl/producto')">📦 Producto</div>
+          <div class="btab" onclick="loadPage('contacto.html','mavisa.cl/contacto')">📞 Contacto</div>
+        </div>
+      </div>
+      <div class="iframe-wrap">
+        <div class="iframe-loading" id="iframe-loading">
+          <div class="spin"></div>
+          Cargando página...
+        </div>
+        <iframe
+          id="preview-iframe"
+          src="index.html"
+          class="preview-iframe"
+          onload="document.getElementById('iframe-loading').classList.add('hidden')"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deploy section -->
+<section class="deploy-section" id="deploy">
+  <div class="container">
+    <div class="label" style="display:block;text-align:center;margin-bottom:10px;">🚀 Deploy en Vercel</div>
+    <h2>Subir a Vercel con tu<br><span class="gt">dominio de NIC Chile</span></h2>
+    <p>Sigue estos pasos en orden. Tiempo estimado: <strong style="color:var(--text);">15–20 minutos</strong></p>
+
+    <!-- Methods -->
+    <div class="methods">
+      <div class="method-card">
+        <h3>
+          <span>📁</span> Método drag & drop
+          <span class="method-rec">Recomendado</span>
+        </h3>
+        <p>Sin código. Arrastra la carpeta directamente a Vercel desde el navegador. Perfecto si no usas Git.</p>
+        <ol>
+          <li><strong>Ir a</strong> vercel.com → Log in</li>
+          <li><strong>Clic en</strong> "Add New Project"</li>
+          <li><strong>Arrastra</strong> la carpeta "Web Mavisa"</li>
+          <li><strong>Clic en</strong> Deploy ✓</li>
+          <li><strong>Conectar</strong> tu dominio NIC</li>
+        </ol>
+      </div>
+      <div class="method-card">
+        <h3><span>⌨️</span> Método CLI (Terminal)</h3>
+        <p>Usa el comando de Vercel desde la terminal. Más control sobre el deploy.</p>
+        <ol>
+          <li><strong>Instalar</strong> Vercel CLI</li>
+          <li><strong>Ir</strong> a la carpeta del proyecto</li>
+          <li><strong>Ejecutar</strong> <code>vercel deploy</code></li>
+          <li><strong>Seguir</strong> las instrucciones</li>
+          <li><strong>Conectar</strong> dominio en el panel</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Step by step -->
+    <div class="steps">
+
+      <div class="step">
+        <span class="step-badge badge-required">Requerido</span>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Crear cuenta en Vercel</h3>
+          <p>Ve a <code>vercel.com</code> y regístrate con tu email o con GitHub. Elige el plan <strong>Hobby (gratis)</strong> — es suficiente para este sitio.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-badge badge-required">Requerido</span>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Subir los archivos del sitio</h3>
+          <p><strong>Opción A — Sin terminal:</strong> En el panel de Vercel, haz clic en "Add New Project" → "Browse" y selecciona la carpeta completa <code>Web Mavisa/</code>.</p>
+          <p style="margin-top:8px;"><strong>Opción B — Terminal:</strong> Abre Terminal, navega a la carpeta y ejecuta:</p>
+          <code class="cmd" onclick="copyCmd(this)">cd ~/Desktop/Claude/Projects/Web\ Mavisa && npx vercel deploy</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-badge badge-required">Requerido</span>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Verificar que el sitio funciona</h3>
+          <p>Vercel te dará una URL temporal tipo <code>mavisa-xyz.vercel.app</code>. Ábrela y confirma que todo se ve bien antes de conectar el dominio.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-badge badge-required">Requerido</span>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Agregar tu dominio de NIC Chile</h3>
+          <p>En Vercel → Settings → Domains → escribe tu dominio (ej: <code>mavisa.cl</code>). Vercel te mostrará los DNS que debes configurar en NIC.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-badge badge-required">Requerido</span>
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Configurar DNS en NIC Chile</h3>
+          <p>Entra a <code>nic.cl</code> → Mis Dominios → tu dominio → Gestionar DNS. Agrega los siguientes registros que te indica Vercel:</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DNS table -->
+    <div class="domain-card">
+      <h3>🌐 Configuración de DNS en NIC Chile</h3>
+      <p>En el panel de NIC.cl, ve a "Gestión de DNS" de tu dominio y agrega estos registros. Vercel los confirmará automáticamente (puede tardar hasta 48h, generalmente menos de 1h).</p>
+      <table class="dns-table">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Nombre / Host</th>
+            <th>Valor</th>
+            <th>TTL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td><code>@</code> (raíz)</td>
+            <td><code>76.76.21.21</code></td>
+            <td>Auto</td>
+          </tr>
+          <tr>
+            <td>CNAME</td>
+            <td><code>www</code></td>
+            <td><code>cname.vercel-dns.com</code></td>
+            <td>Auto</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px;font-size:0.8rem;color:var(--muted);">💡 Si Vercel te muestra valores diferentes, usa los suyos. Los valores exactos los verás en Vercel → Settings → Domains.</p>
+    </div>
+
+    <!-- Checklist -->
+    <div class="checklist">
+      <h3>✅ Checklist antes de publicar</h3>
+      <div class="check-item"><span class="check-icon check-done">✅</span> index.html con hero animado y productos</div>
+      <div class="check-item"><span class="check-icon check-done">✅</span> catalogo.html con filtros y 16 productos</div>
+      <div class="check-item"><span class="check-icon check-done">✅</span> producto.html dinámico con URL params</div>
+<div class="check-item"><span class="check-icon check-done">✅</span> contacto.html con WhatsApp y FAQ</div>
+      <div class="check-item"><span class="check-icon check-done">✅</span> vercel.json con URLs limpias y caché</div>
+      <div class="check-item"><span class="check-icon check-done">✅</span> CSS responsive mobile-first</div>
+      <div class="check-item"><span class="check-icon check-todo">📝</span> Cambiar número WhatsApp real en <code>js/main.js</code> línea 8</div>
+      <div class="check-item"><span class="check-icon check-todo">📝</span> Agregar fotos reales de productos en <code>assets/images/</code></div>
+      <div class="check-item"><span class="check-icon check-todo">📝</span> Actualizar email <code>contacto@mavisa.cl</code> en contacto.html</div>
+      <div class="check-item"><span class="check-icon check-todo">📝</span> Conectar dominio NIC en Vercel (paso 4–5)</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="foot">
+  <p>Mavisa — Sitio web generado y listo para producción · <span style="color:var(--accent);">vercel.json</span> incluido · Deploy en minutos</p>
+</footer>
+
+<script>
+  function loadPage(url, label) {
+    const iframe = document.getElementById('preview-iframe');
+    const loading = document.getElementById('iframe-loading');
+    const urlText = document.getElementById('url-text');
+
+    loading.classList.remove('hidden');
+    iframe.src = url;
+    urlText.textContent = label || url;
+
+    // Update tab active state
+    document.querySelectorAll('.btab').forEach(t => {
+      t.classList.toggle('active', t.textContent.toLowerCase().includes(url.split('.')[0]));
+    });
+  }
+
+  function copyCmd(el) {
+    const text = el.textContent.replace(/^\$ /, '');
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = el.textContent;
+      el.textContent = '✅ Copiado!';
+      el.style.color = '#25D366';
+      setTimeout(() => { el.textContent = orig; el.style.color = ''; }, 2000);
+    });
+  }
+
+  // Prevent iframe from hiding loader indefinitely
+  document.getElementById('preview-iframe').addEventListener('load', () => {
+    document.getElementById('iframe-loading').classList.add('hidden');
+  });
+
+  // Smooth scroll to #deploy
+  document.querySelector('[href="#deploy"]')?.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('deploy').scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

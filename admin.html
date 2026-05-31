@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mavisa — Panel de Administración</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:      #1C3461;
+      --navy-2:    #152849;
+      --navy-3:    #0F1E35;
+      --cream:     #F0EBE0;
+      --cream-2:   #E8E1D4;
+      --red:       #E8303F;
+      --red-dim:   rgba(232,48,63,0.10);
+      --white:     #FFFFFF;
+      --border:    rgba(28,52,97,0.12);
+      --text:      #1C3461;
+      --text-2:    #4A6080;
+      --text-3:    #8A9BB0;
+      --shadow:    0 4px 24px rgba(28,52,97,0.12);
+      --shadow-lg: 0 16px 48px rgba(28,52,97,0.18);
+      --r:         12px;
+      --r-sm:      8px;
+    }
+    html { font-size: 15px; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* ── LOGIN ─────────────────────────────────────────── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+      background-image: repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(255,255,255,0.025) 30px, rgba(255,255,255,0.025) 60px);
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .login-logo { height: 56px; margin-bottom: 24px; mix-blend-mode: multiply; }
+    .login-title { font-size: 1.4rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .login-sub { font-size: 0.85rem; color: var(--text-2); margin-bottom: 32px; }
+    .login-input {
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
+      border-radius: var(--r-sm); font-size: 1rem; font-family: inherit;
+      color: var(--text); background: var(--cream); text-align: center;
+      letter-spacing: 0.2em; margin-bottom: 16px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .login-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(28,52,97,0.10); }
+    .login-btn {
+      width: 100%; padding: 14px; background: var(--navy); color: #fff;
+      border: none; border-radius: var(--r-sm); font-size: 0.95rem;
+      font-weight: 600; font-family: inherit; cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .login-btn:hover { background: var(--navy-2); transform: translateY(-1px); }
+    .login-error { color: var(--red); font-size: 0.82rem; margin-top: 10px; display: none; }
+
+    /* ── APP LAYOUT ────────────────────────────────────── */
+    #app { display: none; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 240px; background: var(--navy);
+      background-image: repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 60px);
+      display: flex; flex-direction: column;
+      z-index: 100; padding: 28px 0;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-logo img { height: 36px; filter: brightness(0) invert(1); }
+    .sidebar-logo span { color: #fff; font-weight: 700; font-size: 1.1rem; }
+    .sidebar-logo span em { color: var(--red); font-style: normal; }
+    .sidebar-nav { flex: 1; padding: 20px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 24px; color: rgba(255,255,255,0.60);
+      font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      transition: all .2s; border-left: 3px solid transparent;
+      text-decoration: none;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-item.active { color: #fff; border-left-color: var(--red); background: rgba(255,255,255,0.08); }
+    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-footer {
+      padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .logout-btn {
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(255,255,255,0.50); font-size: 0.82rem;
+      cursor: pointer; transition: color .2s;
+    }
+    .logout-btn:hover { color: var(--red); }
+
+    /* Main content */
+    .main { margin-left: 240px; min-height: 100vh; padding: 32px; }
+
+    /* Top bar */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .topbar-title { font-size: 1.6rem; font-weight: 800; color: var(--navy); }
+    .topbar-sub { font-size: 0.85rem; color: var(--text-2); margin-top: 2px; }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-box {
+      background: var(--white); border-radius: var(--r);
+      padding: 20px 24px; box-shadow: var(--shadow);
+      border-left: 4px solid var(--navy);
+    }
+    .stat-box.red  { border-left-color: var(--red); }
+    .stat-box.gold { border-left-color: #C9A84C; }
+    .stat-box.green{ border-left-color: #25A55F; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .stat-lbl { font-size: 0.78rem; color: var(--text-2); margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+
+    /* Product table */
+    .card {
+      background: var(--white); border-radius: var(--r);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+    }
+    .card-title { font-size: 1rem; font-weight: 700; color: var(--navy); }
+    .search-input {
+      padding: 9px 14px; border: 1.5px solid var(--border);
+      border-radius: var(--r-sm); font-size: 0.85rem;
+      font-family: inherit; color: var(--text); background: var(--cream);
+      width: 240px; transition: border-color .2s;
+    }
+    .search-input:focus { outline: none; border-color: var(--navy); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border: none; border-radius: var(--r-sm);
+      font-size: 0.85rem; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all .2s; text-decoration: none;
+    }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover { background: var(--navy-2); transform: translateY(-1px); }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: #c9202e; transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text-2); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
+    .btn-export { background: #25A55F; color: #fff; }
+    .btn-export:hover { background: #1e8f52; transform: translateY(-1px); }
+
+    /* Products grid */
+    #products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px; padding: 20px;
+    }
+    .product-item {
+      border: 1.5px solid var(--border); border-radius: var(--r-sm);
+      overflow: hidden; transition: box-shadow .2s, transform .2s;
+      background: var(--cream);
+    }
+    .product-item:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .product-img-wrap {
+      background: var(--white); height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; overflow: hidden; position: relative;
+    }
+    .product-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
+    .product-img-wrap .no-img { font-size: 2.5rem; opacity: .3; }
+    .product-body { padding: 14px 16px; }
+    .product-cat { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--red); margin-bottom: 4px; }
+    .product-name { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-price { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .product-price-old { font-size: 0.78rem; color: var(--text-3); text-decoration: line-through; margin-right: 6px; }
+    .product-actions { display: flex; gap: 8px; }
+    .badge-pill {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 99px; letter-spacing: .05em;
+    }
+    .badge-new  { background: rgba(37,165,95,.15); color: #25A55F; }
+    .badge-hot  { background: rgba(232,48,63,.12); color: var(--red); }
+    .badge-sale { background: rgba(201,168,76,.15); color: #C9A84C; }
+    .badge-import { background: rgba(28,52,97,.12); color: var(--navy); }
+
+    /* ── MODAL ────────────────────────────────────────── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(14,30,53,0.55); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white); border-radius: 20px;
+      width: 100%; max-width: 700px; max-height: 92vh;
+      overflow-y: auto; box-shadow: var(--shadow-lg);
+      transform: scale(.94) translateY(16px); transition: transform .25s;
+    }
+    .overlay.open .modal { transform: scale(1) translateY(0); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 28px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--white); z-index: 10;
+    }
+    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--navy); }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--cream); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 0.9rem; color: var(--text-2); transition: all .15s;
+    }
+    .modal-close:hover { background: var(--red); color: #fff; border-color: var(--red); }
+    .modal-body { padding: 24px 28px; }
+
+    /* Form */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.cols-1 { grid-template-columns: 1fr; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 0.78rem; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .05em; }
+    .form-control {
+      padding: 10px 14px; border: 1.5px solid var(--border);
+      border-radius: var(--r-sm); font-size: 0.9rem; font-family: inherit;
+      color: var(--text); background: var(--cream);
+      transition: border-color .2s, box-shadow .2s; width: 100%;
+    }
+    .form-control:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(28,52,97,0.08); }
+    textarea.form-control { resize: vertical; min-height: 90px; }
+    select.form-control { cursor: pointer; }
+
+    /* Image preview */
+    .img-preview-wrap {
+      border: 2px dashed var(--border); border-radius: var(--r-sm);
+      padding: 16px; text-align: center; background: var(--cream);
+      transition: border-color .2s;
+    }
+    .img-preview-wrap:has(img[src]:not([src=""])) { border-style: solid; border-color: var(--navy); }
+    #img-preview { max-height: 120px; object-fit: contain; margin: 0 auto; display: none; }
+    .img-preview-hint { font-size: 0.78rem; color: var(--text-3); margin-top: 6px; }
+
+    /* Specs editor */
+    .specs-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .spec-row { display: grid; grid-template-columns: 1fr 1fr 32px; gap: 8px; align-items: center; }
+    .spec-del {
+      width: 32px; height: 32px; background: var(--red-dim); color: var(--red);
+      border: none; border-radius: 6px; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; transition: background .15s;
+    }
+    .spec-del:hover { background: var(--red); color: #fff; }
+    .add-spec-btn {
+      font-size: 0.8rem; color: var(--navy); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; background: rgba(28,52,97,.07);
+      border-radius: 6px; border: none; font-family: inherit; font-weight: 600;
+      transition: background .15s;
+    }
+    .add-spec-btn:hover { background: rgba(28,52,97,.13); }
+
+    /* Toggles */
+    .toggle-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+    .toggle-label { font-size: 0.85rem; font-weight: 600; color: var(--text); flex: 1; }
+    .toggle-desc { font-size: 0.75rem; color: var(--text-2); }
+    .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: var(--border);
+      border-radius: 24px; cursor: pointer; transition: background .2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background: #fff; border-radius: 50%; transition: transform .2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--navy); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* Section divider */
+    .section-divider {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text-3); padding: 8px 0 12px;
+      border-bottom: 1px solid var(--border); margin-bottom: 16px;
+    }
+
+    /* Modal footer */
+    .modal-footer {
+      display: flex; justify-content: flex-end; gap: 10px;
+      padding: 20px 28px; border-top: 1px solid var(--border);
+      position: sticky; bottom: 0; background: var(--white); z-index: 10;
+    }
+
+    /* Toast */
+    .toast-wrap { position: fixed; bottom: 28px; right: 28px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
+    .toast {
+      background: var(--navy); color: #fff; padding: 12px 20px;
+      border-radius: var(--r-sm); font-size: 0.85rem; font-weight: 500;
+      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
+      animation: slideIn .3s ease; max-width: 300px;
+    }
+    .toast.error { background: var(--red); }
+    .toast.success { background: #25A55F; }
+    @keyframes slideIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-3); }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; opacity: .4; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* Delete confirm modal */
+    #confirm-modal .modal { max-width: 400px; }
+    .confirm-body { padding: 32px 28px; text-align: center; }
+    .confirm-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .confirm-title { font-size: 1.1rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .confirm-text { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+
+    /* Export modal */
+    #export-modal .modal { max-width: 560px; }
+    .export-box {
+      background: var(--navy-3); color: #8BBAFF; font-family: monospace;
+      font-size: 0.75rem; padding: 16px; border-radius: var(--r-sm);
+      max-height: 300px; overflow-y: auto; white-space: pre-wrap;
+      word-break: break-all; line-height: 1.6; margin-bottom: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar { width: 200px; }
+      .main { margin-left: 200px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-row.cols-3 { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ──────────────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <img src="assets/images/logo.png" alt="Mavisa" class="login-logo"
+         onerror="this.style.display='none'">
+    <div class="login-title">Panel Administración</div>
+    <div class="login-sub">Mavisa Import & Export S.V. Ltda.</div>
+    <input type="password" id="pin-input" class="login-input"
+           placeholder="••••••" maxlength="12"
+           onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Ingresar →</button>
+    <div class="login-error" id="login-error">PIN incorrecto. Intenta de nuevo.</div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="assets/images/logo.png" alt="Mavisa" onerror="this.style.display='none'">
+      <span>Mavi<em>sa</em></span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showSection('products')">
+        <span class="nav-icon">📦</span> Productos
+      </div>
+      <a class="nav-item" href="index.html" target="_blank">
+        <span class="nav-icon">🌐</span> Ver sitio
+      </a>
+      <div class="nav-item" onclick="openExport()">
+        <span class="nav-icon">💾</span> Exportar catálogo
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="logout-btn" onclick="doLogout()">
+        <span>🚪</span> Cerrar sesión
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Gestión de Productos</div>
+        <div class="topbar-sub">Agrega, edita y administra tu catálogo</div>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal()">
+        ＋ Agregar Producto
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row"></div>
+
+    <!-- Products card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Todos los productos (<span id="product-count">0</span>)</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="text" class="search-input" placeholder="🔍  Buscar producto…" oninput="filterProducts(this.value)">
+          <button class="btn btn-export btn-sm" onclick="openExport()">💾 Exportar</button>
+        </div>
+      </div>
+      <div id="products-grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ── ADD / EDIT MODAL ───────────────────────────────────────── -->
+<div class="overlay" id="product-modal" onclick="if(event.target===this)closeModal('product-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Agregar Producto</div>
+      <div class="modal-close" onclick="closeModal('product-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+
+      <div class="section-divider">📋 Información básica</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre del producto *</label>
+          <input type="text" class="form-control" id="f-name" placeholder="Ej: Taladro Percutor 710W">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría *</label>
+          <select class="form-control" id="f-category">
+            <option value="">— Seleccionar —</option>
+            <option value="Belleza|belleza">Belleza</option>
+            <option value="Mascotas|mascotas">Mascotas</option>
+            <option value="Deportes y Hobbies|deportes-hobbies">Deportes y Hobbies</option>
+            <option value="Hogar y Cocina|hogar-cocina">Hogar y Cocina</option>
+            <option value="Salud y Equipos Medicos|salud-medicos">Salud y Equipos Médicos</option>
+            <option value="Maquinas Industriales|maquinas-industriales">Máquinas Industriales</option>
+            <option value="Juguetes|juguetes">Juguetes</option>
+            <option value="Electrodomésticos|electrodomesticos">Electrodomésticos</option>
+            <option value="Tecnología Hogar|tecnologia-hogar">Tecnología Hogar</option>
+            <option value="Gadgets|gadgets">Gadgets</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label class="form-label">Precio ($ CLP) *</label>
+          <input type="number" class="form-control" id="f-price" placeholder="29990" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Precio anterior (tachado)</label>
+          <input type="number" class="form-control" id="f-price-old" placeholder="39990 (opcional)" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Etiqueta (badge)</label>
+          <select class="form-control" id="f-badge">
+            <option value="">Sin etiqueta</option>
+            <option value="new|Nuevo">🟢 Nuevo</option>
+            <option value="hot|Más vendido">🔴 Más vendido</option>
+            <option value="sale|-% Oferta">🟡 Oferta</option>
+            <option value="import|Importado">🔵 Importado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row cols-1">
+        <div class="form-group">
+          <label class="form-label">Descripción *</label>
+          <textarea class="form-control" id="f-desc" placeholder="Describe el producto, sus características principales y beneficios…"></textarea>
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:8px;">🖼 Imagen del producto</div>
+      <div class="form-row cols-1">
+        <div class="form-group">
+          <label class="form-label">URL de la imagen</label>
+          <input type="text" class="form-control" id="f-image"
+                 placeholder="https://… o assets/images/nombre.jpg"
+                 oninput="previewImage(this.value)">
+          <div class="img-preview-wrap" style="margin-top:10px;">
+            <img id="img-preview" src="" alt="Vista previa">
+            <div class="img-preview-hint" id="img-hint">Ingresa la URL para ver una vista previa</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:8px;">📊 Especificaciones técnicas</div>
+      <div class="specs-list" id="specs-list"></div>
+      <button class="add-spec-btn" onclick="addSpecRow()">＋ Agregar especificación</button>
+
+      <div class="section-divider" style="margin-top:20px;">⚙️ Configuración</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Producto Destacado</div>
+          <div class="toggle-desc">Aparece en la sección principal del inicio</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="f-featured"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Recién llegado</div>
+          <div class="toggle-desc">Aparece en la sección "Lo último en llegar"</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="f-new"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">En stock</div>
+          <div class="toggle-desc">Disponible para cotización</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="f-stock" checked><span class="toggle-slider"></span></label>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('product-modal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Guardar producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONFIRM DELETE ─────────────────────────────────────────── -->
+<div class="overlay" id="confirm-modal" onclick="if(event.target===this)closeModal('confirm-modal')">
+  <div class="modal" id="confirm-modal">
+    <div class="confirm-body">
+      <div class="confirm-icon">🗑️</div>
+      <div class="confirm-title">¿Eliminar producto?</div>
+      <div class="confirm-text" id="confirm-text">Esta acción no se puede deshacer.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('confirm-modal')">Cancelar</button>
+      <button class="btn btn-red" id="confirm-yes-btn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPORT MODAL ───────────────────────────────────────────── -->
+<div class="overlay" id="export-modal" onclick="if(event.target===this)closeModal('export-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">💾 Exportar catálogo</div>
+      <div class="modal-close" onclick="closeModal('export-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.88rem;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
+        Haz clic en <strong>"Descargar catalog.js"</strong> y reemplaza el archivo
+        <code style="background:var(--cream);padding:2px 6px;border-radius:4px;">js/catalog.js</code>
+        en la carpeta del proyecto. Los cambios se verán en el sitio inmediatamente.
+      </p>
+      <div class="export-box" id="export-preview"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('export-modal')">Cerrar</button>
+      <button class="btn btn-export" onclick="downloadCatalog()">⬇ Descargar catalog.js</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOASTS ────────────────────────────────────────────────── -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="js/catalog.js"></script>
+<script>
+/* ── CONFIG ──────────────────────────────────────────────── */
+const PIN = '1234';          // ← Cambia este PIN
+const STORAGE_KEY = 'mavisa_admin_products';
+
+/* ── STATE ───────────────────────────────────────────────── */
+let products = [];
+let editingId = null;
+let searchQuery = '';
+
+/* ── HELPERS ─────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const fmt = n => new Intl.NumberFormat('es-CL', { style:'currency', currency:'CLP', maximumFractionDigits:0 }).format(n);
+
+function nextId() {
+  if (!products.length) return 'p001';
+  const nums = products.map(p => parseInt(p.id.replace('p','')) || 0);
+  return 'p' + String(Math.max(...nums) + 1).padStart(3,'0');
+}
+
+/* ── LOGIN ───────────────────────────────────────────────── */
+function doLogin() {
+  if ($('pin-input').value === PIN) {
+    $('login-screen').style.display = 'none';
+    $('app').style.display = 'block';
+    loadProducts();
+    renderAll();
+  } else {
+    $('login-error').style.display = 'block';
+    $('pin-input').value = '';
+    $('pin-input').focus();
+  }
+}
+function doLogout() {
+  $('app').style.display = 'none';
+  $('login-screen').style.display = 'flex';
+  $('pin-input').value = '';
+}
+
+/* ── STORAGE ─────────────────────────────────────────────── */
+function loadProducts() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try { products = JSON.parse(saved); } catch(e) { products = [...PRODUCTS_DATA]; }
+  } else {
+    products = [...PRODUCTS_DATA];
+    saveToStorage();
+  }
+}
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+}
+
+/* ── RENDER ──────────────────────────────────────────────── */
+function renderAll() {
+  renderStats();
+  renderGrid(searchQuery);
+}
+function renderStats() {
+  const featured = products.filter(p => p.featured).length;
+  const isNew    = products.filter(p => p.isNew).length;
+  const inStock  = products.filter(p => p.inStock).length;
+  $('stats-row').innerHTML = `
+    <div class="stat-box">
+      <div class="stat-num">${products.length}</div>
+      <div class="stat-lbl">Total productos</div>
+    </div>
+    <div class="stat-box red">
+      <div class="stat-num">${featured}</div>
+      <div class="stat-lbl">Destacados</div>
+    </div>
+    <div class="stat-box gold">
+      <div class="stat-num">${isNew}</div>
+      <div class="stat-lbl">Recién llegados</div>
+    </div>
+    <div class="stat-box green">
+      <div class="stat-num">${inStock}</div>
+      <div class="stat-lbl">En stock</div>
+    </div>
+  `;
+  $('product-count').textContent = products.length;
+}
+
+function filterProducts(q) {
+  searchQuery = q.toLowerCase();
+  renderGrid(searchQuery);
+}
+
+function renderGrid(q = '') {
+  const grid = $('products-grid');
+  let list = products;
+  if (q) list = list.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    p.category.toLowerCase().includes(q)
+  );
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>No se encontraron productos</p></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => `
+    <div class="product-item">
+      <div class="product-img-wrap">
+        ${p.badge ? `<span class="badge-pill badge-${p.badge}">${p.badgeLabel}</span>` : ''}
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                     <span class="no-img" style="display:none">📦</span>`
+                  : `<span class="no-img">📦</span>`}
+      </div>
+      <div class="product-body">
+        <div class="product-cat">${p.category}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">
+          ${p.priceOld ? `<span class="product-price-old">${fmt(p.priceOld)}</span>` : ''}
+          ${fmt(p.price)}
+        </div>
+        <div class="product-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openEdit('${p.id}')">✏️ Editar</button>
+          <button class="btn btn-sm" style="background:var(--red-dim);color:var(--red);" onclick="confirmDelete('${p.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── MODAL OPEN / CLOSE ──────────────────────────────────── */
+function openModal(id)  { $(id).classList.add('open'); }
+function closeModal(id) { $(id).classList.remove('open'); }
+
+function showSection(s) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+/* ── ADD PRODUCT ─────────────────────────────────────────── */
+function openAddModal() {
+  editingId = null;
+  $('modal-title').textContent = '➕ Agregar Producto';
+  clearForm();
+  openModal('product-modal');
+}
+
+function clearForm() {
+  ['f-name','f-price','f-price-old','f-desc','f-image'].forEach(id => $(id).value = '');
+  $('f-category').value = '';
+  $('f-badge').value = '';
+  $('f-featured').checked = false;
+  $('f-new').checked = false;
+  $('f-stock').checked = true;
+  $('specs-list').innerHTML = '';
+  $('img-preview').style.display = 'none';
+  $('img-hint').style.display = 'block';
+}
+
+/* ── EDIT PRODUCT ────────────────────────────────────────── */
+function openEdit(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  $('modal-title').textContent = '✏️ Editar Producto';
+
+  $('f-name').value = p.name;
+  $('f-price').value = p.price;
+  $('f-price-old').value = p.priceOld || '';
+  $('f-desc').value = p.description;
+  $('f-image').value = p.image || '';
+  $('f-featured').checked = !!p.featured;
+  $('f-new').checked = !!p.isNew;
+  $('f-stock').checked = !!p.inStock;
+
+  // Category
+  const catOpt = [...$('f-category').options].find(o => o.value.includes(p.categorySlug));
+  $('f-category').value = catOpt ? catOpt.value : '';
+
+  // Badge
+  const badgeOpt = [...$('f-badge').options].find(o => o.value.startsWith(p.badge || '~'));
+  $('f-badge').value = badgeOpt ? badgeOpt.value : '';
+
+  // Specs
+  $('specs-list').innerHTML = '';
+  (p.specs || []).forEach(s => addSpecRow(s.label, s.value));
+
+  // Preview
+  previewImage(p.image);
+
+  openModal('product-modal');
+}
+
+/* ── SAVE ────────────────────────────────────────────────── */
+function saveProduct() {
+  const name = $('f-name').value.trim();
+  const catVal = $('f-category').value;
+  const price = parseFloat($('f-price').value);
+  const desc = $('f-desc').value.trim();
+
+  if (!name || !catVal || !price || !desc) {
+    showToast('Completa los campos obligatorios (*)','error'); return;
+  }
+
+  const [category, categorySlug] = catVal.split('|');
+  const priceOld = parseFloat($('f-price-old').value) || null;
+  const badgeVal = $('f-badge').value;
+  const [badge, badgeLabel] = badgeVal ? badgeVal.split('|') : [null, null];
+
+  const specs = [...document.querySelectorAll('.spec-row')].map(row => ({
+    label: row.querySelector('.spec-label').value.trim(),
+    value: row.querySelector('.spec-value').value.trim(),
+  })).filter(s => s.label && s.value);
+
+  const product = {
+    id: editingId || nextId(),
+    name, category, categorySlug,
+    price, priceOld,
+    badge: badge || null,
+    badgeLabel: badgeLabel || null,
+    description: desc,
+    specs,
+    image: $('f-image').value.trim() || 'assets/images/placeholder.svg',
+    images: [$('f-image').value.trim() || 'assets/images/placeholder.svg'],
+    featured: $('f-featured').checked,
+    isNew: $('f-new').checked,
+    inStock: $('f-stock').checked,
+  };
+
+  if (editingId) {
+    const idx = products.findIndex(p => p.id === editingId);
+    products[idx] = product;
+    showToast('✅ Producto actualizado');
+  } else {
+    products.push(product);
+    showToast('✅ Producto agregado');
+  }
+
+  saveToStorage();
+  closeModal('product-modal');
+  renderAll();
+}
+
+/* ── DELETE ──────────────────────────────────────────────── */
+function confirmDelete(id) {
+  const p = products.find(x => x.id === id);
+  $('confirm-text').textContent = `¿Estás seguro de eliminar "${p?.name}"? Esta acción no se puede deshacer.`;
+  $('confirm-yes-btn').onclick = () => { deleteProduct(id); closeModal('confirm-modal'); };
+  openModal('confirm-modal');
+}
+function deleteProduct(id) {
+  products = products.filter(p => p.id !== id);
+  saveToStorage();
+  renderAll();
+  showToast('🗑️ Producto eliminado');
+}
+
+/* ── SPECS ───────────────────────────────────────────────── */
+function addSpecRow(label='', value='') {
+  const row = document.createElement('div');
+  row.className = 'spec-row';
+  row.innerHTML = `
+    <input type="text" class="form-control spec-label" placeholder="Ej: Potencia" value="${label}">
+    <input type="text" class="form-control spec-value" placeholder="Ej: 710W" value="${value}">
+    <button class="spec-del" onclick="this.parentElement.remove()">✕</button>
+  `;
+  $('specs-list').appendChild(row);
+}
+
+/* ── IMAGE PREVIEW ───────────────────────────────────────── */
+function previewImage(url) {
+  const img = $('img-preview');
+  const hint = $('img-hint');
+  if (url) {
+    img.src = url;
+    img.style.display = 'block';
+    hint.style.display = 'none';
+    img.onerror = () => { img.style.display='none'; hint.textContent='⚠️ No se pudo cargar la imagen'; hint.style.display='block'; };
+  } else {
+    img.style.display = 'none';
+    hint.textContent = 'Ingresa la URL para ver una vista previa';
+    hint.style.display = 'block';
+  }
+}
+
+/* ── EXPORT ──────────────────────────────────────────────── */
+function openExport() {
+  const preview = generateCatalogJS();
+  $('export-preview').textContent = preview.slice(0, 2000) + (preview.length > 2000 ? '\n\n… (archivo completo en descarga)' : '');
+  openModal('export-modal');
+}
+
+function generateCatalogJS() {
+  const productsStr = JSON.stringify(products, null, 2)
+    .replace(/"([^"]+)":/g, '$1:')   // quita comillas en keys
+    .replace(/"/g, "'");              // comillas simples
+
+  // Lee el catalog.js original y reemplaza solo PRODUCTS_DATA
+  return `/* ============================================================
+   MAVISA — Products Data & Catalog Logic
+   Exportado desde el Panel de Administración
+   Fecha: ${new Date().toLocaleDateString('es-CL')}
+   ============================================================ */
+
+'use strict';
+
+/* ── Products Database ────────────────────────────────────── */
+const PRODUCTS_DATA = ${productsStr};
+
+/* ── Catalog State ────────────────────────────────────────── */
+const catalogState = {
+  category: 'all',
+  search: '',
+  sort: 'featured',
+  page: 1,
+  perPage: 8,
+};
+
+/* ── Render Helpers ───────────────────────────────────────── */
+function badgeHTML(p) {
+  if (!p.badge) return '';
+  const cls = { new: 'badge-new', hot: 'badge-hot', sale: 'badge-sale', import: 'badge-import' }[p.badge] || '';
+  return \`<span class="badge \${cls}">\${p.badgeLabel}</span>\`;
+}
+function priceHTML(p) {
+  return \`<div>\${p.priceOld ? \`<span class="product-card-price-old">\${formatPrice(p.priceOld)}</span>\` : ''}<span class="product-card-price">\${formatPrice(p.price)}</span></div>\`;
+}
+function productCardHTML(p) {
+  return \`<article class="product-card reveal" data-product-id="\${p.id}"><div class="product-card-image"><div class="product-card-badges">\${badgeHTML(p)}</div><div class="product-card-actions"><button class="product-card-action-btn" onclick="openQuickView('\${p.id}')" title="Vista rápida">👁</button><a class="product-card-action-btn" href="\${whatsappUrl('Hola! Me interesa: '+p.name)}" target="_blank" title="Consultar">💬</a></div><img src="\${p.image}" alt="\${p.name}" loading="lazy" onerror="this.style.opacity='.3'"></div><div class="product-card-body"><div class="product-card-category">\${p.category}</div><h3 class="product-card-name">\${p.name}</h3><p class="product-card-specs">\${p.specs?.[0] ? p.specs[0].label+': '+p.specs[0].value : ''}</p><div class="product-card-footer">\${priceHTML(p)}<a href="producto.html?id=\${p.id}" class="product-card-btn" title="Ver producto">→</a></div></div></article>\`;
+}
+function getFilteredProducts() {
+  let list = [...PRODUCTS_DATA];
+  if (catalogState.category !== 'all') list = list.filter(p => p.categorySlug === catalogState.category);
+  if (catalogState.search.trim()) { const q = catalogState.search.toLowerCase(); list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)); }
+  switch (catalogState.sort) {
+    case 'price-asc':  list.sort((a,b) => a.price - b.price); break;
+    case 'price-desc': list.sort((a,b) => b.price - a.price); break;
+    case 'new':        list.sort((a,b) => (b.isNew?1:0)-(a.isNew?1:0)); break;
+    default:           list.sort((a,b) => (b.featured?1:0)-(a.featured?1:0)); break;
+  }
+  return list;
+}
+function renderCatalog() {
+  const grid = $('#catalog-grid'), countEl = $('#catalog-count'), emptyEl = $('#catalog-empty');
+  if (!grid) return;
+  const filtered = getFilteredProducts(), start = (catalogState.page-1)*catalogState.perPage, page = filtered.slice(start, start+catalogState.perPage);
+  if (countEl) countEl.textContent = filtered.length+' producto'+(filtered.length!==1?'s':'');
+  if (!filtered.length) { grid.innerHTML=''; emptyEl?.removeAttribute('hidden'); } else { emptyEl?.setAttribute('hidden',''); grid.innerHTML=page.map(productCardHTML).join(''); renderPagination(filtered.length); initScrollAnimations(); }
+}
+function renderPagination(total) {
+  const pag = $('#catalog-pagination'); if (!pag) return;
+  const pages = Math.ceil(total/catalogState.perPage); if (pages<=1){pag.innerHTML='';return;}
+  let html=''; if(catalogState.page>1) html+=\`<button class="page-btn" data-page="\${catalogState.page-1}">‹</button>\`;
+  for(let i=1;i<=pages;i++) html+=\`<button class="page-btn\${i===catalogState.page?' active':''}" data-page="\${i}">\${i}</button>\`;
+  if(catalogState.page<pages) html+=\`<button class="page-btn" data-page="\${catalogState.page+1}">›</button>\`;
+  pag.innerHTML=html; pag.querySelectorAll('.page-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ catalogState.page=parseInt(btn.dataset.page); renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); }); });
+}
+function initCatalogPage() {
+  if (!$('#catalog-grid')) return;
+  $$('.filter-tab').forEach(tab=>{ tab.addEventListener('click',()=>{ $$('.filter-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); catalogState.category=tab.dataset.category; catalogState.page=1; renderCatalog(); }); });
+  const sortSel=$('#catalog-sort'); sortSel?.addEventListener('change',()=>{ catalogState.sort=sortSel.value; catalogState.page=1; renderCatalog(); });
+  const searchInput=$('#catalog-search'); searchInput?.addEventListener('input',debounce(()=>{ catalogState.search=searchInput.value; catalogState.page=1; renderCatalog(); },300));
+  const params=new URLSearchParams(location.search); if(params.get('category')){ catalogState.category=params.get('category'); $$('.filter-tab').forEach(t=>{ t.classList.toggle('active',t.dataset.category===catalogState.category); }); }
+  renderCatalog();
+}
+function initProductPage() {
+  const productContainer=$('#product-detail'); if(!productContainer) return;
+  const params=new URLSearchParams(location.search), id=params.get('id'), product=PRODUCTS_DATA.find(p=>p.id===id)||PRODUCTS_DATA[0];
+  document.title=product.name+' — Mavisa'; $('#pd-breadcrumb-name').textContent=product.name; $('#pd-category').textContent=product.category; $('#pd-title').textContent=product.name; $('#pd-badge-wrap').innerHTML=badgeHTML(product); $('#pd-price').textContent=formatPrice(product.price);
+  if(product.priceOld){$('#pd-price-old').textContent=formatPrice(product.priceOld);const disc=Math.round((1-product.price/product.priceOld)*100);$('#pd-discount').textContent='-'+disc+'%';$('#pd-discount').removeAttribute('hidden');}
+  $('#pd-description').textContent=product.description;
+  const specsEl=$('#pd-specs'); if(specsEl&&product.specs){specsEl.innerHTML=product.specs.map(s=>\`<div class="modal-spec-row"><span class="modal-spec-label">\${s.label}</span><span class="modal-spec-value">\${s.value}</span></div>\`).join('');}
+  const mainImg=$('#pd-main-img'); if(mainImg) mainImg.src=product.image;
+  $$('.pd-whatsapp').forEach(b=>{ b.href=whatsappUrl('Hola! Me interesa el producto: '+product.name+'. ¿Podría darme más información y el precio actual? 🛒'); });
+  const relatedGrid=$('#related-grid'); if(relatedGrid){const related=PRODUCTS_DATA.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4);relatedGrid.innerHTML=related.map(productCardHTML).join('');}
+  initScrollAnimations();
+}
+function initHomeFeatured() {
+  const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
+  const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8); featuredGrid.innerHTML=featured.map(productCardHTML).join('');
+  const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,4);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
+  initScrollAnimations();
+}
+document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });`;
+}
+
+function downloadCatalog() {
+  const content = generateCatalogJS();
+  const blob = new Blob([content], { type: 'text/javascript' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'catalog.js';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('⬇️ catalog.js descargado — reemplázalo en js/catalog.js');
+}
+
+/* ── TOAST ───────────────────────────────────────────────── */
+function showToast(msg, type='success') {
+  const wrap = $('toast-wrap');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+/* ── KEY EVENTS ──────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['product-modal','confirm-modal','export-modal'].forEach(closeModal);
+  }
+});
+</script>
+</body>
+</html>
