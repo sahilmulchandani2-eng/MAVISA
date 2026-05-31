@@ -3378,6 +3378,44 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
   }
 }
 
+/* ── "Lo último en llegar" — horizontal carousel ───────────── */
+.new-carousel-wrap {
+  position: relative;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+.new-carousel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 16px; bottom: 0;
+  width: 80px;
+  background: linear-gradient(to right, transparent, var(--color-bg, #fff));
+  pointer-events: none;
+  z-index: 2;
+}
+.new-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 8px;
+}
+.new-carousel::-webkit-scrollbar { display: none; }
+.new-carousel .product-card {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+}
+@media (max-width: 768px) {
+  .new-carousel .product-card { flex: 0 0 200px; }
+  .new-carousel { gap: 14px; }
+}
+@media (max-width: 430px) {
+  .new-carousel .product-card { flex: 0 0 160px; }
+  .new-carousel { gap: 12px; }
+}
+
 /* ── Utilities ────────────────────────────────────────────── */
 img { max-width: 100%; height: auto; }
 * { min-width: 0; } /* Fixes grid/flex overflow on small screens */

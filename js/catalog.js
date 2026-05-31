@@ -860,7 +860,7 @@ function initProductPage() {
 function initHomeFeatured() {
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
   const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8); featuredGrid.innerHTML=featured.map(productCardHTML).join('');
-  const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,4);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
+  const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,8);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
