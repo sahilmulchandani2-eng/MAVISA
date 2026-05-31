@@ -884,5 +884,20 @@
   }
 })();
 </script>
+<script>
+// Ticker speed: pixels per second
+(function(){
+  var track = document.querySelector('.ticker-track');
+  if (!track) return;
+  var pps = 120; // pixels per second — sube este número para más velocidad
+  function setSpeed() {
+    var w = track.scrollWidth / 2;
+    var dur = w / pps;
+    track.style.animationDuration = dur + 's';
+  }
+  setSpeed();
+  window.addEventListener('resize', setSpeed);
+})();
+</script>
 </body>
 </html>
