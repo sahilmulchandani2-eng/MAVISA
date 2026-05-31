@@ -650,14 +650,134 @@ const PRODUCTS_DATA = [
   },
   {
     id: 'p017',
-    name: 'Afeitadora Kemei TX10',
+    name: 'Auto RC Control Remoto 4x4 Offroad',
+    category: 'Juguetes',
+    categorySlug: 'juguetes',
+    price: 49990,
+    priceOld: 69990,
+    badge: 'hot',
+    badgeLabel: 'Popular',
+    description: 'Vehículo todoterreno de control remoto con suspensión independiente, tracción 4x4, velocidad máxima 35 km/h, batería recargable y alcance de 80 metros.',
+    specs: [
+      {
+        label: 'Velocidad',
+        value: '35 km/h'
+      },
+      {
+        label: 'Alcance',
+        value: '80 m'
+      },
+      {
+        label: 'Tracción',
+        value: '4x4'
+      },
+      {
+        label: 'Batería',
+        value: 'Li-Ion 1200 mAh'
+      },
+      {
+        label: 'Autonomía',
+        value: '25 min'
+      }
+    ],
+    image: 'assets/images/auto-rc.svg',
+    images: [
+      'assets/images/auto-rc.svg'
+    ],
+    featured: true,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p018',
+    name: 'Kit Robótica Educativa Programable',
+    category: 'Juguetes',
+    categorySlug: 'juguetes',
+    price: 89990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Kit STEM de robótica con más de 200 piezas, compatible con programación visual (Scratch) y Python. Ideal para niños de 8 a 14 años. Incluye sensores y motores.',
+    specs: [
+      {
+        label: 'Piezas',
+        value: '200+'
+      },
+      {
+        label: 'Edad',
+        value: '8–14 años'
+      },
+      {
+        label: 'Programación',
+        value: 'Scratch / Python'
+      },
+      {
+        label: 'Conectividad',
+        value: 'Bluetooth'
+      },
+      {
+        label: 'Incluye',
+        value: 'App gratuita'
+      }
+    ],
+    image: 'assets/images/robot-kit.svg',
+    images: [
+      'assets/images/robot-kit.svg'
+    ],
+    featured: true,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p019',
+    name: 'Dron para Niños con Cámara HD 720p',
+    category: 'Juguetes',
+    categorySlug: 'juguetes',
+    price: 39990,
+    priceOld: 54990,
+    badge: 'sale',
+    badgeLabel: '-27%',
+    description: 'Minidron estabilizado con altímetro, cámara HD 720p, 3 velocidades y modos acrobáticos. Diseñado para principiantes con hélices protegidas.',
+    specs: [
+      {
+        label: 'Cámara',
+        value: 'HD 720p'
+      },
+      {
+        label: 'Autonomía',
+        value: '15 min'
+      },
+      {
+        label: 'Alcance',
+        value: '50 m'
+      },
+      {
+        label: 'Estabilización',
+        value: 'Altímetro'
+      },
+      {
+        label: 'Edad',
+        value: '8+ años'
+      }
+    ],
+    image: 'assets/images/mini-drone.svg',
+    images: [
+      'assets/images/mini-drone.svg'
+    ],
+    featured: false,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p020',
+    name: 'AFEITADORA KEMEI TX10',
     category: 'Belleza',
     categorySlug: 'belleza',
     price: 29900,
     priceOld: 35900,
-    badge: 'sale',
-    badgeLabel: '-% Oferta',
-    description: 'Afeitadora modelo kemei \ncargador usb tipo c \npotencia',
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'AFEITADORA KEMEI TX10\nBOLSILLO\nUSB TIPO C',
     specs: [],
     image: 'assets/images/placeholder.svg',
     images: [
