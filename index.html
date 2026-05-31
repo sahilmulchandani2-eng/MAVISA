@@ -889,7 +889,7 @@
 (function(){
   var track = document.querySelector('.ticker-track');
   if (!track) return;
-  var pps = window.innerWidth <= 768 ? 220 : 80; // móvil más rápido, desktop más lento
+  var pps = window.innerWidth <= 768 ? 350 : 80; // móvil más rápido, desktop más lento
   function setSpeed() {
     var w = track.scrollWidth / 2;
     var dur = w / pps;

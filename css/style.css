@@ -1570,6 +1570,9 @@ h1, h2, h3, h4, h5, h6 {
   gap: 64px;
   animation: ticker-scroll 5s linear infinite;
   white-space: nowrap;
+  width: max-content;
+  min-width: 200%;
+  flex-shrink: 0;
 }
 .ticker-item {
   font-size: 0.82rem;
