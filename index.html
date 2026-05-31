@@ -885,22 +885,26 @@
 })();
 </script>
 <script>
-// Ticker speed: pixels per second
-(function(){
+// Ticker — RAF loop, no CSS animation, seamless on all devices
+window.addEventListener('load', function(){
   var track = document.querySelector('.ticker-track');
   if (!track) return;
-  var pps = window.innerWidth <= 768 ? 350 : 80;
-  function setSpeed() {
-    track.style.animationDuration = '9999s'; // pausa para medir
-    requestAnimationFrame(function(){
-      var w = track.scrollWidth / 2;
-      var dur = w / pps;
-      track.style.animationDuration = dur + 's';
-    });
+  var pos = 0;
+  var halfW = 0;
+  var speed = window.innerWidth <= 768 ? 1.8 : 0.6; // px per frame
+
+  function measure() { halfW = track.scrollWidth / 2; }
+  measure();
+  window.addEventListener('resize', measure);
+
+  function tick() {
+    pos += speed;
+    if (halfW > 0 && pos >= halfW) pos -= halfW;
+    track.style.transform = 'translateX(-' + pos.toFixed(2) + 'px)';
+    requestAnimationFrame(tick);
   }
-  setSpeed();
-  window.addEventListener('resize', setSpeed);
-})();
+  requestAnimationFrame(tick);
+});
 </script>
 </body>
 </html>

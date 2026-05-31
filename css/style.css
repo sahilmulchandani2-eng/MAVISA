@@ -1568,10 +1568,10 @@ h1, h2, h3, h4, h5, h6 {
 .ticker-track {
   display: flex;
   gap: 48px;
-  animation: ticker-scroll 5s linear infinite;
   white-space: nowrap;
   width: max-content;
   flex-shrink: 0;
+  will-change: transform;
 }
 .ticker-item {
   font-size: 0.82rem;
@@ -1587,10 +1587,6 @@ h1, h2, h3, h4, h5, h6 {
   width: 5px; height: 5px;
   background: rgba(255,255,255,0.5);
   border-radius: 50%;
-}
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
 }
 
 /* ── Pagination ───────────────────────────────────────────── */
