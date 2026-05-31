@@ -885,37 +885,43 @@
 })();
 </script>
 <script>
-// Ticker — RAF loop seamless
-window.addEventListener('load', function(){
+// Ticker — conveyor belt, sin reset, sin cortes
+(function(){
   var track = document.querySelector('.ticker-track');
   if (!track) return;
-  var speed = window.innerWidth <= 768 ? 2.2 : 0.6;
-  var pos = 0;
-  var halfW = 0;
 
-  function measure() {
-    // Mide usando los items individuales (confiable en Safari móvil)
-    var items = track.querySelectorAll('.ticker-item');
-    var n = items.length; // 16 items (8 x2)
-    if (!n) return;
-    var itemW = 0;
-    items.forEach(function(it){ itemW += it.getBoundingClientRect().width; });
-    var gap = 48;
-    halfW = itemW / 2 + gap * (n / 2);
+  // Quitar animación CSS
+  track.style.animation = 'none';
+  track.style.transform = 'none';
+  track.style.gap = '0';
+
+  var GAP = 48;
+  var speed = window.innerWidth <= 768 ? 2.5 : 0.8;
+  var offset = 0;
+
+  // Dar padding-right a cada item para simular el gap
+  Array.from(track.children).forEach(function(el){
+    el.style.paddingRight = GAP + 'px';
+    el.style.boxSizing = 'content-box';
+  });
+
+  function tick() {
+    offset += speed;
+    var first = track.firstElementChild;
+    if (first) {
+      var w = first.getBoundingClientRect().width;
+      if (w > 0 && offset >= w) {
+        // Mueve el primer item al final — sin corte visible
+        track.appendChild(first);
+        offset -= w;
+      }
+    }
+    track.style.transform = 'translateX(-' + offset.toFixed(2) + 'px)';
+    requestAnimationFrame(tick);
   }
 
-  setTimeout(function(){
-    measure();
-    window.addEventListener('resize', measure);
-    function tick() {
-      pos += speed;
-      if (halfW > 0 && pos >= halfW) pos -= halfW;
-      track.style.transform = 'translateX(-' + pos.toFixed(2) + 'px)';
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }, 200);
-});
+  requestAnimationFrame(tick);
+})();
 </script>
 </body>
 </html>
