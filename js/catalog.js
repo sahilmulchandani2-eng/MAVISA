@@ -89,86 +89,6 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
-    id: 'p003',
-    name: 'Lavadora Carga Frontal 10kg Inverter',
-    category: 'Electrodomésticos',
-    categorySlug: 'electrodomesticos',
-    price: 449990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Motor Inverter Direct Drive, 14 programas de lavado, vapor antialérgico, pantalla táctil LED y control por app. Clase A+++.',
-    specs: [
-      {
-        label: 'Capacidad',
-        value: '10 kg'
-      },
-      {
-        label: 'Centrifugado',
-        value: '1400 RPM'
-      },
-      {
-        label: 'Eficiencia',
-        value: 'A+++'
-      },
-      {
-        label: 'Programas',
-        value: '14'
-      },
-      {
-        label: 'Control',
-        value: 'App + Panel'
-      }
-    ],
-    image: 'assets/images/lavadora.svg',
-    images: [
-      'assets/images/lavadora.svg'
-    ],
-    featured: false,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p004',
-    name: 'Frigorífico Side by Side 600L',
-    category: 'Electrodomésticos',
-    categorySlug: 'electrodomesticos',
-    price: 899990,
-    priceOld: 1099990,
-    badge: 'import',
-    badgeLabel: 'Importado',
-    description: 'Refrigerador side by side con dispensador de agua y hielo, panel táctil, sistema No Frost total, zona freshzone y display interior.',
-    specs: [
-      {
-        label: 'Capacidad',
-        value: '600 L total'
-      },
-      {
-        label: 'Refrigerador',
-        value: '370 L'
-      },
-      {
-        label: 'Congelador',
-        value: '230 L'
-      },
-      {
-        label: 'Eficiencia',
-        value: 'A+'
-      },
-      {
-        label: 'Control',
-        value: 'Panel LCD'
-      }
-    ],
-    image: 'assets/images/frigorifico.svg',
-    images: [
-      'assets/images/frigorifico.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
     id: 'p005',
     name: 'Smart TV QLED 65\' 4K 144Hz',
     category: 'Tecnología Hogar',
@@ -245,86 +165,6 @@ const PRODUCTS_DATA = [
       'assets/images/proyector.svg'
     ],
     featured: true,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p007',
-    name: 'Bocina Inteligente Subwoofer 2.1',
-    category: 'Tecnología Hogar',
-    categorySlug: 'tecnologia-hogar',
-    price: 159990,
-    priceOld: 199990,
-    badge: null,
-    badgeLabel: null,
-    description: 'Sistema de audio 2.1 con subwoofer inalámbrico, 120W totales, Dolby Atmos, Wi-Fi, Bluetooth 5.2 y control por app o voz.',
-    specs: [
-      {
-        label: 'Potencia',
-        value: '120W (80+40)'
-      },
-      {
-        label: 'Audio',
-        value: 'Dolby Atmos'
-      },
-      {
-        label: 'Conectividad',
-        value: 'Wi-Fi / BT 5.2'
-      },
-      {
-        label: 'Respuesta',
-        value: '40Hz – 20kHz'
-      },
-      {
-        label: 'Control',
-        value: 'App + Voz'
-      }
-    ],
-    image: 'assets/images/bocina.svg',
-    images: [
-      'assets/images/bocina.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p008',
-    name: 'Hub Smart Home WiFi 6 + Zigbee',
-    category: 'Tecnología Hogar',
-    categorySlug: 'tecnologia-hogar',
-    price: 89990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Central inteligente para hogar con WiFi 6 tri-banda, Zigbee 3.0, Z-Wave y Matter. Compatible con más de 5000 dispositivos IoT.',
-    specs: [
-      {
-        label: 'WiFi',
-        value: 'WiFi 6 (AX)'
-      },
-      {
-        label: 'Protocolos',
-        value: 'Zigbee / Z-Wave / Matter'
-      },
-      {
-        label: 'Dispositivos',
-        value: '+5000 compatibles'
-      },
-      {
-        label: 'App',
-        value: 'iOS + Android'
-      },
-      {
-        label: 'Voz',
-        value: 'Alexa / Google'
-      }
-    ],
-    image: 'assets/images/hub.svg',
-    images: [
-      'assets/images/hub.svg'
-    ],
-    featured: false,
     isNew: true,
     inStock: true
   },
@@ -409,126 +249,6 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
-    id: 'p011',
-    name: 'Drone 4K Pro con Gimbal 3 Ejes',
-    category: 'Gadgets',
-    categorySlug: 'gadgets',
-    price: 399990,
-    priceOld: 499990,
-    badge: 'import',
-    badgeLabel: 'Exclusivo',
-    description: 'Drone plegable con cámara 4K/60fps, gimbal de 3 ejes, autonomía 40 min, alcance 10km, evitación de obstáculos omnidireccional y modos de vuelo inteligentes.',
-    specs: [
-      {
-        label: 'Cámara',
-        value: '4K 60fps / 48MP'
-      },
-      {
-        label: 'Gimbal',
-        value: '3 ejes'
-      },
-      {
-        label: 'Autonomía',
-        value: '40 minutos'
-      },
-      {
-        label: 'Alcance',
-        value: '10 km'
-      },
-      {
-        label: 'Peso',
-        value: '249 g'
-      }
-    ],
-    image: 'assets/images/drone.svg',
-    images: [
-      'assets/images/drone.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p012',
-    name: 'Tableta Gráfica Digital 10\'',
-    category: 'Gadgets',
-    categorySlug: 'gadgets',
-    price: 59990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Tableta gráfica con pantalla LCD monocolor de 10\', lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
-    specs: [
-      {
-        label: 'Área activa',
-        value: '10 × 6.25\''
-      },
-      {
-        label: 'Precisión',
-        value: '8192 niveles'
-      },
-      {
-        label: 'Resolución',
-        value: '5080 LPI'
-      },
-      {
-        label: 'Lápiz',
-        value: 'Sin batería'
-      },
-      {
-        label: 'Compatibilidad',
-        value: 'Win / Mac / Android'
-      }
-    ],
-    image: 'assets/images/tableta.svg',
-    images: [
-      'assets/images/tableta.svg'
-    ],
-    featured: false,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p013',
-    name: 'Secador Iónico Profesional 2400W',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 69990,
-    priceOld: 89990,
-    badge: 'hot',
-    badgeLabel: 'Popular',
-    description: 'Secador profesional con tecnología iónica y cerámica, motor DC de alta velocidad, difusor y concentrador incluidos, función frío y 3 velocidades.',
-    specs: [
-      {
-        label: 'Potencia',
-        value: '2400W'
-      },
-      {
-        label: 'Tecnología',
-        value: 'Iónico + Cerámico'
-      },
-      {
-        label: 'Velocidades',
-        value: '3'
-      },
-      {
-        label: 'Temperaturas',
-        value: '3 + frío'
-      },
-      {
-        label: 'Cable',
-        value: '3 metros'
-      }
-    ],
-    image: 'assets/images/secador.svg',
-    images: [
-      'assets/images/secador.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
     id: 'p014',
     name: 'Masajeador Facial LED + EMS',
     category: 'Belleza',
@@ -565,86 +285,6 @@ const PRODUCTS_DATA = [
       'assets/images/masajeador.svg'
     ],
     featured: true,
-    isNew: true,
-    inStock: true
-  },
-  {
-    id: 'p015',
-    name: 'Plancha Alisadora Titanio 450°F',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 44990,
-    priceOld: 59990,
-    badge: null,
-    badgeLabel: null,
-    description: 'Plancha profesional con placas de titanio flotantes, calentamiento en 15 segundos, pantalla LCD, ajuste 150–230°C y apagado automático.',
-    specs: [
-      {
-        label: 'Placas',
-        value: 'Titanio flotante'
-      },
-      {
-        label: 'Temperatura',
-        value: '150–230°C'
-      },
-      {
-        label: 'Calentamiento',
-        value: '15 segundos'
-      },
-      {
-        label: 'Display',
-        value: 'LCD digital'
-      },
-      {
-        label: 'Seguridad',
-        value: 'Auto apagado 30 min'
-      }
-    ],
-    image: 'assets/images/plancha.svg',
-    images: [
-      'assets/images/plancha.svg'
-    ],
-    featured: false,
-    isNew: false,
-    inStock: true
-  },
-  {
-    id: 'p016',
-    name: 'Rizador Automático Inteligente',
-    category: 'Belleza',
-    categorySlug: 'belleza',
-    price: 54990,
-    priceOld: null,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'Rizador automático con cámara de cerámica, motor rotacional bidireccional, timer ajustable y 6 tamaños de rizo. Calentamiento en 10 segundos.',
-    specs: [
-      {
-        label: 'Barril',
-        value: 'Cerámica 32mm'
-      },
-      {
-        label: 'Temperatura',
-        value: '130–230°C'
-      },
-      {
-        label: 'Timer',
-        value: '8–18 seg.'
-      },
-      {
-        label: 'Dirección',
-        value: 'Bidireccional auto'
-      },
-      {
-        label: 'Calentamiento',
-        value: '10 segundos'
-      }
-    ],
-    image: 'assets/images/rizador.svg',
-    images: [
-      'assets/images/rizador.svg'
-    ],
-    featured: false,
     isNew: true,
     inStock: true
   },
@@ -729,6 +369,185 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
+    id: 'p020',
+    name: 'AFEITADORA KEMEI TX10',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 29900,
+    priceOld: 35900,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'AFEITADORA KEMEI TX10\nBOLSILLO\nUSB TIPO C',
+    specs: [],
+    image: 'assets/images/placeholder.svg',
+    images: [
+      'assets/images/placeholder.svg'
+    ],
+    featured: true,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p008',
+    name: 'Hub Smart Home WiFi 6 + Zigbee',
+    category: 'Tecnología Hogar',
+    categorySlug: 'tecnologia-hogar',
+    price: 89990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Central inteligente para hogar con WiFi 6 tri-banda, Zigbee 3.0, Z-Wave y Matter. Compatible con más de 5000 dispositivos IoT.',
+    specs: [
+      {
+        label: 'WiFi',
+        value: 'WiFi 6 (AX)'
+      },
+      {
+        label: 'Protocolos',
+        value: 'Zigbee / Z-Wave / Matter'
+      },
+      {
+        label: 'Dispositivos',
+        value: '+5000 compatibles'
+      },
+      {
+        label: 'App',
+        value: 'iOS + Android'
+      },
+      {
+        label: 'Voz',
+        value: 'Alexa / Google'
+      }
+    ],
+    image: 'assets/images/hub.svg',
+    images: [
+      'assets/images/hub.svg'
+    ],
+    featured: false,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p003',
+    name: 'Lavadora Carga Frontal 10kg Inverter',
+    category: 'Electrodomésticos',
+    categorySlug: 'electrodomesticos',
+    price: 449990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Motor Inverter Direct Drive, 14 programas de lavado, vapor antialérgico, pantalla táctil LED y control por app. Clase A+++.',
+    specs: [
+      {
+        label: 'Capacidad',
+        value: '10 kg'
+      },
+      {
+        label: 'Centrifugado',
+        value: '1400 RPM'
+      },
+      {
+        label: 'Eficiencia',
+        value: 'A+++'
+      },
+      {
+        label: 'Programas',
+        value: '14'
+      },
+      {
+        label: 'Control',
+        value: 'App + Panel'
+      }
+    ],
+    image: 'assets/images/lavadora.svg',
+    images: [
+      'assets/images/lavadora.svg'
+    ],
+    featured: false,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p012',
+    name: 'Tableta Gráfica Digital 10\'',
+    category: 'Gadgets',
+    categorySlug: 'gadgets',
+    price: 59990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Tableta gráfica con pantalla LCD monocolor de 10\', lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
+    specs: [
+      {
+        label: 'Área activa',
+        value: '10 × 6.25\''
+      },
+      {
+        label: 'Precisión',
+        value: '8192 niveles'
+      },
+      {
+        label: 'Resolución',
+        value: '5080 LPI'
+      },
+      {
+        label: 'Lápiz',
+        value: 'Sin batería'
+      },
+      {
+        label: 'Compatibilidad',
+        value: 'Win / Mac / Android'
+      }
+    ],
+    image: 'assets/images/tableta.svg',
+    images: [
+      'assets/images/tableta.svg'
+    ],
+    featured: false,
+    isNew: true,
+    inStock: true
+  },
+  {
+    id: 'p016',
+    name: 'Rizador Automático Inteligente',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 54990,
+    priceOld: null,
+    badge: 'new',
+    badgeLabel: 'Nuevo',
+    description: 'Rizador automático con cámara de cerámica, motor rotacional bidireccional, timer ajustable y 6 tamaños de rizo. Calentamiento en 10 segundos.',
+    specs: [
+      {
+        label: 'Barril',
+        value: 'Cerámica 32mm'
+      },
+      {
+        label: 'Temperatura',
+        value: '130–230°C'
+      },
+      {
+        label: 'Timer',
+        value: '8–18 seg.'
+      },
+      {
+        label: 'Dirección',
+        value: 'Bidireccional auto'
+      },
+      {
+        label: 'Calentamiento',
+        value: '10 segundos'
+      }
+    ],
+    image: 'assets/images/rizador.svg',
+    images: [
+      'assets/images/rizador.svg'
+    ],
+    featured: false,
+    isNew: true,
+    inStock: true
+  },
+  {
     id: 'p019',
     name: 'Dron para Niños con Cámara HD 720p',
     category: 'Juguetes',
@@ -769,22 +588,203 @@ const PRODUCTS_DATA = [
     inStock: true
   },
   {
-    id: 'p020',
-    name: 'AFEITADORA KEMEI TX10',
+    id: 'p004',
+    name: 'Frigorífico Side by Side 600L',
+    category: 'Electrodomésticos',
+    categorySlug: 'electrodomesticos',
+    price: 899990,
+    priceOld: 1099990,
+    badge: 'import',
+    badgeLabel: 'Importado',
+    description: 'Refrigerador side by side con dispensador de agua y hielo, panel táctil, sistema No Frost total, zona freshzone y display interior.',
+    specs: [
+      {
+        label: 'Capacidad',
+        value: '600 L total'
+      },
+      {
+        label: 'Refrigerador',
+        value: '370 L'
+      },
+      {
+        label: 'Congelador',
+        value: '230 L'
+      },
+      {
+        label: 'Eficiencia',
+        value: 'A+'
+      },
+      {
+        label: 'Control',
+        value: 'Panel LCD'
+      }
+    ],
+    image: 'assets/images/frigorifico.svg',
+    images: [
+      'assets/images/frigorifico.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p007',
+    name: 'Bocina Inteligente Subwoofer 2.1',
+    category: 'Tecnología Hogar',
+    categorySlug: 'tecnologia-hogar',
+    price: 159990,
+    priceOld: 199990,
+    badge: null,
+    badgeLabel: null,
+    description: 'Sistema de audio 2.1 con subwoofer inalámbrico, 120W totales, Dolby Atmos, Wi-Fi, Bluetooth 5.2 y control por app o voz.',
+    specs: [
+      {
+        label: 'Potencia',
+        value: '120W (80+40)'
+      },
+      {
+        label: 'Audio',
+        value: 'Dolby Atmos'
+      },
+      {
+        label: 'Conectividad',
+        value: 'Wi-Fi / BT 5.2'
+      },
+      {
+        label: 'Respuesta',
+        value: '40Hz – 20kHz'
+      },
+      {
+        label: 'Control',
+        value: 'App + Voz'
+      }
+    ],
+    image: 'assets/images/bocina.svg',
+    images: [
+      'assets/images/bocina.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p011',
+    name: 'Drone 4K Pro con Gimbal 3 Ejes',
+    category: 'Gadgets',
+    categorySlug: 'gadgets',
+    price: 399990,
+    priceOld: 499990,
+    badge: 'import',
+    badgeLabel: 'Exclusivo',
+    description: 'Drone plegable con cámara 4K/60fps, gimbal de 3 ejes, autonomía 40 min, alcance 10km, evitación de obstáculos omnidireccional y modos de vuelo inteligentes.',
+    specs: [
+      {
+        label: 'Cámara',
+        value: '4K 60fps / 48MP'
+      },
+      {
+        label: 'Gimbal',
+        value: '3 ejes'
+      },
+      {
+        label: 'Autonomía',
+        value: '40 minutos'
+      },
+      {
+        label: 'Alcance',
+        value: '10 km'
+      },
+      {
+        label: 'Peso',
+        value: '249 g'
+      }
+    ],
+    image: 'assets/images/drone.svg',
+    images: [
+      'assets/images/drone.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p013',
+    name: 'Secador Iónico Profesional 2400W',
     category: 'Belleza',
     categorySlug: 'belleza',
-    price: 29900,
-    priceOld: 35900,
-    badge: 'new',
-    badgeLabel: 'Nuevo',
-    description: 'AFEITADORA KEMEI TX10\nBOLSILLO\nUSB TIPO C',
-    specs: [],
-    image: 'assets/images/placeholder.svg',
-    images: [
-      'assets/images/placeholder.svg'
+    price: 69990,
+    priceOld: 89990,
+    badge: 'hot',
+    badgeLabel: 'Popular',
+    description: 'Secador profesional con tecnología iónica y cerámica, motor DC de alta velocidad, difusor y concentrador incluidos, función frío y 3 velocidades.',
+    specs: [
+      {
+        label: 'Potencia',
+        value: '2400W'
+      },
+      {
+        label: 'Tecnología',
+        value: 'Iónico + Cerámico'
+      },
+      {
+        label: 'Velocidades',
+        value: '3'
+      },
+      {
+        label: 'Temperaturas',
+        value: '3 + frío'
+      },
+      {
+        label: 'Cable',
+        value: '3 metros'
+      }
     ],
-    featured: true,
-    isNew: true,
+    image: 'assets/images/secador.svg',
+    images: [
+      'assets/images/secador.svg'
+    ],
+    featured: false,
+    isNew: false,
+    inStock: true
+  },
+  {
+    id: 'p015',
+    name: 'Plancha Alisadora Titanio 450°F',
+    category: 'Belleza',
+    categorySlug: 'belleza',
+    price: 44990,
+    priceOld: 59990,
+    badge: null,
+    badgeLabel: null,
+    description: 'Plancha profesional con placas de titanio flotantes, calentamiento en 15 segundos, pantalla LCD, ajuste 150–230°C y apagado automático.',
+    specs: [
+      {
+        label: 'Placas',
+        value: 'Titanio flotante'
+      },
+      {
+        label: 'Temperatura',
+        value: '150–230°C'
+      },
+      {
+        label: 'Calentamiento',
+        value: '15 segundos'
+      },
+      {
+        label: 'Display',
+        value: 'LCD digital'
+      },
+      {
+        label: 'Seguridad',
+        value: 'Auto apagado 30 min'
+      }
+    ],
+    image: 'assets/images/plancha.svg',
+    images: [
+      'assets/images/plancha.svg'
+    ],
+    featured: false,
+    isNew: false,
     inStock: true
   }
 ];
