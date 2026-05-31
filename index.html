@@ -885,25 +885,36 @@
 })();
 </script>
 <script>
-// Ticker — RAF loop, no CSS animation, seamless on all devices
+// Ticker — RAF loop seamless
 window.addEventListener('load', function(){
   var track = document.querySelector('.ticker-track');
   if (!track) return;
+  var speed = window.innerWidth <= 768 ? 2.2 : 0.6;
   var pos = 0;
   var halfW = 0;
-  var speed = window.innerWidth <= 768 ? 1.8 : 0.6; // px per frame
 
-  function measure() { halfW = track.scrollWidth / 2; }
-  measure();
-  window.addEventListener('resize', measure);
-
-  function tick() {
-    pos += speed;
-    if (halfW > 0 && pos >= halfW) pos -= halfW;
-    track.style.transform = 'translateX(-' + pos.toFixed(2) + 'px)';
-    requestAnimationFrame(tick);
+  function measure() {
+    // Mide usando los items individuales (confiable en Safari móvil)
+    var items = track.querySelectorAll('.ticker-item');
+    var n = items.length; // 16 items (8 x2)
+    if (!n) return;
+    var itemW = 0;
+    items.forEach(function(it){ itemW += it.getBoundingClientRect().width; });
+    var gap = 48;
+    halfW = itemW / 2 + gap * (n / 2);
   }
-  requestAnimationFrame(tick);
+
+  setTimeout(function(){
+    measure();
+    window.addEventListener('resize', measure);
+    function tick() {
+      pos += speed;
+      if (halfW > 0 && pos >= halfW) pos -= halfW;
+      track.style.transform = 'translateX(-' + pos.toFixed(2) + 'px)';
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }, 200);
 });
 </script>
 </body>
