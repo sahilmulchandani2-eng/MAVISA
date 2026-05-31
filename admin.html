@@ -168,18 +168,28 @@
 
     /* Drag rows */
     .drag-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px; background: var(--white);
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; background: var(--white);
       border: 1.5px solid var(--border); border-radius: var(--r-sm);
-      cursor: grab; user-select: none; transition: box-shadow .15s, opacity .15s;
+      cursor: grab; user-select: none; transition: box-shadow .15s, opacity .15s, border-color .15s;
     }
+    .drag-row:hover { border-color: rgba(28,52,97,0.3); box-shadow: 0 2px 8px rgba(28,52,97,0.08); }
     .drag-row:active { cursor: grabbing; }
-    .drag-row.dragging { opacity: .4; }
+    .drag-row.dragging { opacity: .35; }
     .drag-row.drag-over { border-color: var(--navy); box-shadow: 0 0 0 2px rgba(28,52,97,0.15); }
-    .drag-handle { font-size: 1.1rem; color: var(--text-3); flex-shrink:0; }
-    .drag-img { width:40px; height:40px; object-fit:contain; border-radius:6px; background:var(--cream); flex-shrink:0; }
-    .drag-name { flex:1; font-size:.88rem; font-weight:600; color:var(--text); }
-    .drag-cat { font-size:.75rem; color:var(--text-3); }
+    .drag-handle { font-size: 1rem; color: var(--text-3); flex-shrink:0; }
+    .drag-img { width:36px; height:36px; object-fit:contain; border-radius:6px; background:var(--cream); flex-shrink:0; }
+    .drag-name { flex:1; font-size:.83rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .drag-cat { font-size:.72rem; color:var(--text-3); }
+    .drag-add { background:none; border:none; cursor:pointer; color:var(--navy); font-size:1.1rem; padding:2px 4px; border-radius:4px; transition:background .15s; flex-shrink:0; }
+    .drag-add:hover { background:rgba(28,52,97,0.08); }
+    .drag-remove { background:none; border:none; cursor:pointer; color:var(--red); font-size:.9rem; padding:2px 6px; border-radius:4px; transition:background .15s; flex-shrink:0; }
+    .drag-remove:hover { background:var(--red-dim); }
+    .drop-hint { text-align:center; padding:28px 16px; color:var(--text-3); font-size:.82rem; border:2px dashed var(--border); border-radius:var(--r-sm); }
+    .drop-active { background:rgba(28,52,97,0.04) !important; border-color:rgba(28,52,97,0.2); }
+    .pool-row { display:flex; align-items:center; gap:10px; padding:7px 10px; border-radius:var(--r-sm); cursor:grab; transition:background .12s; }
+    .pool-row:hover { background:rgba(28,52,97,0.05); }
+    .pool-row.in-zone { opacity:.45; cursor:default; pointer-events:none; }
 
     /* Products grid */
     #products-grid {
@@ -451,22 +461,55 @@
       <div class="topbar" style="margin-bottom:24px;">
         <div>
           <div class="topbar-title">Ordenar portada</div>
-          <div class="topbar-sub">Arrastra los productos para cambiar el orden en el sitio</div>
+          <div class="topbar-sub">Busca un producto y arrástralo al panel, o usa el botón +</div>
         </div>
         <div style="display:flex;gap:10px;">
           <button class="btn btn-primary" onclick="saveOrder()" style="background:var(--red);border-color:var(--red);">💾 Guardar orden</button>
           <button class="btn btn-primary" onclick="openPublishModal()">🚀 Publicar al sitio</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-        <div class="card">
-          <div class="card-header"><div class="card-title">⭐ Los más populares</div><div style="font-size:.8rem;color:var(--text-3);">Máx. 8 en el sitio</div></div>
-          <div id="order-featured" style="display:flex;flex-direction:column;gap:8px;padding:8px 0;min-height:60px;"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start;">
+
+        <!-- COL 1: Todos los productos -->
+        <div class="card" style="position:sticky;top:20px;">
+          <div class="card-header" style="flex-direction:column;align-items:stretch;gap:10px;">
+            <div class="card-title">📦 Todos los productos</div>
+            <input type="text" class="search-input" style="width:100%;" placeholder="🔍 Buscar producto..." oninput="filterPool(this.value)" id="pool-search">
+          </div>
+          <div id="product-pool" style="display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding:4px 0;"></div>
         </div>
+
+        <!-- COL 2: Más populares -->
         <div class="card">
-          <div class="card-header"><div class="card-title">🆕 Lo último en llegar</div><div style="font-size:.8rem;color:var(--text-3);">Máx. 4 en el sitio</div></div>
-          <div id="order-new" style="display:flex;flex-direction:column;gap:8px;padding:8px 0;min-height:60px;"></div>
+          <div class="card-header">
+            <div class="card-title">⭐ Más populares</div>
+            <div style="font-size:.8rem;color:var(--text-3);">Máx. 8 · <span id="featured-count">0</span>/8</div>
+          </div>
+          <div id="order-featured"
+            style="display:flex;flex-direction:column;gap:6px;min-height:120px;padding:8px 0;"
+            ondragover="event.preventDefault();this.classList.add('drop-active')"
+            ondragleave="this.classList.remove('drop-active')"
+            ondrop="dropToZone(event,'featured')">
+            <div class="drop-hint" id="hint-featured">Arrastra productos aquí</div>
+          </div>
         </div>
+
+        <!-- COL 3: Últimos en llegar -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🆕 Últimos en llegar</div>
+            <div style="font-size:.8rem;color:var(--text-3);">Máx. 4 · <span id="new-count">0</span>/4</div>
+          </div>
+          <div id="order-new"
+            style="display:flex;flex-direction:column;gap:6px;min-height:120px;padding:8px 0;"
+            ondragover="event.preventDefault();this.classList.add('drop-active')"
+            ondragleave="this.classList.remove('drop-active')"
+            ondrop="dropToZone(event,'new')">
+            <div class="drop-hint" id="hint-new">Arrastra productos aquí</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1049,66 +1092,164 @@ function showSection(name) {
   if (name === 'order') renderOrderSection();
 }
 
-/* ── DRAG & DROP ORDER ───────────────────────────────────── */
+/* ── ORDER SECTION ───────────────────────────────────────── */
 let dragSrc = null;
+let dragSrcZone = null; // 'pool' | 'featured' | 'new'
+let poolQuery = '';
 
 function renderOrderSection() {
-  renderDragList('order-featured', products.filter(p => p.featured));
-  renderDragList('order-new',      products.filter(p => p.isNew));
+  renderPool();
+  renderZone('featured');
+  renderZone('new');
 }
 
-function renderDragList(containerId, items) {
-  const container = $(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-  if (!items.length) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-3);font-size:.85rem;">No hay productos en esta sección.<br>Márcalos desde Productos.</div>';
-    return;
-  }
-  items.forEach(p => {
+function filterPool(q) { poolQuery = q.toLowerCase(); renderPool(); }
+
+function renderPool() {
+  const container = $('product-pool');
+  const inFeatured = new Set([...$('order-featured').querySelectorAll('[data-id]')].map(r => r.dataset.id));
+  const inNew      = new Set([...$('order-new').querySelectorAll('[data-id]')].map(r => r.dataset.id));
+  const list = products.filter(p => {
+    if (poolQuery && !p.name.toLowerCase().includes(poolQuery) && !p.category.toLowerCase().includes(poolQuery)) return false;
+    return true;
+  });
+  container.innerHTML = list.length ? '' : '<div style="text-align:center;padding:20px;color:var(--text-3);font-size:.82rem;">Sin resultados</div>';
+  list.forEach(p => {
+    const inZone = inFeatured.has(p.id) || inNew.has(p.id);
     const row = document.createElement('div');
-    row.className = 'drag-row';
-    row.draggable = true;
+    row.className = 'pool-row' + (inZone ? ' in-zone' : '');
+    row.draggable = !inZone;
     row.dataset.id = p.id;
     row.innerHTML = `
-      <span class="drag-handle">☰</span>
       <img class="drag-img" src="${p.image}" onerror="this.style.opacity='.2'">
       <div style="flex:1;min-width:0;">
         <div class="drag-name">${p.name}</div>
         <div class="drag-cat">${p.category}</div>
       </div>
+      ${!inZone ? `
+        <button class="drag-add" title="Agregar a Populares" onclick="quickAdd('${p.id}','featured')">⭐</button>
+        <button class="drag-add" title="Agregar a Nuevos" onclick="quickAdd('${p.id}','new')" style="font-size:.95rem;">🆕</button>
+      ` : '<span style="font-size:.75rem;color:var(--text-3);padding:0 4px;">✓ agregado</span>'}
     `;
-    row.addEventListener('dragstart', e => { dragSrc = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-    row.addEventListener('dragend',   () => { dragSrc = null; row.classList.remove('dragging'); container.querySelectorAll('.drag-row').forEach(r => r.classList.remove('drag-over')); });
-    row.addEventListener('dragover',  e => { e.preventDefault(); if (dragSrc && dragSrc !== row) row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-    row.addEventListener('drop', e => {
-      e.preventDefault();
-      row.classList.remove('drag-over');
-      if (!dragSrc || dragSrc === row) return;
-      const rows = [...container.querySelectorAll('.drag-row')];
-      const srcIdx = rows.indexOf(dragSrc);
-      const tgtIdx = rows.indexOf(row);
-      if (srcIdx < tgtIdx) container.insertBefore(dragSrc, row.nextSibling);
-      else container.insertBefore(dragSrc, row);
-    });
+    if (!inZone) {
+      row.addEventListener('dragstart', e => { dragSrc = p.id; dragSrcZone = 'pool'; row.classList.add('dragging'); e.dataTransfer.setData('text/plain', p.id); });
+      row.addEventListener('dragend', () => row.classList.remove('dragging'));
+    }
     container.appendChild(row);
   });
 }
 
+function renderZone(zone) {
+  const container = $('order-' + zone);
+  const hint = $('hint-' + zone);
+  const rows = [...container.querySelectorAll('.drag-row')];
+  const ids = rows.map(r => r.dataset.id);
+  const items = ids.map(id => products.find(p => p.id === id)).filter(Boolean);
+
+  // Limpiar rows existentes
+  rows.forEach(r => r.remove());
+
+  if (hint) hint.style.display = items.length ? 'none' : 'block';
+  $(`${zone === 'featured' ? 'featured' : 'new'}-count`).textContent = items.length;
+
+  items.forEach(p => {
+    container.insertBefore(makeDragRow(p, zone), hint || null);
+  });
+}
+
+function makeDragRow(p, zone) {
+  const row = document.createElement('div');
+  row.className = 'drag-row';
+  row.draggable = true;
+  row.dataset.id = p.id;
+  row.innerHTML = `
+    <span class="drag-handle">☰</span>
+    <img class="drag-img" src="${p.image}" onerror="this.style.opacity='.2'">
+    <div style="flex:1;min-width:0;">
+      <div class="drag-name">${p.name}</div>
+      <div class="drag-cat">${p.category}</div>
+    </div>
+    <button class="drag-remove" onclick="removeFromZone('${p.id}','${zone}')" title="Quitar">✕</button>
+  `;
+  row.addEventListener('dragstart', e => { dragSrc = p.id; dragSrcZone = zone; row.classList.add('dragging'); e.dataTransfer.setData('text/plain', p.id); });
+  row.addEventListener('dragend',   () => { row.classList.remove('dragging'); });
+  row.addEventListener('dragover',  e => { e.preventDefault(); if (dragSrcZone === zone) row.classList.add('drag-over'); });
+  row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+  row.addEventListener('drop', e => {
+    e.preventDefault();
+    row.classList.remove('drag-over');
+    if (dragSrcZone !== zone || !dragSrc || dragSrc === p.id) return;
+    const container = $('order-' + zone);
+    const srcRow = container.querySelector(`[data-id="${dragSrc}"]`);
+    if (!srcRow) return;
+    const rows = [...container.querySelectorAll('.drag-row')];
+    const srcIdx = rows.indexOf(srcRow);
+    const tgtIdx = rows.indexOf(row);
+    if (srcIdx < tgtIdx) container.insertBefore(srcRow, row.nextSibling);
+    else container.insertBefore(srcRow, row);
+  });
+  return row;
+}
+
+function dropToZone(e, zone) {
+  e.preventDefault();
+  $('order-' + zone).classList.remove('drop-active');
+  const id = e.dataTransfer.getData('text/plain') || dragSrc;
+  if (!id) return;
+  if (dragSrcZone === zone) return; // ya está en esta zona
+  const limits = { featured: 8, new: 4 };
+  const current = $('order-' + zone).querySelectorAll('.drag-row').length;
+  if (current >= limits[zone]) { showToast(`⚠️ Máximo ${limits[zone]} productos en esta sección`, 'error'); return; }
+  // Verificar que no esté ya
+  if ($('order-' + zone).querySelector(`[data-id="${id}"]`)) return;
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const hint = $('hint-' + zone);
+  $('order-' + zone).insertBefore(makeDragRow(p, zone), hint);
+  hint.style.display = 'none';
+  $(`${zone === 'featured' ? 'featured' : 'new'}-count`).textContent = $('order-' + zone).querySelectorAll('.drag-row').length;
+  renderPool();
+}
+
+function quickAdd(id, zone) {
+  const limits = { featured: 8, new: 4 };
+  const current = $('order-' + zone).querySelectorAll('.drag-row').length;
+  if (current >= limits[zone]) { showToast(`⚠️ Máximo ${limits[zone]} productos`, 'error'); return; }
+  if ($('order-' + zone).querySelector(`[data-id="${id}"]`)) return;
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const hint = $('hint-' + zone);
+  $('order-' + zone).insertBefore(makeDragRow(p, zone), hint);
+  hint.style.display = 'none';
+  $(`${zone === 'featured' ? 'featured' : 'new'}-count`).textContent = $('order-' + zone).querySelectorAll('.drag-row').length;
+  renderPool();
+}
+
+function removeFromZone(id, zone) {
+  const row = $('order-' + zone).querySelector(`[data-id="${id}"]`);
+  if (row) row.remove();
+  const remaining = $('order-' + zone).querySelectorAll('.drag-row').length;
+  $(`${zone === 'featured' ? 'featured' : 'new'}-count`).textContent = remaining;
+  if (!remaining) $('hint-' + zone).style.display = 'block';
+  renderPool();
+}
+
 function saveOrder() {
-  // Lee el nuevo orden de ambas listas y reordena products[]
   const featuredIds = [...$('order-featured').querySelectorAll('.drag-row')].map(r => r.dataset.id);
   const newIds      = [...$('order-new').querySelectorAll('.drag-row')].map(r => r.dataset.id);
 
-  // Reordena featured: primero los featured en el nuevo orden, luego el resto
+  // Actualizar flags en products[]
+  products.forEach(p => {
+    p.featured = featuredIds.includes(p.id);
+    p.isNew    = newIds.includes(p.id);
+  });
+
+  // Reordenar: featured primero, luego new, luego el resto
   const featuredSet = new Set(featuredIds);
   const newSet      = new Set(newIds);
-  const rest        = products.filter(p => !featuredSet.has(p.id) && !newSet.has(p.id));
   const featuredOrdered = featuredIds.map(id => products.find(p => p.id === id)).filter(Boolean);
   const newOrdered      = newIds.map(id => products.find(p => p.id === id)).filter(Boolean);
-
-  // Merge: featured+new primero (por si un producto está en ambos), luego el resto
+  const rest            = products.filter(p => !featuredSet.has(p.id) && !newSet.has(p.id));
   const seen = new Set();
   products = [];
   [...featuredOrdered, ...newOrdered, ...rest].forEach(p => {
