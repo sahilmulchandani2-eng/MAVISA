@@ -2122,7 +2122,7 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Hero badge/label */
   .hero-grid .section-label {
-    font-size: 0.72rem !important;
+    font-size: 0.6rem !important;
     padding: 8px 14px !important;
     text-align: center;
   }
