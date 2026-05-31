@@ -365,6 +365,54 @@
       word-break: break-all; line-height: 1.6; margin-bottom: 12px;
     }
 
+    /* ── Category filter tabs ─────────────────────────── */
+    .cat-filters {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+    .cat-tab {
+      padding: 6px 14px; border-radius: 99px;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--white); color: var(--text-2);
+      transition: all .15s; white-space: nowrap;
+    }
+    .cat-tab:hover { border-color: var(--navy); color: var(--navy); }
+    .cat-tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    /* ── Product preview card (front-end look) ────────── */
+    .preview-card {
+      background: var(--white); border-radius: 14px;
+      overflow: hidden; box-shadow: 0 8px 32px rgba(28,52,97,0.14);
+      max-width: 280px; margin: 0 auto;
+    }
+    .preview-img-wrap {
+      background: var(--cream); height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .preview-img-wrap img { width:100%; height:100%; object-fit:contain; padding:16px; }
+    .preview-img-wrap .no-img-ph { font-size:3rem; opacity:.25; }
+    .preview-badge {
+      position:absolute; top:10px; left:10px;
+      font-size:0.65rem; font-weight:700; text-transform:uppercase;
+      padding:3px 10px; border-radius:99px; letter-spacing:.05em;
+    }
+    .preview-body { padding: 16px; }
+    .preview-cat { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--red); margin-bottom:4px; }
+    .preview-name { font-size:.95rem; font-weight:700; color:var(--navy); line-height:1.3; margin-bottom:6px; }
+    .preview-spec { font-size:.78rem; color:var(--text-2); margin-bottom:12px; min-height:18px; }
+    .preview-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .preview-price { font-size:1.1rem; font-weight:800; color:var(--navy); }
+    .preview-price-old { font-size:.78rem; color:var(--text-3); text-decoration:line-through; display:block; }
+    .preview-btn {
+      width:36px; height:36px; border-radius:8px;
+      background:var(--navy); color:#fff; border:none;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; flex-shrink:0;
+    }
+
     /* Responsive */
     @media (max-width: 900px) {
       .sidebar { width: 200px; }
@@ -451,6 +499,20 @@
             <button class="btn btn-export btn-sm" onclick="openExport()">💾 Exportar</button>
             <button class="btn btn-primary btn-sm" onclick="openPublishModal()" style="background:var(--red);border-color:var(--red);">🚀 Publicar al sitio</button>
           </div>
+        </div>
+        <!-- Category filter tabs -->
+        <div class="cat-filters" id="cat-filters">
+          <button class="cat-tab active" data-slug="all" onclick="setCatFilter(this)">Todos</button>
+          <button class="cat-tab" data-slug="belleza" onclick="setCatFilter(this)">💄 Belleza</button>
+          <button class="cat-tab" data-slug="mascotas" onclick="setCatFilter(this)">🐾 Mascotas</button>
+          <button class="cat-tab" data-slug="deportes-hobbies" onclick="setCatFilter(this)">⚽ Deportes</button>
+          <button class="cat-tab" data-slug="hogar-cocina" onclick="setCatFilter(this)">🏠 Hogar</button>
+          <button class="cat-tab" data-slug="salud-medicos" onclick="setCatFilter(this)">🏥 Salud</button>
+          <button class="cat-tab" data-slug="maquinas-industriales" onclick="setCatFilter(this)">⚙️ Maquinaria</button>
+          <button class="cat-tab" data-slug="juguetes" onclick="setCatFilter(this)">🧸 Juguetes</button>
+          <button class="cat-tab" data-slug="electrodomesticos" onclick="setCatFilter(this)">🔌 Electrodomésticos</button>
+          <button class="cat-tab" data-slug="tecnologia-hogar" onclick="setCatFilter(this)">📱 Tec. Hogar</button>
+          <button class="cat-tab" data-slug="gadgets" onclick="setCatFilter(this)">🎧 Gadgets</button>
         </div>
         <div id="products-grid"></div>
       </div>
@@ -621,6 +683,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('product-modal')">Cancelar</button>
+      <button class="btn btn-ghost" onclick="openPreview()" style="border-color:var(--navy);color:var(--navy);">👁 Vista previa</button>
       <button class="btn btn-primary" onclick="saveProduct()">💾 Guardar producto</button>
     </div>
   </div>
@@ -690,6 +753,27 @@
   </div>
 </div>
 
+<!-- ── PREVIEW MODAL ─────────────────────────────────────────── -->
+<div class="overlay" id="preview-modal" onclick="if(event.target===this)closeModal('preview-modal')">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header">
+      <div class="modal-title">👁 Así se verá en el sitio</div>
+      <div class="modal-close" onclick="closeModal('preview-modal')">✕</div>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:20px;">
+      <p style="font-size:.82rem;color:var(--text-2);line-height:1.5;">
+        Vista previa de cómo aparecerá esta tarjeta en la página principal y el catálogo.
+      </p>
+      <div id="preview-card-wrap"></div>
+      <div id="preview-badges-row" style="display:flex;gap:8px;flex-wrap:wrap;font-size:.75rem;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('preview-modal')">Cerrar</button>
+      <button class="btn btn-primary" onclick="closeModal('preview-modal');saveProduct()">💾 Guardar producto</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── TOASTS ────────────────────────────────────────────────── -->
 <div class="toast-wrap" id="toast-wrap"></div>
 
@@ -703,6 +787,7 @@ const STORAGE_KEY = 'mavisa_admin_products';
 let products = [];
 let editingId = null;
 let searchQuery = '';
+let categoryFilter = 'all';
 
 /* ── HELPERS ─────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
@@ -750,7 +835,7 @@ function saveToStorage() {
 /* ── RENDER ──────────────────────────────────────────────── */
 function renderAll() {
   renderStats();
-  renderGrid(searchQuery);
+  renderGrid();
 }
 function renderStats() {
   const featured = products.filter(p => p.featured).length;
@@ -779,12 +864,21 @@ function renderStats() {
 
 function filterProducts(q) {
   searchQuery = q.toLowerCase();
-  renderGrid(searchQuery);
+  renderGrid();
 }
 
-function renderGrid(q = '') {
+function setCatFilter(btn) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  categoryFilter = btn.dataset.slug;
+  renderGrid();
+}
+
+function renderGrid() {
+  const q = searchQuery;
   const grid = $('products-grid');
   let list = products;
+  if (categoryFilter !== 'all') list = list.filter(p => p.categorySlug === categoryFilter);
   if (q) list = list.filter(p =>
     p.name.toLowerCase().includes(q) ||
     p.category.toLowerCase().includes(q)
@@ -1339,6 +1433,66 @@ function setPublishStatus(type, msg) {
   el.style.background = type === 'success' ? 'rgba(34,197,94,0.12)' : type === 'error' ? 'rgba(232,48,63,0.10)' : 'rgba(28,52,97,0.08)';
   el.style.color = type === 'success' ? '#15803d' : type === 'error' ? 'var(--red)' : 'var(--navy)';
   el.style.border = '1px solid ' + (type === 'success' ? 'rgba(34,197,94,0.3)' : type === 'error' ? 'rgba(232,48,63,0.2)' : 'rgba(28,52,97,0.15)');
+}
+
+/* ── PRODUCT PREVIEW ─────────────────────────────────────── */
+function openPreview() {
+  const name     = $('f-name').value.trim() || 'Nombre del producto';
+  const catVal   = $('f-category').value;
+  const category = catVal ? catVal.split('|')[0] : 'Categoría';
+  const price    = parseFloat($('f-price').value) || 0;
+  const priceOld = parseFloat($('f-price-old').value) || null;
+  const imageUrl = $('f-image').value.trim();
+  const badgeVal = $('f-badge').value;
+  const badge    = badgeVal ? badgeVal.split('|') : null;
+  const isFeatured = $('f-featured').checked;
+  const isNew    = $('f-new').checked;
+  const inStock  = $('f-stock').checked;
+
+  const specRows = [...document.querySelectorAll('.spec-row')];
+  const firstSpec = specRows.length
+    ? (specRows[0].querySelector('.spec-label').value + ': ' + specRows[0].querySelector('.spec-value').value)
+    : '';
+
+  const badgeColors = {
+    new:    { bg:'rgba(37,165,95,.15)',   color:'#25A55F' },
+    hot:    { bg:'rgba(232,48,63,.12)',   color:'#E8303F' },
+    sale:   { bg:'rgba(201,168,76,.15)', color:'#C9A84C' },
+    import: { bg:'rgba(28,52,97,.12)',    color:'#1C3461' },
+  };
+  const bc = badge ? (badgeColors[badge[0]] || {}) : {};
+
+  $('preview-card-wrap').innerHTML = `
+    <div class="preview-card">
+      <div class="preview-img-wrap">
+        ${badge ? `<span class="preview-badge" style="background:${bc.bg};color:${bc.color};">${badge[1]}</span>` : ''}
+        ${imageUrl
+          ? `<img src="${imageUrl}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="no-img-ph" style="display:none">📦</span>`
+          : `<span class="no-img-ph">📦</span>`}
+      </div>
+      <div class="preview-body">
+        <div class="preview-cat">${category}</div>
+        <div class="preview-name">${name}</div>
+        <div class="preview-spec">${firstSpec}</div>
+        <div class="preview-footer">
+          <div>
+            ${priceOld ? `<span class="preview-price-old">${fmt(priceOld)}</span>` : ''}
+            <span class="preview-price">${price ? fmt(price) : '$ —'}</span>
+          </div>
+          <div class="preview-btn">→</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const tags = [];
+  if (isFeatured) tags.push('<span style="background:rgba(28,52,97,.1);color:var(--navy);padding:4px 10px;border-radius:99px;">⭐ Destacado en inicio</span>');
+  if (isNew) tags.push('<span style="background:rgba(37,165,95,.12);color:#25A55F;padding:4px 10px;border-radius:99px;">🆕 Último en llegar</span>');
+  if (!inStock) tags.push('<span style="background:rgba(232,48,63,.1);color:var(--red);padding:4px 10px;border-radius:99px;">❌ Sin stock</span>');
+  $('preview-badges-row').innerHTML = tags.join('');
+
+  closeModal('product-modal');
+  openModal('preview-modal');
 }
 
 /* ── TOAST ───────────────────────────────────────────────── */
