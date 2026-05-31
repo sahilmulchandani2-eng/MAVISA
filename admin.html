@@ -420,6 +420,7 @@
         <div style="display:flex;gap:10px;align-items:center;">
           <input type="text" class="search-input" placeholder="🔍  Buscar producto…" oninput="filterProducts(this.value)">
           <button class="btn btn-export btn-sm" onclick="openExport()">💾 Exportar</button>
+          <button class="btn btn-primary btn-sm" onclick="openPublishModal()" style="background:var(--red);border-color:var(--red);">🚀 Publicar al sitio</button>
         </div>
       </div>
       <div id="products-grid"></div>
@@ -570,6 +571,33 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('export-modal')">Cerrar</button>
       <button class="btn btn-export" onclick="downloadCatalog()">⬇ Descargar catalog.js</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PUBLISH MODAL ─────────────────────────────────────────── -->
+<div class="overlay" id="publish-modal" onclick="if(event.target===this)closeModal('publish-modal')">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">🚀 Publicar al sitio</div>
+      <div class="modal-close" onclick="closeModal('publish-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div id="publish-status" style="display:none;padding:14px;border-radius:8px;margin-bottom:16px;font-size:.88rem;font-weight:600;"></div>
+      <p style="font-size:.88rem;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
+        Al publicar, los productos se subirán automáticamente a GitHub y el sitio se actualizará en ~30 segundos.
+      </p>
+      <div class="form-group">
+        <label class="form-label">GitHub Token <span style="color:var(--text-3);font-weight:400;">(se guarda en este dispositivo)</span></label>
+        <input type="password" class="form-control" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <div style="font-size:.78rem;color:var(--text-3);margin-top:6px;">
+          Obtén un token en GitHub → Settings → Developer settings → Personal access tokens → repo ✓
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('publish-modal')">Cancelar</button>
+      <button class="btn btn-primary" id="publish-btn" onclick="publishToGitHub()" style="background:var(--red);border-color:var(--red);">🚀 Publicar ahora</button>
     </div>
   </div>
 </div>
@@ -965,6 +993,87 @@ function downloadCatalog() {
   a.href = url; a.download = 'catalog.js';
   a.click(); URL.revokeObjectURL(url);
   showToast('⬇️ catalog.js descargado — reemplázalo en js/catalog.js');
+}
+
+/* ── PUBLISH TO GITHUB ───────────────────────────────────── */
+const GH_REPO  = 'sahilmulchandani2-eng/MAVISA';
+const GH_FILE  = 'js/catalog.js';
+
+function openPublishModal() {
+  const saved = localStorage.getItem('gh_token') || '';
+  $('gh-token').value = saved;
+  $('publish-status').style.display = 'none';
+  openModal('publish-modal');
+}
+
+async function publishToGitHub() {
+  const token = $('gh-token').value.trim();
+  if (!token) { setPublishStatus('error', '⚠️ Ingresa tu GitHub Token'); return; }
+
+  localStorage.setItem('gh_token', token);
+
+  const btn = $('publish-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Publicando...';
+  setPublishStatus('info', '🔄 Conectando con GitHub...');
+
+  try {
+    const headers = {
+      'Authorization': 'token ' + token,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    // 1. Obtener SHA del archivo actual
+    setPublishStatus('info', '🔄 Obteniendo archivo actual...');
+    const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`, { headers });
+    if (!getRes.ok) throw new Error('No se pudo leer el archivo. Verifica el token.');
+    const getJson = await getRes.json();
+    const sha = getJson.sha;
+
+    // 2. Generar nuevo contenido
+    const content = generateCatalogJS();
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+
+    // 3. Subir a GitHub
+    setPublishStatus('info', '🔄 Subiendo productos...');
+    const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: `Admin: actualización catálogo ${new Date().toLocaleDateString('es-CL')}`,
+        content: encoded,
+        sha: sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || 'Error al subir archivo');
+    }
+
+    setPublishStatus('success', '✅ ¡Publicado! El sitio se actualizará en ~30 segundos.');
+    showToast('🚀 Sitio actualizado correctamente');
+    btn.textContent = '✅ Publicado';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '🚀 Publicar ahora';
+    }, 3000);
+
+  } catch(err) {
+    setPublishStatus('error', '❌ ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🚀 Publicar ahora';
+  }
+}
+
+function setPublishStatus(type, msg) {
+  const el = $('publish-status');
+  el.style.display = 'block';
+  el.textContent = msg;
+  el.style.background = type === 'success' ? 'rgba(34,197,94,0.12)' : type === 'error' ? 'rgba(232,48,63,0.10)' : 'rgba(28,52,97,0.08)';
+  el.style.color = type === 'success' ? '#15803d' : type === 'error' ? 'var(--red)' : 'var(--navy)';
+  el.style.border = '1px solid ' + (type === 'success' ? 'rgba(34,197,94,0.3)' : type === 'error' ? 'rgba(232,48,63,0.2)' : 'rgba(28,52,97,0.15)');
 }
 
 /* ── TOAST ───────────────────────────────────────────────── */
