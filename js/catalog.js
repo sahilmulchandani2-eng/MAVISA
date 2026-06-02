@@ -1006,13 +1006,55 @@ function initNewGrid(grid) {
   }
 }
 
+function initDesktopGrid(grid, products) {
+  // Desktop: grid simple 4 columnas, sin carrusel
+  grid.innerHTML = products.map(productCardHTML).join('');
+
+  // Ocultar flechas y dots
+  const outer = grid.closest('.h-carousel-outer');
+  if (outer) outer.querySelectorAll('.h-carousel-arrow').forEach(b => b.style.display = 'none');
+  const dotsId = grid.id === 'featured-grid' ? 'featured-dots' : 'new-dots';
+  const dotsEl = document.getElementById(dotsId);
+  if (dotsEl) dotsEl.style.display = 'none';
+
+  // Quitar overflow del wrap
+  const wrap = grid.closest('.h-scroll-wrap');
+  if (wrap) { wrap.style.overflow = 'visible'; wrap.style.width = '100%'; }
+
+  // Grid 4 columnas
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+  grid.style.gap = '24px';
+  grid.style.width = '100%';
+  grid.style.transform = 'none';
+  grid.style.transition = 'none';
+  grid.style.flexWrap = '';
+  grid.style.flexDirection = '';
+  grid.querySelectorAll('.product-card').forEach(card => {
+    card.style.width = '';
+    card.style.minWidth = '';
+    card.style.maxWidth = '';
+    card.style.flexShrink = '';
+  });
+}
+
 function initHomeFeatured() {
   const featuredGrid = $('#featured-grid'); if (!featuredGrid) return;
+  const isMobile = window.innerWidth <= 768;
   const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
-  featuredGrid.innerHTML = featured.map(productCardHTML).join('');
-  fixCardsInTrack(featuredGrid); // carrusel en ambas versiones
+  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
 
-  initNewGrid($('#new-grid'));
+  if (isMobile) {
+    featuredGrid.innerHTML = featured.map(productCardHTML).join('');
+    fixCardsInTrack(featuredGrid);
+    const newGrid = $('#new-grid');
+    if (newGrid) { newGrid.innerHTML = newProducts.map(productCardHTML).join(''); fixCardsInTrack(newGrid); }
+  } else {
+    initDesktopGrid(featuredGrid, featured);
+    const newGrid = $('#new-grid');
+    if (newGrid) initDesktopGrid(newGrid, newProducts);
+  }
+
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
