@@ -23,16 +23,11 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
   <link rel="canonical" href="https://www.mavisa.cl/">
-  <!-- Preconnect para Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- CSS crítico carga primero -->
-  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="css/style.css"></noscript>
-  <link rel="preload" href="css/animations.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="css/animations.css"></noscript>
-  <!-- Preload logo -->
-  <link rel="preload" href="assets/images/logo.png" as="image">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>body{opacity:0;transition:opacity 0.25s}body.loaded{opacity:1}</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1004,5 +999,7 @@
 
   requestAnimationFrame(tick);
 })();
-</script></body>
+</script>
+<script>window.addEventListener('load',function(){document.body.classList.add('loaded');});</script>
+</body>
 </html>
