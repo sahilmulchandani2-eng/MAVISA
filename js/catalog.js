@@ -1006,7 +1006,7 @@ function initNewGrid(grid) {
   }
 }
 
-function initDesktopGrid(grid, products) {
+function initDesktopGrid(grid, products, centerLastRow) {
   // Desktop: grid simple 4 columnas, sin carrusel
   grid.innerHTML = products.map(productCardHTML).join('');
 
@@ -1036,6 +1036,22 @@ function initDesktopGrid(grid, products) {
     card.style.maxWidth = '';
     card.style.flexShrink = '';
   });
+
+  // Centrar última fila si está incompleta
+  if (centerLastRow) {
+    const total = products.length;
+    const lastRowCount = total % 4;
+    if (lastRowCount > 0) {
+      const cards = grid.querySelectorAll('.product-card');
+      const firstInLastRow = total - lastRowCount;
+      // Calcular columna de inicio para centrar
+      // lastRowCount=1 → col 2 (center of 4)
+      // lastRowCount=2 → col 2-3
+      // lastRowCount=3 → col 1-3 (ya casi llena, dejar así)
+      const colStart = lastRowCount === 1 ? 2 : lastRowCount === 2 ? 2 : 1;
+      cards[firstInLastRow].style.gridColumn = `${colStart} / span ${lastRowCount === 1 ? 2 : lastRowCount}`;
+    }
+  }
 }
 
 function initHomeFeatured() {
@@ -1050,9 +1066,9 @@ function initHomeFeatured() {
     const newGrid = $('#new-grid');
     if (newGrid) { newGrid.innerHTML = newProducts.map(productCardHTML).join(''); fixCardsInTrack(newGrid); }
   } else {
-    initDesktopGrid(featuredGrid, featured);
+    initDesktopGrid(featuredGrid, featured, false);
     const newGrid = $('#new-grid');
-    if (newGrid) initDesktopGrid(newGrid, newProducts);
+    if (newGrid) initDesktopGrid(newGrid, newProducts, true); // centra última fila
   }
 
   initScrollAnimations();
