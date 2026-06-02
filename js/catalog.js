@@ -857,23 +857,27 @@ function initProductPage() {
   const relatedGrid=$('#related-grid'); if(relatedGrid){const related=PRODUCTS_DATA.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4);relatedGrid.innerHTML=related.map(productCardHTML).join('');}
   initScrollAnimations();
 }
+function fixCardsInTrack(track) {
+  if (!track) return;
+  track.querySelectorAll('.product-card').forEach(card => {
+    card.style.cssText += ';width:260px;min-width:260px;max-width:260px;flex-shrink:0;';
+  });
+  // Drag to scroll
+  const wrap = track.closest('.h-scroll-wrap');
+  if (!wrap) return;
+  let isDown=false, startX, scrollLeft;
+  wrap.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
+  wrap.addEventListener('mouseleave',()=>isDown=false);
+  wrap.addEventListener('mouseup',()=>isDown=false);
+  wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
+}
 function initHomeFeatured() {
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
   const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8);
   featuredGrid.innerHTML=featured.map(productCardHTML).join('');
+  fixCardsInTrack(featuredGrid);
   const newGrid=$('#new-grid');
-  if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,8);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
-  // Drag to scroll
-  [featuredGrid, newGrid].forEach(track => {
-    if (!track) return;
-    const wrap = track.closest('.h-scroll-wrap');
-    if (!wrap) return;
-    let isDown=false, startX, scrollLeft;
-    wrap.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
-    wrap.addEventListener('mouseleave',()=>isDown=false);
-    wrap.addEventListener('mouseup',()=>isDown=false);
-    wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
-  });
+  if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,8);newGrid.innerHTML=newProducts.map(productCardHTML).join('');fixCardsInTrack(newGrid);}
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
