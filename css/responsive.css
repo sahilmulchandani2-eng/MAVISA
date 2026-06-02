@@ -74,7 +74,64 @@
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Agregar estilos mobile aquí */
+  /* ── Categorías: chips horizontales compactos ─────────── */
+  .categories-section .section-header { margin-bottom: 16px; }
+  .categories-section .section-header .section-title { font-size: 1.6rem; }
+  .categories-section .section-header .section-subtitle { display: none; }
+
+  /* Grid → fila horizontal scrolleable */
+  .categories-section .grid-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    padding-bottom: 8px;
+    grid-template-columns: unset !important;
+  }
+  .categories-section .grid-4::-webkit-scrollbar { display: none; }
+
+  /* Cards → chips compactos */
+  .categories-section .category-card {
+    flex-shrink: 0 !important;
+    width: auto !important;
+    min-width: 120px !important;
+    border-radius: 16px !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Ocultar imagen grande */
+  .categories-section .category-card-bg {
+    display: none !important;
+  }
+
+  /* Contenido compacto */
+  .categories-section .category-card-content {
+    padding: 12px 14px !important;
+    gap: 6px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .categories-section .category-card-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.2rem !important;
+    border-radius: 10px !important;
+  }
+  .categories-section .category-card-name {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+  }
+  .categories-section .category-card-count {
+    display: none !important;
+  }
+  .categories-section .category-card-arrow {
+    display: none !important;
+  }
 
 }
 
