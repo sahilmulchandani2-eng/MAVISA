@@ -137,7 +137,7 @@
   }
   .cat-arrow {
     position: absolute;
-    top: 20%; transform: translateY(-50%);
+    top: -20px; transform: none;
     z-index: 10;
     width: 44px; height: 44px;
     border-radius: 50%;
