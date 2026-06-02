@@ -91,101 +91,15 @@
   /* También ocultar flechas del carrusel en mobile */
   .h-carousel-arrow { display: none !important; }
 
-  /* ── Categorías mobile: chips compactos horizontales ──── */
+  /* ── Categorías mobile: cards con imagen + ícono + nombre ── */
   .categories-section .section-header .section-subtitle { display: none !important; }
 
-  /* Fila horizontal scrolleable */
+  /* Ocultar flechas de categorías en mobile */
+  .cat-arrow { display: none !important; }
+
+  /* Scroll horizontal */
+  .categories-section .grid-4,
   .section.categories-section .grid-4 {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 10px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    scrollbar-width: none !important;
-    padding-bottom: 4px !important;
-    grid-template-columns: unset !important;
-    width: 100% !important;
-  }
-  .section.categories-section .grid-4::-webkit-scrollbar { display: none !important; }
-
-  /* Card compacta */
-  .section.categories-section .category-card {
-    flex-shrink: 0 !important;
-    width: 130px !important;
-    min-width: 130px !important;
-    max-width: 130px !important;
-    border-radius: 16px !important;
-    transform: none !important;
-    box-shadow: 0 2px 12px rgba(28,52,97,0.10) !important;
-  }
-
-  /* Ocultar imagen grande */
-  .section.categories-section .category-card .category-card-bg {
-    display: none !important;
-    height: 0 !important;
-  }
-
-  /* Contenido compacto */
-  .section.categories-section .category-card .category-card-content {
-    padding: 12px !important;
-    gap: 6px !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-  }
-  .section.categories-section .category-card .category-card-icon {
-    width: 70px !important;
-    height: 70px !important;
-    border-radius: 50% !important;
-    background: transparent !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-  }
-  .section.categories-section .category-card .category-card-icon .cat-flaticon {
-    width: 70px !important;
-    height: 70px !important;
-    object-fit: contain !important;
-    display: block !important;
-    border-radius: 50% !important;
-  }
-  .section.categories-section .category-card .category-card-icon .cat-lucide {
-    display: none !important;
-  }
-  .section.categories-section .category-card .category-card-name {
-    font-size: 0.78rem !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-  }
-  .section.categories-section .category-card .category-card-count,
-  .section.categories-section .category-card .category-card-arrow {
-    display: none !important;
-  }
-
-  /* Categorías: scroll horizontal con peek y fade */
-  .cat-scroll-outer {
-    position: relative;
-  }
-  .cat-arrow {
-    position: absolute;
-    top: -52px; transform: none;
-    z-index: 10;
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: var(--navy);
-    color: #fff;
-    font-size: 1.8rem;
-    line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-    padding: 0;
-    box-shadow: 0 4px 16px rgba(28,52,97,0.35);
-  }
-  .cat-arrow-left { left: 6px; }
-  .cat-arrow-right { right: 6px; }
-  .categories-section .grid-4 {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
@@ -193,18 +107,80 @@
     overflow-y: hidden !important;
     scrollbar-width: none !important;
     gap: 12px !important;
-    padding-right: 40px !important;
+    padding-bottom: 6px !important;
+    padding-right: 16px !important;
     grid-template-columns: unset !important;
     -webkit-overflow-scrolling: touch;
   }
-  .categories-section .grid-4::-webkit-scrollbar { display: none !important; }
-  .categories-section .category-card {
+  .categories-section .grid-4::-webkit-scrollbar,
+  .section.categories-section .grid-4::-webkit-scrollbar { display: none !important; }
+
+  /* Card con imagen visible */
+  .categories-section .category-card,
+  .section.categories-section .category-card {
     flex-shrink: 0 !important;
-    width: calc(42vw) !important;
-    min-width: 150px !important;
-    max-width: 180px !important;
+    width: 44vw !important;
+    min-width: 155px !important;
+    max-width: 185px !important;
+    border-radius: 18px !important;
+    transform: none !important;
+    box-shadow: 0 4px 16px rgba(28,52,97,0.12) !important;
   }
-  .categories-section .category-card-bg { height: 110px !important; }
+
+  /* Mostrar imagen superior */
+  .categories-section .category-card .category-card-bg,
+  .section.categories-section .category-card .category-card-bg {
+    display: flex !important;
+    height: 120px !important;
+  }
+
+  /* Contenido inferior */
+  .categories-section .category-card .category-card-content,
+  .section.categories-section .category-card .category-card-content {
+    padding: 12px 14px !important;
+    gap: 8px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  /* Ícono: mostrar lucide dorado, ocultar flaticon */
+  .categories-section .category-card .category-card-icon,
+  .section.categories-section .category-card .category-card-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    background: rgba(201,168,76,0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+  .categories-section .category-card .category-card-icon .cat-flaticon,
+  .section.categories-section .category-card .category-card-icon .cat-flaticon {
+    display: none !important;
+  }
+  .categories-section .category-card .category-card-icon .cat-lucide,
+  .section.categories-section .category-card .category-card-icon .cat-lucide {
+    display: flex !important;
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  /* Nombre */
+  .categories-section .category-card .category-card-name,
+  .section.categories-section .category-card .category-card-name {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Ocultar count y flecha */
+  .categories-section .category-card .category-card-count,
+  .categories-section .category-card .category-card-arrow,
+  .section.categories-section .category-card .category-card-count,
+  .section.categories-section .category-card .category-card-arrow {
+    display: none !important;
+  }
 
 }
 
