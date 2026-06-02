@@ -858,9 +858,13 @@ function initProductPage() {
 function fixCardsInTrack(track) {
   if (!track) return;
   const isMobile = window.innerWidth <= 768;
-  const cardW = isMobile ? 140 : 260;
   const gap = isMobile ? 10 : 20;
   const perPage = isMobile ? 2 : 4;
+
+  // Calcular ancho dinámico para que exactamente perPage cards llenen el wrap
+  const wrap = track.closest('.h-scroll-wrap');
+  const wrapW = wrap ? wrap.clientWidth || wrap.offsetWidth : (isMobile ? window.innerWidth - 80 : 1100);
+  const cardW = isMobile ? 140 : Math.floor((wrapW - (perPage - 1) * gap) / perPage);
 
   // Style cards
   const cards = Array.from(track.querySelectorAll('.product-card'));
@@ -882,7 +886,6 @@ function fixCardsInTrack(track) {
   track.style.width = 'max-content';
 
   // Style wrap — overflow hidden, no scrollbar
-  const wrap = track.closest('.h-scroll-wrap');
   if (!wrap) return;
   wrap.style.overflow = 'hidden';
   wrap.style.width = '100%';
