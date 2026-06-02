@@ -862,68 +862,96 @@ function fixCardsInTrack(track) {
   const isMobile = window.innerWidth <= 768;
   const cardW = isMobile ? 140 : 260;
   const gap = isMobile ? 10 : 20;
+  const perPage = isMobile ? 2 : 4;
 
-  // On mobile hide arrows, rely on swipe
-  const outer = track.closest('.h-carousel-outer');
-  if (outer) {
-    outer.querySelectorAll('.h-carousel-arrow').forEach(btn => {
-      btn.style.display = isMobile ? 'none' : '';
-    });
-  }
-
-  track.style.display = 'flex';
-  track.style.flexDirection = 'row';
-  track.style.flexWrap = 'nowrap';
-  track.style.gap = gap + 'px';
-  track.style.width = 'max-content';
-  track.style.padding = '8px 4px';
-  track.querySelectorAll('.product-card').forEach(card => {
+  // Style cards
+  const cards = Array.from(track.querySelectorAll('.product-card'));
+  if (!cards.length) return;
+  cards.forEach(card => {
     card.style.width = cardW + 'px';
     card.style.minWidth = cardW + 'px';
     card.style.maxWidth = cardW + 'px';
     card.style.flexShrink = '0';
   });
 
+  // Style track
+  track.style.display = 'flex';
+  track.style.flexDirection = 'row';
+  track.style.flexWrap = 'nowrap';
+  track.style.gap = gap + 'px';
+  track.style.transition = 'transform 0.4s cubic-bezier(.25,.8,.25,1)';
+  track.style.willChange = 'transform';
+  track.style.width = 'max-content';
+
+  // Style wrap — overflow hidden, no scrollbar
   const wrap = track.closest('.h-scroll-wrap');
   if (!wrap) return;
-  wrap.style.overflowX = 'auto';
-  wrap.style.overflowY = 'hidden';
+  wrap.style.overflow = 'hidden';
   wrap.style.width = '100%';
   wrap.style.cursor = 'grab';
 
-  // Mouse drag (desktop)
-  let isDown=false, startX, scrollLeft;
-  wrap.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
-  wrap.addEventListener('mouseleave',()=>isDown=false);
-  wrap.addEventListener('mouseup',()=>isDown=false);
-  wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
+  const totalPages = Math.ceil(cards.length / perPage);
+  let currentPage = 0;
 
-  // Touch swipe (mobile)
-  let touchStartX=0, touchScrollLeft=0;
-  wrap.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchScrollLeft=wrap.scrollLeft;},{passive:true});
-  wrap.addEventListener('touchmove',e=>{const dx=touchStartX-e.touches[0].clientX;wrap.scrollLeft=touchScrollLeft+dx;},{passive:true});
+  function getOffset(page) {
+    return page * perPage * (cardW + gap);
+  }
+
+  function goTo(page) {
+    currentPage = Math.max(0, Math.min(page, totalPages - 1));
+    track.style.transform = `translateX(-${getOffset(currentPage)}px)`;
+    if (dotsEl) {
+      dotsEl.querySelectorAll('.auto-carousel-dot').forEach((d, i) => d.classList.toggle('active', i === currentPage));
+    }
+  }
+
+  // Arrows
+  const outer = track.closest('.h-carousel-outer');
+  if (outer) {
+    outer.querySelectorAll('.h-carousel-arrow').forEach(btn => {
+      btn.style.display = isMobile ? 'none' : '';
+    });
+    const prev = outer.querySelector('.h-carousel-prev');
+    const next = outer.querySelector('.h-carousel-next');
+    if (prev) prev.onclick = () => goTo(currentPage - 1);
+    if (next) next.onclick = () => goTo(currentPage + 1);
+  }
 
   // Dots
-  const cards = track.querySelectorAll('.product-card');
-  const perPage = isMobile ? 2 : 4;
-  const totalPages = Math.ceil(cards.length / perPage);
   const dotsId = track.id === 'featured-grid' ? 'featured-dots' : 'new-dots';
   const dotsEl = document.getElementById(dotsId);
-  if (dotsEl && totalPages > 1) {
-    dotsEl.innerHTML = Array.from({length: totalPages}, (_,i) =>
-      `<button class="auto-carousel-dot${i===0?' active':''}" data-page="${i}"></button>`
-    ).join('');
-    dotsEl.querySelectorAll('.auto-carousel-dot').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const page = parseInt(btn.dataset.page);
-        wrap.scrollTo({left: page * cardW * perPage + gap * page * perPage, behavior:'smooth'});
+  if (dotsEl) {
+    if (totalPages > 1) {
+      dotsEl.innerHTML = Array.from({length: totalPages}, (_, i) =>
+        `<button class="auto-carousel-dot${i === 0 ? ' active' : ''}" data-page="${i}"></button>`
+      ).join('');
+      dotsEl.querySelectorAll('.auto-carousel-dot').forEach(btn => {
+        btn.addEventListener('click', () => goTo(parseInt(btn.dataset.page)));
       });
-    });
-    wrap.addEventListener('scroll', () => {
-      const page = Math.round(wrap.scrollLeft / (cardW * perPage + gap * perPage));
-      dotsEl.querySelectorAll('.auto-carousel-dot').forEach((d,i) => d.classList.toggle('active', i===Math.min(page, totalPages-1)));
-    });
+    } else {
+      dotsEl.innerHTML = '';
+    }
   }
+
+  // Touch swipe
+  let touchStartX = 0;
+  wrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive: true});
+  wrap.addEventListener('touchend', e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(dx > 0 ? currentPage + 1 : currentPage - 1);
+  }, {passive: true});
+
+  // Mouse drag
+  let dragStartX = 0, dragging = false;
+  wrap.addEventListener('mousedown', e => { dragging = true; dragStartX = e.clientX; wrap.style.cursor = 'grabbing'; });
+  wrap.addEventListener('mouseup', e => {
+    if (!dragging) return;
+    dragging = false;
+    wrap.style.cursor = 'grab';
+    const dx = dragStartX - e.clientX;
+    if (Math.abs(dx) > 40) goTo(dx > 0 ? currentPage + 1 : currentPage - 1);
+  });
+  wrap.addEventListener('mouseleave', () => { dragging = false; wrap.style.cursor = 'grab'; });
 }
 function initHomeFeatured() {
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
