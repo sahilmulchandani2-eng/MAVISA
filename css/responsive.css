@@ -72,6 +72,22 @@
    ══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
+  /* ── Grids de productos: 2 columnas en mobile ────────── */
+  #featured-grid, #new-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    display: grid !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+  #featured-grid .product-card,
+  #new-grid .product-card {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+  /* También ocultar flechas del carrusel en mobile */
+  .h-carousel-arrow { display: none !important; }
+
   /* ── Categorías: chips horizontales compactos ─────────── */
   .categories-section .section-header { margin-bottom: 16px; }
   .categories-section .section-header .section-title { font-size: 1.6rem; }

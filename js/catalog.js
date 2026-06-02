@@ -1060,16 +1060,10 @@ function initHomeFeatured() {
   const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
   const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
 
-  if (isMobile) {
-    featuredGrid.innerHTML = featured.map(productCardHTML).join('');
-    fixCardsInTrack(featuredGrid);
-    const newGrid = $('#new-grid');
-    if (newGrid) { newGrid.innerHTML = newProducts.map(productCardHTML).join(''); fixCardsInTrack(newGrid); }
-  } else {
-    initDesktopGrid(featuredGrid, featured, false);
-    const newGrid = $('#new-grid');
-    if (newGrid) initDesktopGrid(newGrid, newProducts, true); // centra última fila
-  }
+  // Desktop Y Mobile: grid simple, sin carrusel
+  initDesktopGrid(featuredGrid, featured, false);
+  const newGrid = $('#new-grid');
+  if (newGrid) initDesktopGrid(newGrid, newProducts, true);
 
   initScrollAnimations();
 }
