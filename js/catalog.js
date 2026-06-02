@@ -860,12 +860,19 @@ function initProductPage() {
 function fixCardsInTrack(track) {
   if (!track) return;
   const isMobile = window.innerWidth <= 768;
-  const cardW = isMobile ? 160 : 260;
-  const gap = isMobile ? 12 : 20;
-  // Force horizontal flex on track
-  track.style.cssText = `display:flex;flex-direction:row;flex-wrap:nowrap;gap:${gap}px;width:max-content;padding:8px 4px;`;
+  const cardW = isMobile ? 155 : 260;
+  const gap = isMobile ? 10 : 20;
+  track.style.display = 'flex';
+  track.style.flexDirection = 'row';
+  track.style.flexWrap = 'nowrap';
+  track.style.gap = gap + 'px';
+  track.style.width = 'max-content';
+  track.style.padding = '8px 4px';
   track.querySelectorAll('.product-card').forEach(card => {
-    card.style.cssText += `;width:${cardW}px;min-width:${cardW}px;max-width:${cardW}px;flex-shrink:0;`;
+    card.style.width = cardW + 'px';
+    card.style.minWidth = cardW + 'px';
+    card.style.maxWidth = cardW + 'px';
+    card.style.flexShrink = '0';
   });
   // Force scroll on wrap
   const wrap = track.closest('.h-scroll-wrap');
