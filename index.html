@@ -397,7 +397,9 @@
       <h2 class="section-title section-title-editorial reveal reveal-delay-1">Explora nuestros<br><span class="text-gradient">productos</span></h2>
       <p class="section-subtitle reveal reveal-delay-2">Productos de primer nivel para tu hogar</p>
     </div>
-    <div class="grid-4 stagger-children" id="cat-scroll-track">
+    <div class="cat-carousel-outer" id="cat-carousel-outer">
+      <div class="cat-carousel-wrap" id="cat-carousel-wrap">
+        <div class="grid-4 stagger-children" id="cat-scroll-track">
 
       <a href="catalogo.html?category=electrodomesticos" class="category-card">
         <div class="category-card-bg" style="background:linear-gradient(135deg,#1C3461,#3a6bc4);">
@@ -469,8 +471,10 @@
         </div>
       </a>
 
+        </div>
+      </div>
     </div>
-    <div class="cat-progress-wrap"><div class="cat-progress-thumb" id="cat-thumb"></div></div>
+    <div class="auto-carousel-dots" id="cat-dots"></div>
   </div>
 </section>
 
@@ -1021,22 +1025,43 @@ function scrollCarousel(trackId, dir) {
 window.addEventListener('load', function() {
   document.body.classList.add('loaded');
 
-  // Category progress bar (mobile)
-  setTimeout(function() {
+  // Category carousel (mobile only)
+  if (window.innerWidth <= 768) {
     var track = document.getElementById('cat-scroll-track');
-    var thumb = document.getElementById('cat-thumb');
-    if (!track || !thumb) return;
-    function updateCatProgress() {
-      var scrollable = track.scrollWidth - track.clientWidth;
-      if (scrollable <= 0) return;
-      var thumbW = Math.round((track.clientWidth / track.scrollWidth) * 100);
-      var pos = Math.round((track.scrollLeft / scrollable) * (100 - thumbW));
-      thumb.style.width = thumbW + '%';
-      thumb.style.left = pos + '%';
+    var dotsEl = document.getElementById('cat-dots');
+    if (track && dotsEl) {
+      var cards = track.querySelectorAll('.category-card');
+      var perPage = 2;
+      var total = Math.ceil(cards.length / perPage);
+      var current = 0;
+      var cardW = 150, gap = 12;
+
+      // Build dots
+      dotsEl.innerHTML = Array.from({length: total}, function(_, i) {
+        return '<button class="auto-carousel-dot' + (i===0?' active':'') + '" data-p="' + i + '"></button>';
+      }).join('');
+
+      function goTo(p) {
+        current = Math.max(0, Math.min(p, total - 1));
+        track.style.transform = 'translateX(-' + (current * perPage * (cardW + gap)) + 'px)';
+        dotsEl.querySelectorAll('.auto-carousel-dot').forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      dotsEl.querySelectorAll('.auto-carousel-dot').forEach(function(btn) {
+        btn.addEventListener('click', function() { goTo(parseInt(btn.dataset.p)); });
+      });
+
+      // Touch swipe
+      var tx = 0;
+      track.addEventListener('touchstart', function(e) { tx = e.touches[0].clientX; }, {passive:true});
+      track.addEventListener('touchend', function(e) {
+        var dx = tx - e.changedTouches[0].clientX;
+        if (Math.abs(dx) > 40) goTo(dx > 0 ? current+1 : current-1);
+      }, {passive:true});
     }
-    updateCatProgress();
-    track.addEventListener('scroll', updateCatProgress, { passive: true });
-  }, 300);
+  }
 });
 </script>
 </body>

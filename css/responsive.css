@@ -131,24 +131,28 @@
     display: none !important;
   }
 
-  /* Progress bar categorías */
-  .cat-progress-wrap {
-    height: 4px;
-    background: rgba(28,52,97,0.12);
-    border-radius: 999px;
-    margin-top: 14px;
+  /* Carrusel categorías mobile */
+  .cat-carousel-outer { width: 100%; overflow: hidden; }
+  .cat-carousel-wrap {
     overflow: hidden;
-    position: relative;
+    width: 100%;
   }
-  .cat-progress-thumb {
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    width: 40%;
-    background: var(--accent);
-    border-radius: 999px;
-    transition: left 0.1s linear, width 0.1s linear;
+  .categories-section .grid-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    transition: transform 0.4s cubic-bezier(.25,.8,.25,1) !important;
+    width: max-content !important;
+    gap: 12px !important;
+    grid-template-columns: unset !important;
   }
+  .categories-section .category-card {
+    width: 150px !important;
+    min-width: 150px !important;
+    flex-shrink: 0 !important;
+  }
+  .categories-section .category-card-bg { height: 100px !important; }
+  #cat-dots { margin-top: 16px; }
 
 }
 
