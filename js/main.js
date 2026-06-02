@@ -439,11 +439,12 @@ function initLiveSearch() {
   if (!input || !dropdown) return;
 
   const CATEGORY_EMOJI = {
+    'Belleza': '💄',
+    'Mascotas': '🐾',
+    'Hobbies': '🎨',
     'Electrodomésticos': '🫖',
-    'Tecnología Hogar': '🖥️',
-    'Gadgets': '🎧',
-    'Belleza': '🪞',
-    'Juguetes': '🤖',
+    'Salud': '💊',
+    'Barbería': '✂️',
   };
 
   function getProducts() {
