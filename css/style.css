@@ -3498,8 +3498,10 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
   cursor: grab;
 }
 .h-scroll-wrap:active { cursor: grabbing; }
-.h-scroll-wrap::-webkit-scrollbar { display: none; }
-.h-scroll-wrap { -ms-overflow-style: none; scrollbar-width: none; }
+.h-scroll-wrap::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+.h-scroll-wrap::-webkit-scrollbar-thumb { display: none !important; }
+.h-scroll-wrap::-webkit-scrollbar-track { display: none !important; }
+.h-scroll-wrap { -ms-overflow-style: none !important; scrollbar-width: none !important; }
 /* Dots en fondo claro (sección crema) */
 .section:not([style*="navy"]) .auto-carousel-dot { background: rgba(28,52,97,0.2); }
 .section:not([style*="navy"]) .auto-carousel-dot.active { background: var(--accent); }
@@ -3522,23 +3524,25 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
 .auto-carousel-dots {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
-  margin-top: 32px;
+  margin-top: 24px;
+  min-height: 20px;
 }
 .auto-carousel-dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.4);
   border: none;
   cursor: pointer;
-  transition: background 0.3s, transform 0.3s, width 0.3s;
+  transition: background 0.3s, width 0.3s;
   padding: 0;
+  flex-shrink: 0;
 }
 .auto-carousel-dot.active {
   background: var(--accent);
-  width: 24px;
-  transform: scale(1);
+  width: 28px;
 }
 @media (max-width: 900px) {
   .auto-carousel-track { grid-template-columns: repeat(2, 1fr); }
