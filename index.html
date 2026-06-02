@@ -397,7 +397,7 @@
       <h2 class="section-title section-title-editorial reveal reveal-delay-1">Explora nuestros<br><span class="text-gradient">productos</span></h2>
       <p class="section-subtitle reveal reveal-delay-2">Productos de primer nivel para tu hogar</p>
     </div>
-    <div class="grid-4 stagger-children">
+    <div class="grid-4 stagger-children" id="cat-scroll-track">
 
       <a href="catalogo.html?category=electrodomesticos" class="category-card">
         <div class="category-card-bg" style="background:linear-gradient(135deg,#1C3461,#3a6bc4);">
@@ -469,6 +469,10 @@
         </div>
       </a>
 
+    </div>
+    <!-- Slider indicator — solo visible en móvil via CSS -->
+    <div class="cat-scroll-bar" id="cat-scroll-bar" style="display:none;">
+      <div class="cat-scroll-thumb" id="cat-scroll-thumb" style="width:30%;"></div>
     </div>
   </div>
 </section>
@@ -1017,7 +1021,27 @@ function scrollCarousel(trackId, dir) {
   if (!wrap) return;
   wrap.scrollBy({ left: dir * 560, behavior: 'smooth' });
 }
-window.addEventListener('load',function(){document.body.classList.add('loaded');});
+window.addEventListener('load', function() {
+  document.body.classList.add('loaded');
+  // Category scroll indicator (mobile only)
+  if (window.innerWidth <= 768) {
+    const track = document.getElementById('cat-scroll-track');
+    const bar = document.getElementById('cat-scroll-bar');
+    const thumb = document.getElementById('cat-scroll-thumb');
+    if (track && bar && thumb) {
+      bar.style.display = 'block';
+      function updateThumb() {
+        const scrollable = track.scrollWidth - track.clientWidth;
+        const thumbW = Math.max(20, (track.clientWidth / track.scrollWidth) * 100);
+        const pct = scrollable > 0 ? (track.scrollLeft / scrollable) * (100 - thumbW) : 0;
+        thumb.style.width = thumbW + '%';
+        thumb.style.marginLeft = pct + '%';
+      }
+      updateThumb();
+      track.addEventListener('scroll', updateThumb, { passive: true });
+    }
+  }
+});
 </script>
 </body>
 </html>

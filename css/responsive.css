@@ -133,6 +133,22 @@
     display: none !important;
   }
 
+  /* Slider indicator de scroll */
+  .cat-scroll-bar {
+    display: block;
+    margin-top: 12px;
+    height: 3px;
+    background: rgba(28,52,97,0.12);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .cat-scroll-thumb {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.1s;
+  }
+
 }
 
 
