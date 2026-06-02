@@ -39,10 +39,8 @@
    DESKTOP ONLY (1025px+)
    Cambios exclusivos para desktop que no afectan móvil
    ══════════════════════════════════════════════════════════ */
-@media (min-width: 1025px) {
-
-  /* Agregar estilos desktop aquí */
-
+@media (min-width: 769px) {
+  .cat-scroll-bar { display: none !important; }
 }
 
 
@@ -135,18 +133,23 @@
 
   /* Slider indicator de scroll */
   .cat-scroll-bar {
-    display: block;
+    display: block !important;
     margin-top: 12px;
-    height: 3px;
+    height: 4px;
     background: rgba(28,52,97,0.12);
     border-radius: 999px;
     overflow: hidden;
+    position: relative;
   }
   .cat-scroll-thumb {
     height: 100%;
+    width: 30%;
     background: var(--accent);
     border-radius: 999px;
-    transition: width 0.1s;
+    transition: margin-left 0.1s, width 0.1s;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
 }
