@@ -15,8 +15,12 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/animations.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/style.css"></noscript>
+  <link rel="preload" href="css/animations.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/animations.css"></noscript>
   <style>
     .pd-gallery-main {
       background: var(--color-surface);
@@ -431,8 +435,8 @@
 
 <a href="https://wa.me/56956654167" class="whatsapp-float" target="_blank">💬<span class="whatsapp-float-tooltip">¡Escríbenos!</span></a>
 
-<script src="js/main.js"></script>
-<script src="js/catalog.js"></script>
+<script src="js/main.js" defer></script>
+<script src="js/catalog.js" defer></script>
 <script>
 // Sync thumbnail image
 document.addEventListener('DOMContentLoaded', () => {

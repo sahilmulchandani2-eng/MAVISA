@@ -23,8 +23,16 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
   <link rel="canonical" href="https://www.mavisa.cl/">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/animations.css">
+  <!-- Preconnect para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- CSS crítico carga primero -->
+  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/style.css"></noscript>
+  <link rel="preload" href="css/animations.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/animations.css"></noscript>
+  <!-- Preload logo -->
+  <link rel="preload" href="assets/images/logo.png" as="image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -824,8 +832,8 @@
     start();
   })();
 </script>
-<script src="js/main.js"></script>
-<script src="js/catalog.js"></script>
+<script src="js/main.js" defer></script>
+<script src="js/catalog.js" defer></script>
 <script>
     /* ── Contact Modal ─────────────────────────────────────────── */
   function openContactModal() {
