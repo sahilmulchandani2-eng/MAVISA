@@ -151,8 +151,8 @@
     padding: 0;
     box-shadow: 0 4px 16px rgba(28,52,97,0.35);
   }
-  .cat-arrow-left { left: -8px; }
-  .cat-arrow-right { right: -8px; }
+  .cat-arrow-left { left: 6px; }
+  .cat-arrow-right { right: 6px; }
   .categories-section .grid-4 {
     display: flex !important;
     flex-direction: row !important;
