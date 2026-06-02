@@ -889,6 +889,7 @@ function fixCardsInTrack(track) {
   wrap.style.overflow = 'hidden';
   wrap.style.width = '100%';
   wrap.style.cursor = 'grab';
+  wrap.style.padding = isMobile ? '8px 16px' : '8px 0';
 
   const totalPages = Math.ceil(cards.length / perPage);
   let currentPage = 0;
