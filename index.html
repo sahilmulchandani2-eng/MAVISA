@@ -481,7 +481,7 @@
       <p class="section-subtitle reveal reveal-delay-2" style="color:rgba(255,255,255,0.55);max-width:480px;">Lo que nuestros clientes más eligen, con garantía y al mejor precio de ZOFRI.</p>
     </div>
     <div class="auto-carousel" id="featured-carousel">
-      <div class="auto-carousel-track" id="featured-grid"></div>
+      <div class="auto-carousel-pages" id="featured-grid"></div>
       <div class="auto-carousel-dots" id="featured-dots"></div>
     </div>
     <div style="text-align:center;margin-top:48px;" class="reveal">
@@ -500,7 +500,7 @@
       <p class="section-subtitle reveal reveal-delay-2">Los productos más recientes, con los más altos estándares de calidad</p>
     </div>
     <div class="auto-carousel" id="new-carousel">
-      <div class="auto-carousel-track" id="new-grid"></div>
+      <div class="auto-carousel-pages" id="new-grid"></div>
       <div class="auto-carousel-dots" id="new-dots"></div>
     </div>
   </div>
@@ -1000,71 +1000,6 @@
   requestAnimationFrame(tick);
 })();
 </script>
-<script>
-// Auto Carousel
-function initAutoCarousel(trackId, dotsId, itemsPerPage, intervalMs) {
-  const track = document.getElementById(trackId);
-  const dotsEl = document.getElementById(dotsId);
-  if (!track || !dotsEl) return;
-  const items = Array.from(track.children);
-  if (items.length <= itemsPerPage) return;
-  const pages = Math.ceil(items.length / itemsPerPage);
-  let current = 0, timer;
-
-  // Build dots
-  for (let i = 0; i < pages; i++) {
-    const dot = document.createElement('button');
-    dot.className = 'auto-carousel-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', 'Página ' + (i + 1));
-    dot.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(dot);
-  }
-
-  function showPage(page) {
-    const start = page * itemsPerPage;
-    track.classList.add('sliding-out');
-    setTimeout(() => {
-      items.forEach((el, idx) => {
-        el.style.display = (idx >= start && idx < start + itemsPerPage) ? '' : 'none';
-      });
-      track.classList.remove('sliding-out');
-      track.classList.add('sliding-in');
-      requestAnimationFrame(() => requestAnimationFrame(() => track.classList.remove('sliding-in')));
-      dotsEl.querySelectorAll('.auto-carousel-dot').forEach((d, i) => d.classList.toggle('active', i === page));
-    }, 300);
-  }
-
-  function goTo(page) {
-    current = page;
-    showPage(current);
-    resetTimer();
-  }
-
-  function next() {
-    current = (current + 1) % pages;
-    showPage(current);
-  }
-
-  function resetTimer() {
-    clearInterval(timer);
-    timer = setInterval(next, intervalMs);
-  }
-
-  showPage(0);
-  resetTimer();
-
-  // Pause on hover
-  track.addEventListener('mouseenter', () => clearInterval(timer));
-  track.addEventListener('mouseleave', resetTimer);
-}
-
-window.addEventListener('load', function() {
-  document.body.classList.add('loaded');
-  setTimeout(() => {
-    initAutoCarousel('featured-grid', 'featured-dots', 4, 5000);
-    initAutoCarousel('new-grid', 'new-dots', 4, 5000);
-  }, 300);
-});
-</script>
+<script>window.addEventListener('load',function(){document.body.classList.add('loaded');});</script>
 </body>
 </html>
