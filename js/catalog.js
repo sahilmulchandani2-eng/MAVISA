@@ -902,6 +902,28 @@ function fixCardsInTrack(track) {
   let touchStartX=0, touchScrollLeft=0;
   wrap.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchScrollLeft=wrap.scrollLeft;},{passive:true});
   wrap.addEventListener('touchmove',e=>{const dx=touchStartX-e.touches[0].clientX;wrap.scrollLeft=touchScrollLeft+dx;},{passive:true});
+
+  // Dots
+  const cards = track.querySelectorAll('.product-card');
+  const perPage = isMobile ? 2 : 4;
+  const totalPages = Math.ceil(cards.length / perPage);
+  const dotsId = track.id === 'featured-grid' ? 'featured-dots' : 'new-dots';
+  const dotsEl = document.getElementById(dotsId);
+  if (dotsEl && totalPages > 1) {
+    dotsEl.innerHTML = Array.from({length: totalPages}, (_,i) =>
+      `<button class="auto-carousel-dot${i===0?' active':''}" data-page="${i}"></button>`
+    ).join('');
+    dotsEl.querySelectorAll('.auto-carousel-dot').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const page = parseInt(btn.dataset.page);
+        wrap.scrollTo({left: page * cardW * perPage + gap * page * perPage, behavior:'smooth'});
+      });
+    });
+    wrap.addEventListener('scroll', () => {
+      const page = Math.round(wrap.scrollLeft / (cardW * perPage + gap * perPage));
+      dotsEl.querySelectorAll('.auto-carousel-dot').forEach((d,i) => d.classList.toggle('active', i===Math.min(page, totalPages-1)));
+    });
+  }
 }
 function initHomeFeatured() {
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
