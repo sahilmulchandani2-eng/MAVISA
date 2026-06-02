@@ -41,6 +41,9 @@
    ══════════════════════════════════════════════════════════ */
 @media (min-width: 769px) {
   .cat-progress-wrap { display: none !important; }
+  /* Desktop: mostrar lucide, ocultar flaticon en ícono */
+  .category-card-icon .cat-flaticon { display: none !important; }
+  .category-card-icon .cat-lucide { display: flex !important; }
 }
 
 
@@ -118,11 +121,13 @@
     flex-direction: column !important;
   }
 
-  /* Imagen en mobile: más pequeña */
+  /* Ocultar imagen grande en mobile */
   .categories-section .category-card-bg {
-    height: 90px !important;
-    display: block !important;
+    display: none !important;
   }
+  /* Mostrar flaticon en el ícono, ocultar lucide */
+  .category-card-icon .cat-lucide { display: none !important; }
+  .category-card-icon .cat-flaticon { display: block !important; }
 
   /* Contenido compacto */
   .categories-section .category-card-content {
