@@ -860,8 +860,17 @@ function initProductPage() {
 function fixCardsInTrack(track) {
   if (!track) return;
   const isMobile = window.innerWidth <= 768;
-  const cardW = isMobile ? 155 : 260;
+  const cardW = isMobile ? 140 : 260;
   const gap = isMobile ? 10 : 20;
+
+  // On mobile hide arrows, rely on swipe
+  const outer = track.closest('.h-carousel-outer');
+  if (outer) {
+    outer.querySelectorAll('.h-carousel-arrow').forEach(btn => {
+      btn.style.display = isMobile ? 'none' : '';
+    });
+  }
+
   track.style.display = 'flex';
   track.style.flexDirection = 'row';
   track.style.flexWrap = 'nowrap';
@@ -874,15 +883,25 @@ function fixCardsInTrack(track) {
     card.style.maxWidth = cardW + 'px';
     card.style.flexShrink = '0';
   });
-  // Force scroll on wrap
+
   const wrap = track.closest('.h-scroll-wrap');
   if (!wrap) return;
-  wrap.style.cssText = 'overflow-x:auto;overflow-y:hidden;width:100%;cursor:grab;scrollbar-width:none;';
+  wrap.style.overflowX = 'auto';
+  wrap.style.overflowY = 'hidden';
+  wrap.style.width = '100%';
+  wrap.style.cursor = 'grab';
+
+  // Mouse drag (desktop)
   let isDown=false, startX, scrollLeft;
   wrap.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
   wrap.addEventListener('mouseleave',()=>isDown=false);
   wrap.addEventListener('mouseup',()=>isDown=false);
   wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
+
+  // Touch swipe (mobile)
+  let touchStartX=0, touchScrollLeft=0;
+  wrap.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchScrollLeft=wrap.scrollLeft;},{passive:true});
+  wrap.addEventListener('touchmove',e=>{const dx=touchStartX-e.touches[0].clientX;wrap.scrollLeft=touchScrollLeft+dx;},{passive:true});
 }
 function initHomeFeatured() {
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
