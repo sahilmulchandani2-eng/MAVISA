@@ -131,26 +131,39 @@
     display: none !important;
   }
 
-  /* Carrusel categorías mobile */
-  .cat-carousel-outer { width: 100%; overflow: hidden; }
-  .cat-carousel-wrap {
-    overflow: hidden;
-    width: 100%;
+  /* Categorías: scroll horizontal con peek y fade */
+  .cat-scroll-outer {
+    position: relative;
+  }
+  .cat-scroll-outer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 100%;
+    background: linear-gradient(to right, transparent, var(--color-bg));
+    pointer-events: none;
+    z-index: 2;
   }
   .categories-section .grid-4 {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    transition: transform 0.4s cubic-bezier(.25,.8,.25,1) !important;
-    width: max-content !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
     gap: 12px !important;
+    padding-right: 40px !important;
     grid-template-columns: unset !important;
+    -webkit-overflow-scrolling: touch;
   }
+  .categories-section .grid-4::-webkit-scrollbar { display: none !important; }
   .categories-section .category-card {
     flex-shrink: 0 !important;
+    width: calc(42vw) !important;
+    min-width: 150px !important;
+    max-width: 180px !important;
   }
   .categories-section .category-card-bg { height: 110px !important; }
-  #cat-dots { margin-top: 16px; }
 
 }
 

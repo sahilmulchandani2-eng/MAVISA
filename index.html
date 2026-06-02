@@ -397,9 +397,8 @@
       <h2 class="section-title section-title-editorial reveal reveal-delay-1">Explora nuestros<br><span class="text-gradient">productos</span></h2>
       <p class="section-subtitle reveal reveal-delay-2">Productos de primer nivel para tu hogar</p>
     </div>
-    <div class="cat-carousel-outer" id="cat-carousel-outer">
-      <div class="cat-carousel-wrap" id="cat-carousel-wrap">
-        <div class="grid-4 stagger-children" id="cat-scroll-track">
+    <div class="cat-scroll-outer">
+      <div class="grid-4 stagger-children" id="cat-scroll-track">
 
       <a href="catalogo.html?category=electrodomesticos" class="category-card">
         <div class="category-card-bg" style="background:linear-gradient(135deg,#1C3461,#3a6bc4);">
@@ -471,10 +470,8 @@
         </div>
       </a>
 
-        </div>
       </div>
     </div>
-    <div class="auto-carousel-dots" id="cat-dots"></div>
   </div>
 </section>
 
@@ -1025,57 +1022,6 @@ function scrollCarousel(trackId, dir) {
 window.addEventListener('load', function() {
   document.body.classList.add('loaded');
 
-  // Category carousel (mobile only)
-  if (window.innerWidth <= 768) {
-    setTimeout(function() {
-      var wrap = document.getElementById('cat-carousel-wrap');
-      var track = document.getElementById('cat-scroll-track');
-      var dotsEl = document.getElementById('cat-dots');
-      if (!track || !dotsEl || !wrap) return;
-
-      var perPage = 2;
-      var gap = 12;
-      // Calcular ancho real del contenedor y de cada card
-      var wrapW = wrap.clientWidth;
-      var cardW = Math.floor((wrapW - gap) / perPage);
-
-      // Aplicar ancho correcto a cada card
-      var cards = track.querySelectorAll('.category-card');
-      cards.forEach(function(c) {
-        c.style.width = cardW + 'px';
-        c.style.minWidth = cardW + 'px';
-      });
-
-      var total = Math.ceil(cards.length / perPage);
-      var current = 0;
-
-      // Build dots
-      dotsEl.innerHTML = Array.from({length: total}, function(_, i) {
-        return '<button class="auto-carousel-dot' + (i===0?' active':'') + '" data-p="' + i + '"></button>';
-      }).join('');
-
-      function goTo(p) {
-        current = Math.max(0, Math.min(p, total - 1));
-        var offset = current * perPage * (cardW + gap);
-        track.style.transform = 'translateX(-' + offset + 'px)';
-        dotsEl.querySelectorAll('.auto-carousel-dot').forEach(function(d, i) {
-          d.classList.toggle('active', i === current);
-        });
-      }
-
-      dotsEl.querySelectorAll('.auto-carousel-dot').forEach(function(btn) {
-        btn.addEventListener('click', function() { goTo(parseInt(btn.dataset.p)); });
-      });
-
-      // Touch swipe
-      var tx = 0;
-      track.addEventListener('touchstart', function(e) { tx = e.touches[0].clientX; }, {passive:true});
-      track.addEventListener('touchend', function(e) {
-        var dx = tx - e.changedTouches[0].clientX;
-        if (Math.abs(dx) > 40) goTo(dx > 0 ? current+1 : current-1);
-      }, {passive:true});
-    }, 200);
-  }
 });
 </script>
 </body>
