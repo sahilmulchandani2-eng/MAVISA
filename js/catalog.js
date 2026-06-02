@@ -859,12 +859,15 @@ function initProductPage() {
 }
 function fixCardsInTrack(track) {
   if (!track) return;
+  // Force horizontal flex on track
+  track.style.cssText = 'display:flex !important;flex-direction:row;flex-wrap:nowrap;gap:20px;width:max-content;padding:8px 4px;';
   track.querySelectorAll('.product-card').forEach(card => {
     card.style.cssText += ';width:260px;min-width:260px;max-width:260px;flex-shrink:0;';
   });
-  // Drag to scroll
+  // Force scroll on wrap
   const wrap = track.closest('.h-scroll-wrap');
   if (!wrap) return;
+  wrap.style.cssText = 'overflow-x:auto;overflow-y:hidden;width:100%;cursor:grab;scrollbar-width:none;';
   let isDown=false, startX, scrollLeft;
   wrap.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
   wrap.addEventListener('mouseleave',()=>isDown=false);
