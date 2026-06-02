@@ -3506,11 +3506,13 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
   padding: 8px 4px;
 }
 .h-scroll-track .product-card {
-  width: 260px;
-  flex-shrink: 0;
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  flex-shrink: 0 !important;
 }
 @media (max-width: 768px) {
-  .h-scroll-track .product-card { width: 180px; }
+  .h-scroll-track .product-card { width: 180px !important; min-width: 180px !important; max-width: 180px !important; }
   .h-carousel-arrow { width: 32px; height: 32px; font-size: 1.2rem; }
 }
 .auto-carousel-dots {
