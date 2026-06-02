@@ -91,13 +91,11 @@
   /* También ocultar flechas del carrusel en mobile */
   .h-carousel-arrow { display: none !important; }
 
-  /* ── Categorías: chips horizontales compactos ─────────── */
-  .categories-section .section-header { margin-bottom: 16px; }
-  .categories-section .section-header .section-title { font-size: 1.6rem; }
-  .categories-section .section-header .section-subtitle { display: none; }
+  /* ── Categorías mobile: chips compactos horizontales ──── */
+  .categories-section .section-header .section-subtitle { display: none !important; }
 
-  /* Grid → fila horizontal scrolleable */
-  .categories-section .grid-4 {
+  /* Fila horizontal scrolleable */
+  .section.categories-section .grid-4 {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
@@ -105,51 +103,61 @@
     overflow-x: auto !important;
     overflow-y: hidden !important;
     scrollbar-width: none !important;
-    padding-bottom: 8px;
+    padding-bottom: 4px !important;
     grid-template-columns: unset !important;
+    width: 100% !important;
   }
-  .categories-section .grid-4::-webkit-scrollbar { display: none; }
+  .section.categories-section .grid-4::-webkit-scrollbar { display: none !important; }
 
-  /* Cards → chips compactos */
-  .categories-section .category-card {
+  /* Card compacta */
+  .section.categories-section .category-card {
     flex-shrink: 0 !important;
-    width: auto !important;
-    min-width: 120px !important;
+    width: 130px !important;
+    min-width: 130px !important;
+    max-width: 130px !important;
     border-radius: 16px !important;
     transform: none !important;
-    display: flex !important;
-    flex-direction: column !important;
+    box-shadow: 0 2px 12px rgba(28,52,97,0.10) !important;
   }
 
-  /* Ocultar imagen grande en mobile */
-  .categories-section .category-card-bg {
+  /* Ocultar imagen grande */
+  .section.categories-section .category-card .category-card-bg {
     display: none !important;
+    height: 0 !important;
   }
-  /* Mostrar flaticon en el ícono, ocultar lucide */
-  .category-card-icon .cat-lucide { display: none !important; }
-  .category-card-icon .cat-flaticon { display: block !important; }
 
   /* Contenido compacto */
-  .categories-section .category-card-content {
-    padding: 12px 14px !important;
+  .section.categories-section .category-card .category-card-content {
+    padding: 12px !important;
     gap: 6px !important;
     flex-direction: column !important;
     align-items: flex-start !important;
   }
-  .categories-section .category-card-icon {
+  .section.categories-section .category-card .category-card-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+  .section.categories-section .category-card .category-card-icon .cat-flaticon {
     width: 36px !important;
     height: 36px !important;
-    font-size: 1.2rem !important;
-    border-radius: 10px !important;
+    object-fit: contain !important;
+    display: block !important;
   }
-  .categories-section .category-card-name {
-    font-size: 0.82rem !important;
-    font-weight: 700 !important;
-  }
-  .categories-section .category-card-count {
+  .section.categories-section .category-card .category-card-icon .cat-lucide {
     display: none !important;
   }
-  .categories-section .category-card-arrow {
+  .section.categories-section .category-card .category-card-name {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+  .section.categories-section .category-card .category-card-count,
+  .section.categories-section .category-card .category-card-arrow {
     display: none !important;
   }
 
