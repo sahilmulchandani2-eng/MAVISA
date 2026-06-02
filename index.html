@@ -470,7 +470,7 @@
       </a>
 
     </div>
-    <!-- Slider indicator — solo visible en móvil via CSS -->
+    <div class="cat-progress-wrap"><div class="cat-progress-thumb" id="cat-thumb"></div></div>
   </div>
 </section>
 
@@ -1020,6 +1020,23 @@ function scrollCarousel(trackId, dir) {
 }
 window.addEventListener('load', function() {
   document.body.classList.add('loaded');
+
+  // Category progress bar (mobile)
+  setTimeout(function() {
+    var track = document.getElementById('cat-scroll-track');
+    var thumb = document.getElementById('cat-thumb');
+    if (!track || !thumb) return;
+    function updateCatProgress() {
+      var scrollable = track.scrollWidth - track.clientWidth;
+      if (scrollable <= 0) return;
+      var thumbW = Math.round((track.clientWidth / track.scrollWidth) * 100);
+      var pos = Math.round((track.scrollLeft / scrollable) * (100 - thumbW));
+      thumb.style.width = thumbW + '%';
+      thumb.style.left = pos + '%';
+    }
+    updateCatProgress();
+    track.addEventListener('scroll', updateCatProgress, { passive: true });
+  }, 300);
 });
 </script>
 </body>
