@@ -1,0 +1,101 @@
+/* ============================================================
+   MAVISA — Responsive Styles
+   Archivo central para cambios Desktop / Tablet / Mobile
+   ============================================================
+
+   BREAKPOINTS:
+   ┌─────────────────────────────────────────────────────────┐
+   │  Desktop Large    min-width: 1440px                     │
+   │  Desktop          min-width: 1025px  (default)          │
+   │  Tablet           max-width: 1024px                     │
+   │  Mobile Large     max-width:  900px                     │
+   │  Mobile           max-width:  768px  ← más usado        │
+   │  Mobile Small     max-width:  480px                     │
+   │  Mobile XSmall    max-width:  380px                     │
+   └─────────────────────────────────────────────────────────┘
+
+   USO:
+   - Para cambios SOLO en desktop → usar dentro de @media (min-width: 1025px)
+   - Para cambios SOLO en móvil  → usar dentro de @media (max-width: 768px)
+   - Para cambios en ambos       → fuera de @media (en style.css)
+
+   IMPORTANTE: NO mover estilos existentes de style.css aquí.
+   Este archivo es para NUEVOS cambios organizados.
+   ============================================================ */
+
+
+/* ══════════════════════════════════════════════════════════
+   DESKTOP LARGE (1440px+)
+   Pantallas grandes, monitores 4K
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 1440px) {
+
+  /* Agregar estilos desktop large aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   DESKTOP ONLY (1025px+)
+   Cambios exclusivos para desktop que no afectan móvil
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 1025px) {
+
+  /* Agregar estilos desktop aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   TABLET (max 1024px)
+   iPad, tablets en landscape
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+
+  /* Agregar estilos tablet aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE LARGE (max 900px)
+   Tablets en portrait, móviles grandes
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Agregar estilos mobile large aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE (max 768px)  ← BREAKPOINT PRINCIPAL
+   iPhone, Android, móviles estándar
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Agregar estilos mobile aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE SMALL (max 480px)
+   iPhone SE, móviles compactos
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* Agregar estilos mobile small aquí */
+
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE XSMALL (max 380px)
+   Dispositivos muy pequeños
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 380px) {
+
+  /* Agregar estilos mobile xsmall aquí */
+
+}

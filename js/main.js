@@ -54,10 +54,7 @@ function initNav() {
     }
   });
 
-  // Mobile menu — definir funciones globales AQUÍ para que onclick en HTML funcione
-  const mobileMenu = document.getElementById('nav-mobile');
-  const overlay    = document.getElementById('nav-overlay');
-
+  // Mobile menu — funciones globales (llamadas desde onclick en HTML)
   window.openMobileMenu = function() {
     const menu = document.getElementById('nav-mobile');
     const ov   = document.getElementById('nav-overlay');
@@ -74,11 +71,7 @@ function initNav() {
     document.body.style.overflow = '';
   };
 
-  // También vincular con addEventListener como respaldo
-  const hamburger = document.querySelector('.nav-hamburger');
-  if (hamburger) hamburger.addEventListener('click', window.openMobileMenu);
-
-  // Cerrar al hacer click en links del menú
+  // Cerrar al hacer click en links del menú mobile
   document.querySelectorAll('.nav-mobile-link, .nav-mobile-cat').forEach(function(l) {
     l.addEventListener('click', window.closeMobileMenu);
   });

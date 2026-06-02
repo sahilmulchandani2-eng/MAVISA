@@ -4,6 +4,20 @@
    Brand Theme: Navy Blue + Red Coral
    ============================================================ */
 
+/* ============================================================
+   ESTRUCTURA DEL ARCHIVO:
+   1. Variables globales (:root)
+   2. Reset base
+   3. Tipografía y utilidades
+   4. Layout (container, grid, sections)
+   5. Navegación (nav, ticker, mobile menu)
+   6. Hero
+   7. Componentes (cards, badges, botones, modales)
+   8. Secciones (featured, new products, footer)
+   9. Carrusel horizontal
+   10. Media queries legacy (no editar — usar css/responsive.css)
+   ============================================================ */
+
 /* ── Google Fonts ─────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
@@ -67,6 +81,17 @@
   --dur-fast:          0.2s;
   --dur-med:           0.4s;
   --dur-slow:          0.7s;
+
+  /* Z-Index Stack — centralizado para evitar conflictos */
+  --z-base:            1;
+  --z-dropdown:        100;
+  --z-sticky:          200;
+  --z-nav:             500;
+  --z-modal-bg:        2000;
+  --z-modal:           2001;
+  --z-mobile-overlay:  9999;
+  --z-mobile-menu:     10000;
+  --z-top:             10001;
 }
 
 /* ── Reset ────────────────────────────────────────────────── */
@@ -1826,6 +1851,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   MEDIA QUERIES LEGACY — NO EDITAR DIRECTAMENTE
+   Para nuevos cambios responsive usar: css/responsive.css
+   ══════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
