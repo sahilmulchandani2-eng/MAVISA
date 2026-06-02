@@ -471,9 +471,6 @@
 
     </div>
     <!-- Slider indicator — solo visible en móvil via CSS -->
-    <div class="cat-scroll-bar" id="cat-scroll-bar">
-      <div class="cat-scroll-thumb" id="cat-scroll-thumb"></div>
-    </div>
   </div>
 </section>
 
@@ -1023,20 +1020,6 @@ function scrollCarousel(trackId, dir) {
 }
 window.addEventListener('load', function() {
   document.body.classList.add('loaded');
-  // Category scroll indicator
-  const track = document.getElementById('cat-scroll-track');
-  const thumb = document.getElementById('cat-scroll-thumb');
-  if (track && thumb) {
-    function updateThumb() {
-      const scrollable = track.scrollWidth - track.clientWidth;
-      const thumbW = Math.max(20, (track.clientWidth / track.scrollWidth) * 100);
-      const pct = scrollable > 0 ? (track.scrollLeft / scrollable) * (100 - thumbW) : 0;
-      thumb.style.width = thumbW + '%';
-      thumb.style.left = pct + '%';
-    }
-    updateThumb();
-    track.addEventListener('scroll', updateThumb, { passive: true });
-  }
 });
 </script>
 </body>
