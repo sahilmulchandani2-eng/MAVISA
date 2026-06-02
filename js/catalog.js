@@ -263,8 +263,7 @@ const PRODUCTS_DATA = [
     images: [
       'assets/images/placeholder.svg'
     ],
-    featured: false,
-    isNew: true,
+    featured: true,     isNew: true,
     inStock: true
   },
   {
@@ -303,8 +302,7 @@ const PRODUCTS_DATA = [
     images: [
       'assets/images/hub.svg'
     ],
-    featured: false,
-    isNew: true,
+    featured: true,     isNew: true,
     inStock: true
   },
   {
@@ -954,13 +952,64 @@ function fixCardsInTrack(track) {
   });
   wrap.addEventListener('mouseleave', () => { dragging = false; wrap.style.cursor = 'grab'; });
 }
+function initNewGrid(grid) {
+  // "Lo último en llegar" — DESKTOP: grid fijo 4 col, última fila centrada
+  //                         MOBILE:  carrusel horizontal
+  if (!grid) return;
+  const isMobile = window.innerWidth <= 768;
+  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
+  grid.innerHTML = newProducts.map(productCardHTML).join('');
+
+  if (isMobile) {
+    fixCardsInTrack(grid);
+    return;
+  }
+
+  // Desktop: grid 4 columnas
+  const wrap = grid.closest('.h-scroll-wrap');
+  const outer = grid.closest('.h-carousel-outer');
+
+  // Ocultar flechas y dots en desktop para esta sección
+  if (outer) outer.querySelectorAll('.h-carousel-arrow').forEach(b => b.style.display = 'none');
+  const dotsEl = document.getElementById('new-dots');
+  if (dotsEl) dotsEl.style.display = 'none';
+
+  // Quitar overflow del wrap
+  if (wrap) { wrap.style.overflow = 'visible'; wrap.style.width = '100%'; }
+
+  // Aplicar grid
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+  grid.style.gap = '24px';
+  grid.style.width = '100%';
+  grid.style.transform = 'none';
+  grid.style.transition = 'none';
+
+  // Centrar última fila si está incompleta
+  const total = newProducts.length;
+  const lastRowCount = total % 4;
+  if (lastRowCount > 0) {
+    const cards = grid.querySelectorAll('.product-card');
+    const firstInLastRow = total - lastRowCount;
+    const colStart = Math.floor((4 - lastRowCount) / 2) + 1;
+    cards.forEach((card, i) => {
+      card.style.width = '';
+      card.style.minWidth = '';
+      card.style.maxWidth = '';
+      if (i === firstInLastRow) {
+        card.style.gridColumn = `${colStart} / span 1`;
+      }
+    });
+  }
+}
+
 function initHomeFeatured() {
-  const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
-  const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8);
-  featuredGrid.innerHTML=featured.map(productCardHTML).join('');
-  fixCardsInTrack(featuredGrid);
-  const newGrid=$('#new-grid');
-  if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,8);newGrid.innerHTML=newProducts.map(productCardHTML).join('');fixCardsInTrack(newGrid);}
+  const featuredGrid = $('#featured-grid'); if (!featuredGrid) return;
+  const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
+  featuredGrid.innerHTML = featured.map(productCardHTML).join('');
+  fixCardsInTrack(featuredGrid); // carrusel en ambas versiones
+
+  initNewGrid($('#new-grid'));
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
