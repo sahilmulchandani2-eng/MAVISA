@@ -147,11 +147,9 @@
     grid-template-columns: unset !important;
   }
   .categories-section .category-card {
-    width: 150px !important;
-    min-width: 150px !important;
     flex-shrink: 0 !important;
   }
-  .categories-section .category-card-bg { height: 100px !important; }
+  .categories-section .category-card-bg { height: 110px !important; }
   #cat-dots { margin-top: 16px; }
 
 }
