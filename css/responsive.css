@@ -134,19 +134,21 @@
     align-items: flex-start !important;
   }
   .section.categories-section .category-card .category-card-icon {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 10px !important;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 50% !important;
+    background: transparent !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     overflow: hidden !important;
   }
   .section.categories-section .category-card .category-card-icon .cat-flaticon {
-    width: 36px !important;
-    height: 36px !important;
+    width: 70px !important;
+    height: 70px !important;
     object-fit: contain !important;
     display: block !important;
+    border-radius: 50% !important;
   }
   .section.categories-section .category-card .category-card-icon .cat-lucide {
     display: none !important;
