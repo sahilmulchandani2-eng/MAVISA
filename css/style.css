@@ -3460,20 +3460,30 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
   .wa-float-label { display: none; }
 }
 
-/* ── Auto Carousel ────────────────────────────────────────── */
-.auto-carousel {
-  position: relative;
+/* ── Horizontal Scroll Carousel ───────────────────────────── */
+.h-scroll-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232,48,63,0.3) transparent;
+  padding-bottom: 8px;
+  cursor: grab;
 }
-.auto-carousel-pages {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+.h-scroll-wrap:active { cursor: grabbing; }
+.h-scroll-wrap::-webkit-scrollbar { height: 4px; }
+.h-scroll-wrap::-webkit-scrollbar-track { background: transparent; }
+.h-scroll-wrap::-webkit-scrollbar-thumb { background: rgba(232,48,63,0.3); border-radius: 4px; }
+.h-scroll-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
 }
-@media (max-width: 900px) {
-  .auto-carousel-pages { grid-template-columns: repeat(2, 1fr); }
+.h-scroll-track .product-card {
+  width: 260px;
+  flex-shrink: 0;
 }
-@media (max-width: 540px) {
-  .auto-carousel-pages { grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 768px) {
+  .h-scroll-track .product-card { width: 200px; }
 }
 .auto-carousel-dots {
   display: flex;
