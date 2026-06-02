@@ -3461,29 +3461,57 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
 }
 
 /* ── Horizontal Scroll Carousel ───────────────────────────── */
+.h-carousel-outer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.h-carousel-arrow {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--navy);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  z-index: 2;
+  padding: 0;
+}
+.h-carousel-arrow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
 .h-scroll-wrap {
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(232,48,63,0.3) transparent;
-  padding-bottom: 8px;
+  scrollbar-width: none;
+  flex: 1;
   cursor: grab;
 }
 .h-scroll-wrap:active { cursor: grabbing; }
-.h-scroll-wrap::-webkit-scrollbar { height: 4px; }
-.h-scroll-wrap::-webkit-scrollbar-track { background: transparent; }
-.h-scroll-wrap::-webkit-scrollbar-thumb { background: rgba(232,48,63,0.3); border-radius: 4px; }
+.h-scroll-wrap::-webkit-scrollbar { display: none; }
 .h-scroll-track {
   display: flex;
   gap: 20px;
   width: max-content;
+  padding: 8px 4px;
 }
 .h-scroll-track .product-card {
   width: 260px;
   flex-shrink: 0;
 }
 @media (max-width: 768px) {
-  .h-scroll-track .product-card { width: 200px; }
+  .h-scroll-track .product-card { width: 180px; }
+  .h-carousel-arrow { width: 32px; height: 32px; font-size: 1.2rem; }
 }
 .auto-carousel-dots {
   display: flex;

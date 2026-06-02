@@ -480,8 +480,12 @@
       <h2 class="section-title section-title-editorial reveal reveal-delay-1" style="color:#fff;letter-spacing:-0.03em;">Los más <span style="color:var(--accent);">populares</span></h2>
       <p class="section-subtitle reveal reveal-delay-2" style="color:rgba(255,255,255,0.55);max-width:480px;">Lo que nuestros clientes más eligen, con garantía y al mejor precio de ZOFRI.</p>
     </div>
-    <div class="h-scroll-wrap">
-      <div class="h-scroll-track" id="featured-grid"></div>
+    <div class="h-carousel-outer">
+      <button class="h-carousel-arrow h-carousel-prev" onclick="scrollCarousel('featured-grid',-1)">&#8249;</button>
+      <div class="h-scroll-wrap" id="featured-wrap">
+        <div class="h-scroll-track" id="featured-grid"></div>
+      </div>
+      <button class="h-carousel-arrow h-carousel-next" onclick="scrollCarousel('featured-grid',1)">&#8250;</button>
     </div>
     <div style="text-align:center;margin-top:48px;" class="reveal">
       <a href="catalogo.html" class="btn btn-lg" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.55);font-weight:600;" onmouseover="this.style.borderColor='#fff';this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.55)';this.style.background='transparent'">Ver todos los productos →</a>
@@ -498,8 +502,12 @@
       <h2 class="section-title section-title-editorial reveal reveal-delay-1">Lo <span class="text-gradient">último en llegar</span></h2>
       <p class="section-subtitle reveal reveal-delay-2">Los productos más recientes, con los más altos estándares de calidad</p>
     </div>
-    <div class="h-scroll-wrap">
-      <div class="h-scroll-track" id="new-grid"></div>
+    <div class="h-carousel-outer">
+      <button class="h-carousel-arrow h-carousel-prev" onclick="scrollCarousel('new-grid',-1)">&#8249;</button>
+      <div class="h-scroll-wrap" id="new-wrap">
+        <div class="h-scroll-track" id="new-grid"></div>
+      </div>
+      <button class="h-carousel-arrow h-carousel-next" onclick="scrollCarousel('new-grid',1)">&#8250;</button>
     </div>
   </div>
 </section>
@@ -998,6 +1006,15 @@
   requestAnimationFrame(tick);
 })();
 </script>
-<script>window.addEventListener('load',function(){document.body.classList.add('loaded');});</script>
+<script>
+function scrollCarousel(trackId, dir) {
+  const track = document.getElementById(trackId);
+  if (!track) return;
+  const wrap = track.closest('.h-scroll-wrap');
+  if (!wrap) return;
+  wrap.scrollBy({ left: dir * 560, behavior: 'smooth' });
+}
+window.addEventListener('load',function(){document.body.classList.add('loaded');});
+</script>
 </body>
 </html>
