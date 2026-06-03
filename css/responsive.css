@@ -39,11 +39,14 @@
    DESKTOP ONLY (1025px+)
    Cambios exclusivos para desktop que no afectan móvil
    ══════════════════════════════════════════════════════════ */
+/* Global: ocultar flaticon por defecto, lucide visible */
+.category-card-icon .cat-flaticon { display: none !important; }
+.category-card-icon .cat-lucide   { display: flex !important; }
+
 @media (min-width: 769px) {
   .cat-progress-wrap { display: none !important; }
-  /* Desktop: mostrar lucide, ocultar flaticon en ícono */
-  .category-card-icon .cat-flaticon { display: none !important; }
-  .category-card-icon .cat-lucide { display: flex !important; }
+  /* Desktop: ocultar flechas de categorías */
+  .cat-arrow { display: none !important; }
 }
 
 
