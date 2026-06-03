@@ -25,13 +25,10 @@
   <link rel="canonical" href="https://www.mavisa.cl/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap"></noscript>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>body{opacity:0;transition:opacity 0.25s}body.loaded{opacity:1}</style>
   <script type="application/ld+json">
   {
@@ -408,7 +405,7 @@
 
       <a href="catalogo.html?category=electrodomesticos" class="category-card">
         <div class="category-card-bg" style="background:#0d1e3d;overflow:hidden;">
-          <img src="assets/images/categories/electrodomesticos.png" alt="Electrodomésticos" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+          <img src="assets/images/categories/electrodomesticos.png" alt="Electrodomésticos" style="width:100%;height:100%;object-fit:cover;">
         </div>
         <div class="category-card-content">
           <div class="category-card-icon" style="background:rgba(201,168,76,0.12);"><i class="cat-lucide" data-lucide="cooking-pot" style="width:36px;height:36px;stroke:#C9A84C;stroke-width:1.8;"></i></div>
@@ -422,7 +419,7 @@
 
       <a href="catalogo.html?category=belleza" class="category-card">
         <div class="category-card-bg" style="background:#0d1e3d;overflow:hidden;">
-          <img src="assets/images/categories/belleza.png" alt="Belleza" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+          <img src="assets/images/categories/belleza.png" alt="Belleza" style="width:100%;height:100%;object-fit:cover;">
         </div>
         <div class="category-card-content">
           <div class="category-card-icon" style="background:rgba(201,168,76,0.12);"><i class="cat-lucide" data-lucide="sparkles" style="width:36px;height:36px;stroke:#C9A84C;stroke-width:1.8;"></i></div>
@@ -859,7 +856,7 @@
   })();
 </script>
 <script src="js/main.js" defer></script>
-<script src="js/catalog.js" defer></script>
+<script src="js/catalog.js"></script>
 <script>
     /* ── Contact Modal ─────────────────────────────────────────── */
   function openContactModal() {
@@ -1002,7 +999,6 @@
   track.style.animation = 'none';
   track.style.transform = 'none';
   track.style.gap = '0';
-  track.style.willChange = 'transform';
 
   var GAP = 48;
   var speed = window.innerWidth <= 768 ? 0.9 : 0.5;
@@ -1014,21 +1010,14 @@
     el.style.boxSizing = 'content-box';
   });
 
-  // Cachear anchos — evita layout thrashing en cada frame
-  var widthCache = new WeakMap();
-  function getWidth(el) {
-    if (!widthCache.has(el)) widthCache.set(el, el.offsetWidth);
-    return widthCache.get(el);
-  }
-
   function tick() {
     offset += speed;
     var first = track.firstElementChild;
     if (first) {
-      var w = getWidth(first);
+      var w = first.getBoundingClientRect().width;
       if (w > 0 && offset >= w) {
+        // Mueve el primer item al final — sin corte visible
         track.appendChild(first);
-        widthCache.delete(first);
         offset -= w;
       }
     }
