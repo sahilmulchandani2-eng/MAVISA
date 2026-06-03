@@ -637,39 +637,28 @@
         </div>
       </div>
 
-      <div class="section-divider" style="margin-top:8px;">🖼 Imagen del producto</div>
+      <div class="section-divider" style="margin-top:8px;">🖼 Imágenes del producto</div>
+      <!-- Input oculto para compatibilidad -->
+      <input type="hidden" id="f-image">
       <div class="form-row cols-1">
         <div class="form-group">
+          <div style="font-size:0.78rem;color:var(--text-3);margin-bottom:10px;">La primera imagen es la principal. Puedes agregar hasta 5 fotos.</div>
 
-          <!-- Opciones de imagen -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <!-- Galería de imágenes -->
+          <div id="img-gallery" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"></div>
 
-            <!-- Opción 1: Subir desde computador -->
-            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;border:2px dashed var(--border);border-radius:var(--r);cursor:pointer;background:var(--cream);transition:border-color .2s;text-align:center;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
-              <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this)">
-              <span style="font-size:1.8rem;">📁</span>
-              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);">Subir desde el computador</span>
-              <span style="font-size:0.72rem;color:var(--text-3);">JPG, PNG, WEBP</span>
-              <span id="upload-status" style="font-size:0.72rem;color:var(--red);display:none;"></span>
+          <!-- Botones para agregar -->
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:2px dashed var(--border);border-radius:var(--r);cursor:pointer;background:var(--cream);font-size:0.82rem;font-weight:600;color:var(--navy);transition:border-color .2s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="file" accept="image/*" multiple style="display:none;" onchange="uploadMultipleImages(this)">
+              <span>📁</span> Subir desde computador
             </label>
-
-            <!-- Opción 2: Link de internet -->
-            <div style="display:flex;flex-direction:column;gap:8px;padding:16px;border:2px solid var(--border);border-radius:var(--r);background:var(--cream);">
-              <span style="font-size:1.8rem;text-align:center;">🌐</span>
-              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);text-align:center;">Pegar link de imagen</span>
-              <input type="text" id="f-image"
-                style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:0.82rem;font-family:inherit;background:#fff;color:var(--text);"
-                placeholder="https://imagen.jpg"
-                oninput="previewImage(this.value);updateLivePreview()">
-              <span style="font-size:0.7rem;color:var(--text-3);line-height:1.4;">💡 En Google Imágenes: clic derecho sobre la imagen → <strong>Copiar dirección de imagen</strong></span>
-            </div>
+            <button type="button" onclick="addImageByUrl()" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:2px solid var(--border);border-radius:var(--r);background:var(--cream);font-size:0.82rem;font-weight:600;color:var(--navy);cursor:pointer;white-space:nowrap;">
+              <span>🌐</span> Agregar link de imagen
+            </button>
           </div>
-
-          <!-- Preview -->
-          <div class="img-preview-wrap">
-            <img id="img-preview" src="" alt="Vista previa">
-            <div class="img-preview-hint" id="img-hint">Sube una foto o pega un link para ver la vista previa</div>
-          </div>
+          <div style="font-size:0.7rem;color:var(--text-3);margin-top:6px;">💡 Google Imágenes: clic derecho → <strong>Copiar dirección de imagen</strong></div>
+          <span id="upload-status" style="font-size:0.78rem;display:none;margin-top:6px;"></span>
         </div>
       </div>
 
@@ -984,6 +973,8 @@ function openAddModal() {
 
 function clearForm() {
   ['f-name','f-price','f-price-old','f-desc','f-image'].forEach(id => $(id).value = '');
+  productImages = [];
+  renderImageGallery();
   $('f-category').querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
   $('f-badge').value = '';
   $('f-featured').checked = false;
@@ -1005,7 +996,9 @@ function openEdit(id) {
   $('f-price').value = p.price;
   $('f-price-old').value = p.priceOld || '';
   $('f-desc').value = p.description;
-  $('f-image').value = p.image || '';
+  productImages = p.images || (p.image ? [p.image] : []);
+  renderImageGallery();
+  $('f-image').value = productImages[0] || '';
   $('f-featured').checked = !!p.featured;
   $('f-new').checked = !!p.isNew;
   $('f-stock').checked = !!p.inStock;
@@ -1064,8 +1057,8 @@ function saveProduct() {
     badgeLabel: badgeLabel || null,
     description: desc,
     specs,
-    image: $('f-image').value.trim() || 'assets/images/placeholder.svg',
-    images: [$('f-image').value.trim() || 'assets/images/placeholder.svg'],
+    image: productImages[0] || 'assets/images/placeholder.svg',
+    images: productImages.length ? productImages : ['assets/images/placeholder.svg'],
     featured: $('f-featured').checked,
     isNew: $('f-new').checked,
     inStock: $('f-stock').checked,
@@ -1173,6 +1166,78 @@ function updateLivePreview() {
   $('lp-warnings').innerHTML = warns.map(w =>
     `<div style="display:flex;align-items:flex-start;gap:7px;font-size:0.76rem;color:#4A6080;background:#fff;border:1px solid rgba(28,52,97,0.10);border-radius:8px;padding:8px 10px;">${w.icon} ${w.msg}</div>`
   ).join('');
+}
+
+/* ── MULTI-IMAGE GALLERY ─────────────────────────────────── */
+let productImages = []; // array de URLs
+
+function renderImageGallery() {
+  const gallery = document.getElementById('img-gallery');
+  gallery.innerHTML = '';
+  productImages.forEach((url, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'position:relative;width:90px;height:90px;border-radius:10px;overflow:hidden;border:2px solid ' + (i===0?'var(--navy)':'var(--border)') + ';flex-shrink:0;';
+    div.innerHTML = `
+      <img src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.opacity='.3'">
+      ${i===0?'<div style="position:absolute;bottom:0;left:0;right:0;background:var(--navy);color:#fff;font-size:0.58rem;font-weight:700;text-align:center;padding:2px;">PRINCIPAL</div>':''}
+      <button type="button" onclick="removeImage(${i})" style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;border:none;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">✕</button>
+    `;
+    gallery.appendChild(div);
+  });
+  // Actualizar f-image con la primera imagen
+  document.getElementById('f-image').value = productImages[0] || '';
+  if (productImages[0]) { previewImage(productImages[0]); updateLivePreview(); }
+}
+
+function removeImage(index) {
+  productImages.splice(index, 1);
+  renderImageGallery();
+}
+
+function addImageUrl(url) {
+  if (!url) return;
+  if (productImages.length >= 5) { showUploadStatus('error','Máximo 5 imágenes'); return; }
+  productImages.push(url);
+  renderImageGallery();
+}
+
+function addImageByUrl() {
+  const url = prompt('Pega el link de la imagen:');
+  if (url && url.trim()) addImageUrl(url.trim());
+}
+
+async function uploadMultipleImages(input) {
+  const files = Array.from(input.files).slice(0, 5 - productImages.length);
+  if (!files.length) return;
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { showUploadStatus('error','⚠️ Primero configura el token en "Publicar al sitio"'); return; }
+
+  showUploadStatus('info', `⏳ Subiendo ${files.length} imagen(es)...`);
+  for (const file of files) {
+    try {
+      const base64 = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); });
+      const ext = file.name.split('.').pop().toLowerCase();
+      const filename = 'prod_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '.' + ext;
+      const path = 'assets/images/products/' + filename;
+      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+        method:'PUT', headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
+        body: JSON.stringify({ message:'Imagen producto: '+filename, content:base64 })
+      });
+      if (!res.ok) throw new Error('Error al subir '+file.name);
+      const url = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+      addImageUrl(url);
+    } catch(e) { showUploadStatus('error','❌ '+e.message); }
+  }
+  showUploadStatus('success','✅ Imágenes subidas');
+  input.value = '';
+}
+
+function showUploadStatus(type, msg) {
+  const el = document.getElementById('upload-status');
+  el.style.display = 'block';
+  el.textContent = msg;
+  el.style.color = type==='success'?'#1a7a45':type==='error'?'var(--red)':'var(--navy)';
+  if (type==='success') setTimeout(()=>{ el.style.display='none'; }, 3000);
 }
 
 /* ── UPLOAD IMAGE TO GITHUB ──────────────────────────────── */
