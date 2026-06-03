@@ -18,8 +18,8 @@
    10. Media queries legacy (no editar — usar css/responsive.css)
    ============================================================ */
 
-/* ── Google Fonts ─────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+/* ── Google Fonts — cargado desde HTML con preload ───────── */
+/* @import eliminado — se carga con <link preload> en el HTML */
 
 /* ── CSS Custom Properties ────────────────────────────────── */
 :root {
