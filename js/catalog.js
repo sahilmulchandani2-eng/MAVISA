@@ -870,9 +870,29 @@ function initProductPage() {
   initScrollAnimations();
 }
 function initHomeFeatured() {
+<<<<<<< Updated upstream
   const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
   const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8); featuredGrid.innerHTML=featured.map(productCardHTML).join('');
   const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,4);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
+=======
+  const featuredGrid = $('#featured-grid'); if (!featuredGrid) return;
+  const isMobile = window.innerWidth <= 768;
+  const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
+  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
+
+  // Desktop Y Mobile: grid simple, sin carrusel
+  initDesktopGrid(featuredGrid, featured, false);
+  const newGrid = $('#new-grid');
+  if (newGrid) initDesktopGrid(newGrid, newProducts, true);
+
+  // Forzar visibilidad inmediata en las tarjetas del homepage
+  // (el overflow-y:hidden del carrusel interfiere con IntersectionObserver)
+  requestAnimationFrame(() => {
+    featuredGrid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    if (newGrid) newGrid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  });
+
+>>>>>>> Stashed changes
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
