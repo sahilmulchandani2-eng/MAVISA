@@ -810,7 +810,9 @@ function productCardHTML(p) {
 }
 function getFilteredProducts() {
   let list = [...PRODUCTS_DATA];
-  if (catalogState.category !== 'all') list = list.filter(p => p.categorySlug === catalogState.category);
+  if (catalogState.category !== 'all') list = list.filter(p =>
+    p.categorySlugs ? p.categorySlugs.includes(catalogState.category) : p.categorySlug === catalogState.category
+  );
   if (catalogState.search.trim()) { const q = catalogState.search.toLowerCase(); list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)); }
   switch (catalogState.sort) {
     case 'price-asc':  list.sort((a,b) => a.price - b.price); break;

@@ -594,20 +594,17 @@
           <input type="text" class="form-control" id="f-name" placeholder="Ej: Taladro Percutor 710W">
         </div>
         <div class="form-group">
-          <label class="form-label">Categoría *</label>
-          <select class="form-control" id="f-category">
-            <option value="">— Seleccionar —</option>
-            <option value="Belleza|belleza">Belleza</option>
-            <option value="Mascotas|mascotas">Mascotas</option>
-            <option value="Deportes y Hobbies|deportes-hobbies">Deportes y Hobbies</option>
-            <option value="Hogar y Cocina|hogar-cocina">Hogar y Cocina</option>
-            <option value="Salud y Equipos Medicos|salud-medicos">Salud y Equipos Médicos</option>
-            <option value="Maquinas Industriales|maquinas-industriales">Máquinas Industriales</option>
-            <option value="Juguetes|juguetes">Juguetes</option>
-            <option value="Electrodomésticos|electrodomesticos">Electrodomésticos</option>
-            <option value="Tecnología Hogar|tecnologia-hogar">Tecnología Hogar</option>
-            <option value="Gadgets|gadgets">Gadgets</option>
-          </select>
+          <label class="form-label">Categorías * <span style="font-weight:400;color:var(--text-3);font-size:0.78rem;">(puedes seleccionar varias)</span></label>
+          <div id="f-category" style="display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--cream);">
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Electrodomésticos|electrodomesticos"> Electrodomésticos</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Belleza|belleza"> Belleza</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Barbería|barberia"> Barbería</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Hobbies|hobbies"> Hobbies</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Mascotas|mascotas"> Mascotas</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Salud|salud"> Salud</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Juguetes|juguetes"> Juguetes</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.88rem;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="Gadgets|gadgets"> Gadgets</label>
+          </div>
         </div>
       </div>
 
@@ -930,7 +927,7 @@ function openAddModal() {
 
 function clearForm() {
   ['f-name','f-price','f-price-old','f-desc','f-image'].forEach(id => $(id).value = '');
-  $('f-category').value = '';
+  $('f-category').querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
   $('f-badge').value = '';
   $('f-featured').checked = false;
   $('f-new').checked = false;
@@ -956,9 +953,12 @@ function openEdit(id) {
   $('f-new').checked = !!p.isNew;
   $('f-stock').checked = !!p.inStock;
 
-  // Category
-  const catOpt = [...$('f-category').options].find(o => o.value.includes(p.categorySlug));
-  $('f-category').value = catOpt ? catOpt.value : '';
+  // Category — soporte múltiple y legacy
+  const slugs = p.categorySlugs || (p.categorySlug ? [p.categorySlug] : []);
+  $('f-category').querySelectorAll('input[type=checkbox]').forEach(c => {
+    const slug = c.value.split('|')[1];
+    c.checked = slugs.includes(slug);
+  });
 
   // Badge
   const badgeOpt = [...$('f-badge').options].find(o => o.value.startsWith(p.badge || '~'));
@@ -977,7 +977,8 @@ function openEdit(id) {
 /* ── SAVE ────────────────────────────────────────────────── */
 function saveProduct() {
   const name = $('f-name').value.trim();
-  const catVal = $('f-category').value;
+  const checkedCats = [...$('f-category').querySelectorAll('input[type=checkbox]:checked')].map(c => c.value);
+  const catVal = checkedCats[0] || '';
   const price = parseFloat($('f-price').value);
   const desc = $('f-desc').value.trim();
 
@@ -986,6 +987,8 @@ function saveProduct() {
   }
 
   const [category, categorySlug] = catVal.split('|');
+  const categories = checkedCats.map(v => v.split('|')[0]);
+  const categorySlugs = checkedCats.map(v => v.split('|')[1]);
   const priceOld = parseFloat($('f-price-old').value) || null;
   const badgeVal = $('f-badge').value;
   const [badge, badgeLabel] = badgeVal ? badgeVal.split('|') : [null, null];
@@ -997,7 +1000,7 @@ function saveProduct() {
 
   const product = {
     id: editingId || nextId(),
-    name, category, categorySlug,
+    name, category, categorySlug, categories, categorySlugs,
     price, priceOld,
     badge: badge || null,
     badgeLabel: badgeLabel || null,
