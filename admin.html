@@ -1169,6 +1169,91 @@ function previewImage(url) {
   }
 }
 
+/* ── PUBLISH TO GITHUB ───────────────────────────────────── */
+const GH_REPO  = 'sahilmulchandani2-eng/MAVISA';
+const GH_FILE  = 'js/catalog.js';
+const GH_TOKEN_KEY = 'mavisa_gh_token';
+
+function openPublishModal() {
+  const saved = localStorage.getItem(GH_TOKEN_KEY) || '';
+  $('gh-token').value = saved;
+  $('publish-status').style.display = 'none';
+  openModal('publish-modal');
+}
+
+async function publishToGitHub() {
+  const token = $('gh-token').value.trim();
+  if (!token) { showPublishStatus('error', '⚠️ Ingresa tu GitHub token'); return; }
+  localStorage.setItem(GH_TOKEN_KEY, token);
+
+  const btn = $('publish-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Publicando...';
+  showPublishStatus('info', '📡 Conectando con GitHub...');
+
+  try {
+    const headers = {
+      'Authorization': 'token ' + token,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json'
+    };
+
+    // 1. Obtener SHA del archivo actual
+    showPublishStatus('info', '📥 Obteniendo archivo actual...');
+    const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`, { headers });
+    if (!getRes.ok) throw new Error('No se pudo leer el archivo. Verifica el token.');
+    const getJson = await getRes.json();
+    const sha = getJson.sha;
+
+    // 2. Generar el nuevo catalog.js
+    const newContent = generateCatalogJS();
+    const encoded = btoa(unescape(encodeURIComponent(newContent)));
+
+    // 3. Subir a GitHub
+    showPublishStatus('info', '🚀 Subiendo cambios...');
+    const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: `Admin: actualizar catálogo — ${new Date().toLocaleString('es-CL')}`,
+        content: encoded,
+        sha: sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || 'Error al subir');
+    }
+
+    showPublishStatus('success', '✅ ¡Publicado! El sitio se actualizará en ~30 segundos.');
+    btn.textContent = '✅ Publicado';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '🚀 Publicar ahora';
+    }, 3000);
+
+  } catch(e) {
+    showPublishStatus('error', '❌ ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🚀 Publicar ahora';
+  }
+}
+
+function showPublishStatus(type, msg) {
+  const el = $('publish-status');
+  el.style.display = 'block';
+  el.textContent = msg;
+  const colors = {
+    info:    { bg: 'rgba(28,52,97,0.08)',  color: '#1C3461' },
+    success: { bg: 'rgba(37,165,95,0.12)', color: '#1a7a45' },
+    error:   { bg: 'rgba(232,48,63,0.10)', color: '#c0202e' }
+  };
+  const c = colors[type] || colors.info;
+  el.style.background = c.bg;
+  el.style.color = c.color;
+}
+
 /* ── EXPORT ──────────────────────────────────────────────── */
 function openExport() {
   const preview = generateCatalogJS();
