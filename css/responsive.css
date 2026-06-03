@@ -43,10 +43,11 @@
 .category-card-icon .cat-flaticon { display: none !important; }
 .category-card-icon .cat-lucide   { display: flex !important; }
 
+/* Global: flechas de categorías ocultas por defecto (se muestran solo en mobile) */
+.cat-arrow { display: none !important; }
+
 @media (min-width: 769px) {
   .cat-progress-wrap { display: none !important; }
-  /* Desktop: ocultar flechas de categorías */
-  .cat-arrow { display: none !important; }
 }
 
 
@@ -97,8 +98,29 @@
   /* ── Categorías mobile: cards con imagen + ícono + nombre ── */
   .categories-section .section-header .section-subtitle { display: none !important; }
 
-  /* Ocultar flechas de categorías en mobile */
-  .cat-arrow { display: none !important; }
+  /* Flechas de categorías — visibles en mobile, flotando a los lados del título */
+  .cat-scroll-outer { position: relative; }
+  .cat-arrow {
+    display: flex !important;
+    position: absolute;
+    top: -56px;
+    z-index: 10;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(28,52,97,0.30);
+    transition: background 0.2s;
+  }
+  .cat-arrow:active { background: var(--accent); }
+  .cat-arrow-left  { left: 4px; }
+  .cat-arrow-right { right: 4px; }
 
   /* Scroll horizontal */
   .categories-section .grid-4,
