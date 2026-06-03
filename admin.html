@@ -640,13 +640,35 @@
       <div class="section-divider" style="margin-top:8px;">🖼 Imagen del producto</div>
       <div class="form-row cols-1">
         <div class="form-group">
-          <label class="form-label">URL de la imagen</label>
-          <input type="text" class="form-control" id="f-image"
-                 placeholder="https://… o assets/images/nombre.jpg"
-                 oninput="previewImage(this.value);updateLivePreview()">
-          <div class="img-preview-wrap" style="margin-top:10px;">
+
+          <!-- Opciones de imagen -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+
+            <!-- Opción 1: Subir desde computador -->
+            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;border:2px dashed var(--border);border-radius:var(--r);cursor:pointer;background:var(--cream);transition:border-color .2s;text-align:center;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this)">
+              <span style="font-size:1.8rem;">📁</span>
+              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);">Subir desde el computador</span>
+              <span style="font-size:0.72rem;color:var(--text-3);">JPG, PNG, WEBP</span>
+              <span id="upload-status" style="font-size:0.72rem;color:var(--red);display:none;"></span>
+            </label>
+
+            <!-- Opción 2: Link de internet -->
+            <div style="display:flex;flex-direction:column;gap:8px;padding:16px;border:2px solid var(--border);border-radius:var(--r);background:var(--cream);">
+              <span style="font-size:1.8rem;text-align:center;">🌐</span>
+              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);text-align:center;">Pegar link de imagen</span>
+              <input type="text" id="f-image"
+                style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:0.82rem;font-family:inherit;background:#fff;color:var(--text);"
+                placeholder="https://imagen.jpg"
+                oninput="previewImage(this.value);updateLivePreview()">
+              <span style="font-size:0.7rem;color:var(--text-3);line-height:1.4;">💡 En Google Imágenes: clic derecho sobre la imagen → <strong>Copiar dirección de imagen</strong></span>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="img-preview-wrap">
             <img id="img-preview" src="" alt="Vista previa">
-            <div class="img-preview-hint" id="img-hint">Ingresa la URL para ver una vista previa</div>
+            <div class="img-preview-hint" id="img-hint">Sube una foto o pega un link para ver la vista previa</div>
           </div>
         </div>
       </div>
@@ -1151,6 +1173,69 @@ function updateLivePreview() {
   $('lp-warnings').innerHTML = warns.map(w =>
     `<div style="display:flex;align-items:flex-start;gap:7px;font-size:0.76rem;color:#4A6080;background:#fff;border:1px solid rgba(28,52,97,0.10);border-radius:8px;padding:8px 10px;">${w.icon} ${w.msg}</div>`
   ).join('');
+}
+
+/* ── UPLOAD IMAGE TO GITHUB ──────────────────────────────── */
+async function uploadImageFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('upload-status');
+  statusEl.style.display = 'block';
+  statusEl.style.color = 'var(--navy)';
+  statusEl.textContent = '⏳ Subiendo imagen...';
+
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '⚠️ Primero configura el token en "Publicar al sitio"';
+    return;
+  }
+
+  try {
+    // Leer archivo como base64
+    const base64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = e => res(e.target.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+
+    // Nombre único para el archivo
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = 'prod_' + Date.now() + '.' + ext;
+    const path = 'assets/images/products/' + filename;
+
+    // Subir a GitHub
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: 'Imagen producto: ' + filename,
+        content: base64
+      })
+    });
+
+    if (!res.ok) throw new Error('Error al subir');
+
+    // URL pública de la imagen
+    const url = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    document.getElementById('f-image').value = url;
+    previewImage(url);
+    updateLivePreview();
+
+    statusEl.style.color = '#1a7a45';
+    statusEl.textContent = '✅ Imagen subida';
+    setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+
+  } catch(e) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '❌ Error: ' + e.message;
+  }
 }
 
 /* ── IMAGE PREVIEW ───────────────────────────────────────── */
