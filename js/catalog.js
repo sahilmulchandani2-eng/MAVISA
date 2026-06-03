@@ -1,7 +1,7 @@
 /* ============================================================
    MAVISA — Products Data & Catalog Logic
    Exportado desde el Panel de Administración
-   Fecha: 31-05-2026
+   Fecha: 03-06-2026
    ============================================================ */
 
 'use strict';
@@ -13,6 +13,12 @@ const PRODUCTS_DATA = [
     name: 'Kit Robótica Educativa Programable',
     category: 'Juguetes',
     categorySlug: 'juguetes',
+    categories: [
+      'Juguetes'
+    ],
+    categorySlugs: [
+      'juguetes'
+    ],
     price: 89990,
     priceOld: null,
     badge: 'new',
@@ -253,17 +259,24 @@ const PRODUCTS_DATA = [
     name: 'AFEITADORA KEMEI TX10',
     category: 'Belleza',
     categorySlug: 'belleza',
+    categories: [
+      'Belleza'
+    ],
+    categorySlugs: [
+      'belleza'
+    ],
     price: 29900,
     priceOld: 35900,
     badge: 'new',
     badgeLabel: 'Nuevo',
     description: 'AFEITADORA KEMEI TX10\nBOLSILLO\nUSB TIPO C',
     specs: [],
-    image: 'assets/images/placeholder.svg',
+    image: 'https://img.kwcdn.com/product/fancy/d8222c8a-017c-49c8-8b78-6b7da9a1f75d.jpg?imageView2/2/w/800/q/70/format/webp',
     images: [
-      'assets/images/placeholder.svg'
+      'https://img.kwcdn.com/product/fancy/d8222c8a-017c-49c8-8b78-6b7da9a1f75d.jpg?imageView2/2/w/800/q/70/format/webp'
     ],
-    featured: true,     isNew: true,
+    featured: false,
+    isNew: true,
     inStock: true
   },
   {
@@ -302,23 +315,24 @@ const PRODUCTS_DATA = [
     images: [
       'assets/images/hub.svg'
     ],
-    featured: true,     isNew: true,
+    featured: false,
+    isNew: true,
     inStock: true
   },
   {
     id: 'p012',
-    name: 'Tableta Gráfica Digital 10\'',
+    name: 'Tableta Gráfica Digital 10'',
     category: 'Gadgets',
     categorySlug: 'gadgets',
     price: 59990,
     priceOld: null,
     badge: 'new',
     badgeLabel: 'Nuevo',
-    description: 'Tableta gráfica con pantalla LCD monocolor de 10\', lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
+    description: 'Tableta gráfica con pantalla LCD monocolor de 10', lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
     specs: [
       {
         label: 'Área activa',
-        value: '10 × 6.25\''
+        value: '10 × 6.25''
       },
       {
         label: 'Precisión',
@@ -467,7 +481,7 @@ const PRODUCTS_DATA = [
   },
   {
     id: 'p005',
-    name: 'Smart TV QLED 65\' 4K 144Hz',
+    name: 'Smart TV QLED 65' 4K 144Hz',
     category: 'Tecnología Hogar',
     categorySlug: 'tecnologia-hogar',
     price: 749990,
@@ -478,7 +492,7 @@ const PRODUCTS_DATA = [
     specs: [
       {
         label: 'Pantalla',
-        value: '65\' QLED'
+        value: '65' QLED'
       },
       {
         label: 'Resolución',
@@ -534,7 +548,7 @@ const PRODUCTS_DATA = [
       },
       {
         label: 'Pantalla máx.',
-        value: '300\''
+        value: '300''
       }
     ],
     image: 'assets/images/proyector.svg',
@@ -554,11 +568,11 @@ const PRODUCTS_DATA = [
     priceOld: 179990,
     badge: 'hot',
     badgeLabel: 'Top ventas',
-    description: 'Reloj inteligente con pantalla AMOLED 1.96\', GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
+    description: 'Reloj inteligente con pantalla AMOLED 1.96', GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
     specs: [
       {
         label: 'Pantalla',
-        value: '1.96\' AMOLED'
+        value: '1.96' AMOLED'
       },
       {
         label: 'GPS',
@@ -810,9 +824,7 @@ function productCardHTML(p) {
 }
 function getFilteredProducts() {
   let list = [...PRODUCTS_DATA];
-  if (catalogState.category !== 'all') list = list.filter(p =>
-    p.categorySlugs ? p.categorySlugs.includes(catalogState.category) : p.categorySlug === catalogState.category
-  );
+  if (catalogState.category !== 'all') list = list.filter(p => p.categorySlug === catalogState.category);
   if (catalogState.search.trim()) { const q = catalogState.search.toLowerCase(); list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)); }
   switch (catalogState.sort) {
     case 'price-asc':  list.sort((a,b) => a.price - b.price); break;
@@ -837,31 +849,12 @@ function renderPagination(total) {
   if(catalogState.page<pages) html+=`<button class="page-btn" data-page="${catalogState.page+1}">›</button>`;
   pag.innerHTML=html; pag.querySelectorAll('.page-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ catalogState.page=parseInt(btn.dataset.page); renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); }); });
 }
-function updateSidebarCounts() {
-  const cats = ['electrodomesticos','belleza','barberia','hobbies','mascotas','salud'];
-  const allEl = document.getElementById('count-all');
-  if (allEl) allEl.textContent = PRODUCTS_DATA.length;
-  cats.forEach(cat => {
-    const el = document.getElementById('count-' + cat);
-    if (el) el.textContent = PRODUCTS_DATA.filter(p => p.category === cat).length || '';
-  });
-}
-function syncSidebarActive(category) {
-  $$('.sidebar-category').forEach(el => {
-    el.classList.toggle('active', el.dataset.category === category);
-    const countEl = el.querySelector('span[style*="margin-left:auto"]');
-    if (countEl) countEl.style.background = el.classList.contains('active') ? 'var(--accent-dim)' : 'rgba(28,52,97,0.07)';
-    if (countEl) countEl.style.color = el.classList.contains('active') ? 'var(--accent)' : 'var(--text-secondary)';
-  });
-}
 function initCatalogPage() {
   if (!$('#catalog-grid')) return;
-  $$('.filter-tab').forEach(tab=>{ tab.addEventListener('click',()=>{ $$('.filter-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); catalogState.category=tab.dataset.category; catalogState.page=1; syncSidebarActive(tab.dataset.category); renderCatalog(); }); });
-  $$('.sidebar-category').forEach(el=>{ el.addEventListener('click',()=>{ catalogState.category=el.dataset.category; catalogState.page=1; $$('.filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.category===el.dataset.category)); syncSidebarActive(el.dataset.category); renderCatalog(); }); });
+  $$('.filter-tab').forEach(tab=>{ tab.addEventListener('click',()=>{ $$('.filter-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); catalogState.category=tab.dataset.category; catalogState.page=1; renderCatalog(); }); });
   const sortSel=$('#catalog-sort'); sortSel?.addEventListener('change',()=>{ catalogState.sort=sortSel.value; catalogState.page=1; renderCatalog(); });
   const searchInput=$('#catalog-search'); searchInput?.addEventListener('input',debounce(()=>{ catalogState.search=searchInput.value; catalogState.page=1; renderCatalog(); },300));
-  const params=new URLSearchParams(location.search); if(params.get('category')){ catalogState.category=params.get('category'); $$('.filter-tab').forEach(t=>{ t.classList.toggle('active',t.dataset.category===catalogState.category); }); syncSidebarActive(catalogState.category); }
-  updateSidebarCounts();
+  const params=new URLSearchParams(location.search); if(params.get('category')){ catalogState.category=params.get('category'); $$('.filter-tab').forEach(t=>{ t.classList.toggle('active',t.dataset.category===catalogState.category); }); }
   renderCatalog();
 }
 function initProductPage() {
@@ -876,216 +869,10 @@ function initProductPage() {
   const relatedGrid=$('#related-grid'); if(relatedGrid){const related=PRODUCTS_DATA.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4);relatedGrid.innerHTML=related.map(productCardHTML).join('');}
   initScrollAnimations();
 }
-function fixCardsInTrack(track) {
-  if (!track) return;
-  const isMobile = window.innerWidth <= 768;
-  const gap = isMobile ? 10 : 20;
-  const perPage = isMobile ? 2 : 4;
-
-  // Calcular ancho dinámico para que exactamente perPage cards llenen el wrap
-  const wrap = track.closest('.h-scroll-wrap');
-  const wrapW = wrap ? wrap.clientWidth || wrap.offsetWidth : (isMobile ? window.innerWidth - 80 : 1100);
-  const cardW = isMobile ? 140 : Math.floor((wrapW - (perPage - 1) * gap) / perPage);
-
-  // Style cards
-  const cards = Array.from(track.querySelectorAll('.product-card'));
-  if (!cards.length) return;
-  cards.forEach(card => {
-    card.style.width = cardW + 'px';
-    card.style.minWidth = cardW + 'px';
-    card.style.maxWidth = cardW + 'px';
-    card.style.flexShrink = '0';
-  });
-
-  // Style track
-  track.style.display = 'flex';
-  track.style.flexDirection = 'row';
-  track.style.flexWrap = 'nowrap';
-  track.style.gap = gap + 'px';
-  track.style.transition = 'transform 0.4s cubic-bezier(.25,.8,.25,1)';
-  track.style.willChange = 'transform';
-  track.style.width = 'max-content';
-
-  // Style wrap — overflow hidden, no scrollbar
-  if (!wrap) return;
-  wrap.style.overflow = 'hidden';
-  wrap.style.width = '100%';
-  wrap.style.cursor = 'grab';
-  wrap.style.padding = isMobile ? '8px 16px' : '8px 0';
-
-  const totalPages = Math.ceil(cards.length / perPage);
-  let currentPage = 0;
-
-  function getOffset(page) {
-    return page * perPage * (cardW + gap);
-  }
-
-  function goTo(page) {
-    currentPage = Math.max(0, Math.min(page, totalPages - 1));
-    track.style.transform = `translateX(-${getOffset(currentPage)}px)`;
-    if (dotsEl) {
-      dotsEl.querySelectorAll('.auto-carousel-dot').forEach((d, i) => d.classList.toggle('active', i === currentPage));
-    }
-  }
-
-  // Arrows
-  const outer = track.closest('.h-carousel-outer');
-  if (outer) {
-    outer.querySelectorAll('.h-carousel-arrow').forEach(btn => {
-      btn.style.display = isMobile ? 'none' : '';
-    });
-    const prev = outer.querySelector('.h-carousel-prev');
-    const next = outer.querySelector('.h-carousel-next');
-    if (prev) prev.onclick = () => goTo(currentPage - 1);
-    if (next) next.onclick = () => goTo(currentPage + 1);
-  }
-
-  // Dots
-  const dotsId = track.id === 'featured-grid' ? 'featured-dots' : 'new-dots';
-  const dotsEl = document.getElementById(dotsId);
-  if (dotsEl) {
-    if (totalPages > 1) {
-      dotsEl.innerHTML = Array.from({length: totalPages}, (_, i) =>
-        `<button class="auto-carousel-dot${i === 0 ? ' active' : ''}" data-page="${i}"></button>`
-      ).join('');
-      dotsEl.querySelectorAll('.auto-carousel-dot').forEach(btn => {
-        btn.addEventListener('click', () => goTo(parseInt(btn.dataset.page)));
-      });
-    } else {
-      dotsEl.innerHTML = '';
-    }
-  }
-
-  // Touch swipe
-  let touchStartX = 0;
-  wrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive: true});
-  wrap.addEventListener('touchend', e => {
-    const dx = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 40) goTo(dx > 0 ? currentPage + 1 : currentPage - 1);
-  }, {passive: true});
-
-  // Mouse drag
-  let dragStartX = 0, dragging = false;
-  wrap.addEventListener('mousedown', e => { dragging = true; dragStartX = e.clientX; wrap.style.cursor = 'grabbing'; });
-  wrap.addEventListener('mouseup', e => {
-    if (!dragging) return;
-    dragging = false;
-    wrap.style.cursor = 'grab';
-    const dx = dragStartX - e.clientX;
-    if (Math.abs(dx) > 40) goTo(dx > 0 ? currentPage + 1 : currentPage - 1);
-  });
-  wrap.addEventListener('mouseleave', () => { dragging = false; wrap.style.cursor = 'grab'; });
-}
-function initNewGrid(grid) {
-  // "Lo último en llegar" — DESKTOP: grid fijo 4 col, última fila centrada
-  //                         MOBILE:  carrusel horizontal
-  if (!grid) return;
-  const isMobile = window.innerWidth <= 768;
-  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
-  grid.innerHTML = newProducts.map(productCardHTML).join('');
-
-  if (isMobile) {
-    fixCardsInTrack(grid);
-    return;
-  }
-
-  // Desktop: grid 4 columnas
-  const wrap = grid.closest('.h-scroll-wrap');
-  const outer = grid.closest('.h-carousel-outer');
-
-  // Ocultar flechas y dots en desktop para esta sección
-  if (outer) outer.querySelectorAll('.h-carousel-arrow').forEach(b => b.style.display = 'none');
-  const dotsEl = document.getElementById('new-dots');
-  if (dotsEl) dotsEl.style.display = 'none';
-
-  // Quitar overflow del wrap
-  if (wrap) { wrap.style.overflow = 'visible'; wrap.style.width = '100%'; }
-
-  // Aplicar grid
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-  grid.style.gap = '24px';
-  grid.style.width = '100%';
-  grid.style.transform = 'none';
-  grid.style.transition = 'none';
-
-  // Centrar última fila si está incompleta
-  const total = newProducts.length;
-  const lastRowCount = total % 4;
-  if (lastRowCount > 0) {
-    const cards = grid.querySelectorAll('.product-card');
-    const firstInLastRow = total - lastRowCount;
-    const colStart = Math.floor((4 - lastRowCount) / 2) + 1;
-    cards.forEach((card, i) => {
-      card.style.width = '';
-      card.style.minWidth = '';
-      card.style.maxWidth = '';
-      if (i === firstInLastRow) {
-        card.style.gridColumn = `${colStart} / span 1`;
-      }
-    });
-  }
-}
-
-function initDesktopGrid(grid, products, centerLastRow) {
-  // Desktop: grid simple 4 columnas, sin carrusel
-  grid.innerHTML = products.map(productCardHTML).join('');
-
-  // Ocultar flechas y dots
-  const outer = grid.closest('.h-carousel-outer');
-  if (outer) outer.querySelectorAll('.h-carousel-arrow').forEach(b => b.style.display = 'none');
-  const dotsId = grid.id === 'featured-grid' ? 'featured-dots' : 'new-dots';
-  const dotsEl = document.getElementById(dotsId);
-  if (dotsEl) dotsEl.style.display = 'none';
-
-  // Quitar overflow del wrap
-  const wrap = grid.closest('.h-scroll-wrap');
-  if (wrap) { wrap.style.overflow = 'visible'; wrap.style.width = '100%'; }
-
-  // Grid 4 columnas
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-  grid.style.gap = '24px';
-  grid.style.width = '100%';
-  grid.style.transform = 'none';
-  grid.style.transition = 'none';
-  grid.style.flexWrap = '';
-  grid.style.flexDirection = '';
-  grid.querySelectorAll('.product-card').forEach(card => {
-    card.style.width = '';
-    card.style.minWidth = '';
-    card.style.maxWidth = '';
-    card.style.flexShrink = '';
-  });
-
-  // Centrar última fila si está incompleta
-  if (centerLastRow) {
-    const total = products.length;
-    const lastRowCount = total % 4;
-    if (lastRowCount > 0) {
-      const cards = grid.querySelectorAll('.product-card');
-      const firstInLastRow = total - lastRowCount;
-      // Calcular columna de inicio para centrar
-      // lastRowCount=1 → col 2 (center of 4)
-      // lastRowCount=2 → col 2-3
-      // lastRowCount=3 → col 1-3 (ya casi llena, dejar así)
-      const colStart = lastRowCount === 1 ? 2 : lastRowCount === 2 ? 2 : 1;
-      cards[firstInLastRow].style.gridColumn = `${colStart} / span ${lastRowCount === 1 ? 2 : lastRowCount}`;
-    }
-  }
-}
-
 function initHomeFeatured() {
-  const featuredGrid = $('#featured-grid'); if (!featuredGrid) return;
-  const isMobile = window.innerWidth <= 768;
-  const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
-  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
-
-  // Desktop Y Mobile: grid simple, sin carrusel
-  initDesktopGrid(featuredGrid, featured, false);
-  const newGrid = $('#new-grid');
-  if (newGrid) initDesktopGrid(newGrid, newProducts, true);
-
+  const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
+  const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8); featuredGrid.innerHTML=featured.map(productCardHTML).join('');
+  const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,4);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
