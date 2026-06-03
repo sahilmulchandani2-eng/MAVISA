@@ -878,6 +878,30 @@ function initHomeFeatured() {
     const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 4);
     newGrid.innerHTML = newProducts.map(productCardHTML).join('');
   }
+
+  // Convertir de carrusel flex a grid 4 columnas
+  function applyGridLayout(grid) {
+    if (!grid) return;
+    Object.assign(grid.style, {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: '24px',
+      width: '100%',
+      transform: 'none',
+      transition: 'none'
+    });
+    grid.querySelectorAll('.product-card').forEach(c => {
+      c.style.width = ''; c.style.minWidth = ''; c.style.maxWidth = ''; c.style.flexShrink = '';
+    });
+    const wrap = grid.closest('.h-scroll-wrap');
+    if (wrap) { wrap.style.overflow = 'visible'; wrap.style.width = '100%'; }
+    // Ocultar flechas y dots
+    const outer = grid.closest('.h-carousel-outer');
+    if (outer) outer.querySelectorAll('.h-carousel-arrow').forEach(b => b.style.display = 'none');
+  }
+  applyGridLayout(featuredGrid);
+  applyGridLayout(newGrid);
+
   // Forzar visibilidad inmediata — el overflow-y:hidden del wrap bloquea IntersectionObserver
   requestAnimationFrame(() => {
     featuredGrid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
