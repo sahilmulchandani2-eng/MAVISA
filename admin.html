@@ -1283,15 +1283,27 @@ async function publishToGitHub() {
       'Accept': 'application/vnd.github.v3+json'
     };
 
-    // 1. Obtener SHA del archivo actual
-    showPublishStatus('info', '📥 Obteniendo archivo actual...');
+    // 1. Obtener archivo actual de GitHub
+    showPublishStatus('info', '📥 Leyendo catálogo actual...');
     const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`, { headers });
     if (!getRes.ok) throw new Error('No se pudo leer el archivo. Verifica el token.');
     const getJson = await getRes.json();
     const sha = getJson.sha;
 
-    // 2. Generar el nuevo catalog.js
-    const newContent = generateCatalogJS();
+    // Decodificar contenido actual
+    const currentContent = decodeURIComponent(escape(atob(getJson.content.replace(/\n/g,''))));
+
+    // 2. Reemplazar SOLO el array PRODUCTS_DATA, dejando todo el resto intacto
+    const productsStr = JSON.stringify(products, null, 2)
+      .replace(/"([^"]+)":/g, '$1:')
+      .replace(/"/g, "'");
+
+    const newContent = currentContent.replace(
+      /const PRODUCTS_DATA\s*=\s*\[[\s\S]*?\];/,
+      `const PRODUCTS_DATA = ${productsStr};`
+    );
+
+    if (!newContent.includes('PRODUCTS_DATA')) throw new Error('No se pudo ubicar PRODUCTS_DATA en el archivo.');
     const encoded = btoa(unescape(encodeURIComponent(newContent)));
 
     // 3. Subir a GitHub
