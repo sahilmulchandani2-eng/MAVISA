@@ -171,9 +171,9 @@
   /* Ícono: mostrar lucide dorado, ocultar flaticon */
   .categories-section .category-card .category-card-icon,
   .section.categories-section .category-card .category-card-icon {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 10px !important;
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 12px !important;
     background: rgba(201,168,76,0.12) !important;
     display: flex !important;
     align-items: center !important;
@@ -187,8 +187,8 @@
   .categories-section .category-card .category-card-icon .cat-lucide,
   .section.categories-section .category-card .category-card-icon .cat-lucide {
     display: flex !important;
-    width: 22px !important;
-    height: 22px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 
   /* Nombre */
