@@ -321,18 +321,18 @@ const PRODUCTS_DATA = [
   },
   {
     id: 'p012',
-    name: 'Tableta Gráfica Digital 10'',
+    name: 'Tableta Gráfica Digital 10"',
     category: 'Gadgets',
     categorySlug: 'gadgets',
     price: 59990,
     priceOld: null,
     badge: 'new',
     badgeLabel: 'Nuevo',
-    description: 'Tableta gráfica con pantalla LCD monocolor de 10', lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
+    description: 'Tableta gráfica con pantalla LCD monocolor de 10", lápiz con 8192 niveles de presión, sin batería, compatible con PC/Mac/Android.',
     specs: [
       {
         label: 'Área activa',
-        value: '10 × 6.25''
+        value: '10 × 6.25"'
       },
       {
         label: 'Precisión',
@@ -481,7 +481,7 @@ const PRODUCTS_DATA = [
   },
   {
     id: 'p005',
-    name: 'Smart TV QLED 65' 4K 144Hz',
+    name: 'Smart TV QLED 65" 4K 144Hz',
     category: 'Tecnología Hogar',
     categorySlug: 'tecnologia-hogar',
     price: 749990,
@@ -492,7 +492,7 @@ const PRODUCTS_DATA = [
     specs: [
       {
         label: 'Pantalla',
-        value: '65' QLED'
+        value: '65" QLED'
       },
       {
         label: 'Resolución',
@@ -548,7 +548,7 @@ const PRODUCTS_DATA = [
       },
       {
         label: 'Pantalla máx.',
-        value: '300''
+        value: '300"'
       }
     ],
     image: 'assets/images/proyector.svg',
@@ -568,11 +568,11 @@ const PRODUCTS_DATA = [
     priceOld: 179990,
     badge: 'hot',
     badgeLabel: 'Top ventas',
-    description: 'Reloj inteligente con pantalla AMOLED 1.96', GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
+    description: 'Reloj inteligente con pantalla AMOLED 1.96", GPS integrado, 150+ modos deporte, SpO2, ECG, NFC y autonomía de 14 días.',
     specs: [
       {
         label: 'Pantalla',
-        value: '1.96' AMOLED'
+        value: '1.96" AMOLED'
       },
       {
         label: 'GPS',
@@ -870,29 +870,19 @@ function initProductPage() {
   initScrollAnimations();
 }
 function initHomeFeatured() {
-<<<<<<< Updated upstream
-  const featuredGrid=$('#featured-grid'); if(!featuredGrid) return;
-  const featured=PRODUCTS_DATA.filter(p=>p.featured).slice(0,8); featuredGrid.innerHTML=featured.map(productCardHTML).join('');
-  const newGrid=$('#new-grid'); if(newGrid){const newProducts=PRODUCTS_DATA.filter(p=>p.isNew).slice(0,4);newGrid.innerHTML=newProducts.map(productCardHTML).join('');}
-=======
   const featuredGrid = $('#featured-grid'); if (!featuredGrid) return;
-  const isMobile = window.innerWidth <= 768;
   const featured = PRODUCTS_DATA.filter(p => p.featured).slice(0, 8);
-  const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 8);
-
-  // Desktop Y Mobile: grid simple, sin carrusel
-  initDesktopGrid(featuredGrid, featured, false);
+  featuredGrid.innerHTML = featured.map(productCardHTML).join('');
   const newGrid = $('#new-grid');
-  if (newGrid) initDesktopGrid(newGrid, newProducts, true);
-
-  // Forzar visibilidad inmediata en las tarjetas del homepage
-  // (el overflow-y:hidden del carrusel interfiere con IntersectionObserver)
+  if (newGrid) {
+    const newProducts = PRODUCTS_DATA.filter(p => p.isNew).slice(0, 4);
+    newGrid.innerHTML = newProducts.map(productCardHTML).join('');
+  }
+  // Forzar visibilidad inmediata — el overflow-y:hidden del wrap bloquea IntersectionObserver
   requestAnimationFrame(() => {
     featuredGrid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
     if (newGrid) newGrid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   });
-
->>>>>>> Stashed changes
   initScrollAnimations();
 }
 document.addEventListener('DOMContentLoaded',()=>{ initCatalogPage(); initProductPage(); initHomeFeatured(); });
