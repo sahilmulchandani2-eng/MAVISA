@@ -2284,8 +2284,8 @@ h1, h2, h3, h4, h5, h6 {
     gap: 8px !important;
   }
   .category-card-icon {
-    width: 32px !important;
-    height: 32px !important;
+    width: 56px !important;
+    height: 56px !important;
     font-size: 1rem !important;
     flex-shrink: 0 !important;
   }
