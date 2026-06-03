@@ -835,12 +835,31 @@ function renderPagination(total) {
   if(catalogState.page<pages) html+=`<button class="page-btn" data-page="${catalogState.page+1}">›</button>`;
   pag.innerHTML=html; pag.querySelectorAll('.page-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ catalogState.page=parseInt(btn.dataset.page); renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); }); });
 }
+function updateSidebarCounts() {
+  const cats = ['electrodomesticos','belleza','barberia','hobbies','mascotas','salud'];
+  const allEl = document.getElementById('count-all');
+  if (allEl) allEl.textContent = PRODUCTS_DATA.length;
+  cats.forEach(cat => {
+    const el = document.getElementById('count-' + cat);
+    if (el) el.textContent = PRODUCTS_DATA.filter(p => p.category === cat).length || '';
+  });
+}
+function syncSidebarActive(category) {
+  $$('.sidebar-category').forEach(el => {
+    el.classList.toggle('active', el.dataset.category === category);
+    const countEl = el.querySelector('span[style*="margin-left:auto"]');
+    if (countEl) countEl.style.background = el.classList.contains('active') ? 'var(--accent-dim)' : 'rgba(28,52,97,0.07)';
+    if (countEl) countEl.style.color = el.classList.contains('active') ? 'var(--accent)' : 'var(--text-secondary)';
+  });
+}
 function initCatalogPage() {
   if (!$('#catalog-grid')) return;
-  $$('.filter-tab').forEach(tab=>{ tab.addEventListener('click',()=>{ $$('.filter-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); catalogState.category=tab.dataset.category; catalogState.page=1; renderCatalog(); }); });
+  $$('.filter-tab').forEach(tab=>{ tab.addEventListener('click',()=>{ $$('.filter-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); catalogState.category=tab.dataset.category; catalogState.page=1; syncSidebarActive(tab.dataset.category); renderCatalog(); }); });
+  $$('.sidebar-category').forEach(el=>{ el.addEventListener('click',()=>{ catalogState.category=el.dataset.category; catalogState.page=1; $$('.filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.category===el.dataset.category)); syncSidebarActive(el.dataset.category); renderCatalog(); }); });
   const sortSel=$('#catalog-sort'); sortSel?.addEventListener('change',()=>{ catalogState.sort=sortSel.value; catalogState.page=1; renderCatalog(); });
   const searchInput=$('#catalog-search'); searchInput?.addEventListener('input',debounce(()=>{ catalogState.search=searchInput.value; catalogState.page=1; renderCatalog(); },300));
-  const params=new URLSearchParams(location.search); if(params.get('category')){ catalogState.category=params.get('category'); $$('.filter-tab').forEach(t=>{ t.classList.toggle('active',t.dataset.category===catalogState.category); }); }
+  const params=new URLSearchParams(location.search); if(params.get('category')){ catalogState.category=params.get('category'); $$('.filter-tab').forEach(t=>{ t.classList.toggle('active',t.dataset.category===catalogState.category); }); syncSidebarActive(catalogState.category); }
+  updateSidebarCounts();
   renderCatalog();
 }
 function initProductPage() {

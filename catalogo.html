@@ -256,12 +256,12 @@
     <div style="margin-bottom:20px;">
       <div class="filter-tabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
         <button class="filter-tab active" data-category="all">Todos</button>
-        <button class="filter-tab" data-category="belleza">💄 Belleza</button>
-        <button class="filter-tab" data-category="mascotas">🐾 Mascotas</button>
-        <button class="filter-tab" data-category="hobbies">🎨 Hobbies</button>
         <button class="filter-tab" data-category="electrodomesticos">🫖 Electrodomésticos</button>
-        <button class="filter-tab" data-category="salud">💊 Salud</button>
+        <button class="filter-tab" data-category="belleza">💄 Belleza</button>
         <button class="filter-tab" data-category="barberia">✂️ Barbería</button>
+        <button class="filter-tab" data-category="hobbies">🎨 Hobbies</button>
+        <button class="filter-tab" data-category="mascotas">🐾 Mascotas</button>
+        <button class="filter-tab" data-category="salud">💊 Salud</button>
       </div>
     </div>
 
@@ -282,27 +282,37 @@
           <div style="display:flex;flex-direction:column;gap:4px;">
             <div class="sidebar-category active" data-category="all">
               <span>🗂</span> Todos los productos
-              <span style="margin-left:auto;font-size:0.75rem;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:var(--radius-full);">19</span>
+              <span style="margin-left:auto;font-size:0.75rem;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:var(--radius-full);" id="count-all"></span>
             </div>
             <div class="sidebar-category" data-category="electrodomesticos">
-              <span>🏠</span> Electrodomésticos
-              <span style="margin-left:auto;font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:var(--radius-full);">4</span>
-            </div>
-            <div class="sidebar-category" data-category="tecnologia-hogar">
-              <span>📺</span> Tecnología Hogar
-              <span style="margin-left:auto;font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:var(--radius-full);">4</span>
-            </div>
-            <div class="sidebar-category" data-category="gadgets">
-              <span>⌚</span> Gadgets
-              <span style="margin-left:auto;font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:var(--radius-full);">4</span>
+              <img src="assets/images/categories/electrodomesticos.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Electrodomésticos
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-electrodomesticos"></span>
             </div>
             <div class="sidebar-category" data-category="belleza">
-              <span>💄</span> Belleza
-              <span style="margin-left:auto;font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:var(--radius-full);">4</span>
+              <img src="assets/images/categories/belleza.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Belleza
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-belleza"></span>
             </div>
-            <div class="sidebar-category" data-category="juguetes">
-              <span>🧸</span> Juguetes
-              <span style="margin-left:auto;font-size:0.75rem;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:var(--radius-full);">3</span>
+            <div class="sidebar-category" data-category="barberia">
+              <img src="assets/images/categories/barberia.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Barbería
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-barberia"></span>
+            </div>
+            <div class="sidebar-category" data-category="hobbies">
+              <img src="assets/images/categories/hobbies.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Hobbies
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-hobbies"></span>
+            </div>
+            <div class="sidebar-category" data-category="mascotas">
+              <img src="assets/images/categories/mascotas.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Mascotas
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-mascotas"></span>
+            </div>
+            <div class="sidebar-category" data-category="salud">
+              <img src="assets/images/categories/salud.png" style="width:24px;height:24px;object-fit:contain;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
+              Salud
+              <span style="margin-left:auto;font-size:0.75rem;background:rgba(28,52,97,0.07);color:var(--text-secondary);padding:2px 8px;border-radius:var(--radius-full);" id="count-salud"></span>
             </div>
           </div>
         </div>
