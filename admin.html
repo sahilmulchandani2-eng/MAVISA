@@ -1176,6 +1176,85 @@ function updateLivePreview() {
 }
 
 /* ── UPLOAD IMAGE TO GITHUB ──────────────────────────────── */
+/* ── BACKGROUND REMOVAL (canvas, sin dependencias) ───────── */
+async function removeImageBackground(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = data.data;
+      const w = canvas.width, h = canvas.height;
+
+      // Samplear color de fondo desde las 4 esquinas y bordes
+      function samplePixel(x, y) {
+        const i = (y * w + x) * 4;
+        return [d[i], d[i+1], d[i+2]];
+      }
+      const samples = [
+        samplePixel(0,0), samplePixel(w-1,0),
+        samplePixel(0,h-1), samplePixel(w-1,h-1),
+        samplePixel(Math.floor(w/2),0), samplePixel(0,Math.floor(h/2)),
+        samplePixel(w-1,Math.floor(h/2)), samplePixel(Math.floor(w/2),h-1)
+      ];
+      const bgR = Math.round(samples.reduce((s,p)=>s+p[0],0)/samples.length);
+      const bgG = Math.round(samples.reduce((s,p)=>s+p[1],0)/samples.length);
+      const bgB = Math.round(samples.reduce((s,p)=>s+p[2],0)/samples.length);
+
+      const tolerance = 38; // tolerancia de color (0-255)
+
+      // Flood fill desde las 4 esquinas para eliminar el fondo conectado
+      const visited = new Uint8Array(w * h);
+      const queue = [];
+      function enqueue(x, y) {
+        if (x<0||x>=w||y<0||y>=h) return;
+        const idx = y*w+x;
+        if (visited[idx]) return;
+        const pi = idx*4;
+        const dr=Math.abs(d[pi]-bgR), dg=Math.abs(d[pi+1]-bgG), db=Math.abs(d[pi+2]-bgB);
+        if (dr+dg+db > tolerance*3) return;
+        visited[idx]=1;
+        queue.push(idx);
+      }
+      // Sembrar desde todos los bordes
+      for (let x=0;x<w;x++) { enqueue(x,0); enqueue(x,h-1); }
+      for (let y=0;y<h;y++) { enqueue(0,y); enqueue(w-1,y); }
+
+      let qi=0;
+      while (qi<queue.length) {
+        const idx=queue[qi++];
+        const x=idx%w, y=Math.floor(idx/w);
+        d[idx*4+3]=0; // transparente
+        enqueue(x-1,y); enqueue(x+1,y); enqueue(x,y-1); enqueue(x,y+1);
+      }
+
+      // Suavizar bordes: semi-transparencia en píxeles adyacentes al fondo
+      for (let y=1;y<h-1;y++) {
+        for (let x=1;x<w-1;x++) {
+          const idx=y*w+x;
+          if (d[idx*4+3]===0) continue;
+          // Si algún vecino es transparente, suavizar
+          const neighbors=[idx-1,idx+1,idx-w,idx+w];
+          const transCount=neighbors.filter(n=>d[n*4+3]===0).length;
+          if (transCount>0) d[idx*4+3]=Math.round(255*(1-transCount/6));
+        }
+      }
+
+      ctx.putImageData(data, 0, 0);
+      canvas.toBlob(blob => resolve(blob), 'image/png', 1.0);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 async function uploadImageFile(input) {
   const file = input.files[0];
   if (!file) return;
@@ -1183,7 +1262,6 @@ async function uploadImageFile(input) {
   const statusEl = document.getElementById('upload-status');
   statusEl.style.display = 'block';
   statusEl.style.color = 'var(--navy)';
-  statusEl.textContent = '⏳ Subiendo imagen...';
 
   const token = localStorage.getItem(GH_TOKEN_KEY);
   if (!token) {
@@ -1193,17 +1271,28 @@ async function uploadImageFile(input) {
   }
 
   try {
-    // Leer archivo como base64
+    // Remover fondo automáticamente
+    statusEl.textContent = '🪄 Removiendo fondo...';
+    let processedBlob;
+    try {
+      processedBlob = await removeImageBackground(file);
+    } catch(e) {
+      // Si falla el procesamiento, usar imagen original
+      processedBlob = file;
+    }
+
+    statusEl.textContent = '⏳ Subiendo imagen...';
+
+    // Leer blob procesado como base64
     const base64 = await new Promise((res, rej) => {
       const reader = new FileReader();
       reader.onload = e => res(e.target.result.split(',')[1]);
       reader.onerror = rej;
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(processedBlob);
     });
 
-    // Nombre único para el archivo
-    const ext = file.name.split('.').pop().toLowerCase();
-    const filename = 'prod_' + Date.now() + '.' + ext;
+    // Siempre guardar como PNG (fondo transparente)
+    const filename = 'prod_' + Date.now() + '.png';
     const path = 'assets/images/products/' + filename;
 
     // Subir a GitHub
@@ -1229,7 +1318,7 @@ async function uploadImageFile(input) {
     updateLivePreview();
 
     statusEl.style.color = '#1a7a45';
-    statusEl.textContent = '✅ Imagen subida';
+    statusEl.textContent = '✅ Imagen subida (fondo removido)';
     setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
 
   } catch(e) {
