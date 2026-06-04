@@ -1383,9 +1383,7 @@ async function publishToGitHub() {
     const currentContent = decodeURIComponent(escape(atob(getJson.content.replace(/\n/g,''))));
 
     // 2. Reemplazar SOLO el array PRODUCTS_DATA, dejando todo el resto intacto
-    const productsStr = JSON.stringify(products, null, 2)
-      .replace(/"([^"]+)":/g, '$1:')
-      .replace(/"/g, "'");
+    const productsStr = JSON.stringify(products, null, 2);
 
     const newContent = currentContent.replace(
       /const PRODUCTS_DATA\s*=\s*\[[\s\S]*?\];/,
