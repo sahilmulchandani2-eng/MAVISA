@@ -661,6 +661,8 @@
                 style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:0.82rem;font-family:inherit;background:#fff;color:var(--text);"
                 placeholder="https://imagen.jpg"
                 oninput="previewImage(this.value);updateLivePreview()">
+              <button type="button" onclick="removeBgFromUrl()" style="width:100%;padding:8px;background:var(--navy);color:#fff;border:none;border-radius:var(--r-sm);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;">🪄 Quitar fondo</button>
+              <div id="url-bg-status" style="display:none;font-size:0.75rem;text-align:center;padding:4px;border-radius:6px;"></div>
               <span style="font-size:0.7rem;color:var(--text-3);line-height:1.4;">💡 En Google Imágenes: clic derecho sobre la imagen → <strong>Copiar dirección de imagen</strong></span>
             </div>
           </div>
@@ -1176,6 +1178,70 @@ function updateLivePreview() {
 }
 
 /* ── UPLOAD IMAGE TO GITHUB ──────────────────────────────── */
+/* ── REMOVE BG DESDE URL ─────────────────────────────────── */
+async function removeBgFromUrl() {
+  const urlInput = document.getElementById('f-image');
+  const statusEl = document.getElementById('url-bg-status');
+  const url = urlInput.value.trim();
+  if (!url) return;
+
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('⚠️ Primero configura el token en "Publicar al sitio"'); return; }
+
+  statusEl.style.display = 'block';
+  statusEl.style.background = 'rgba(28,52,97,0.07)';
+  statusEl.style.color = 'var(--navy)';
+  statusEl.textContent = '🪄 Removiendo fondo...';
+
+  try {
+    // Llamar remove.bg con URL
+    const formData = new FormData();
+    formData.append('image_url', url);
+    formData.append('size', 'auto');
+    const res = await fetch('https://api.remove.bg/v1.0/removebg', {
+      method: 'POST',
+      headers: { 'X-Api-Key': REMOVEBG_KEY },
+      body: formData
+    });
+    if (!res.ok) throw new Error('remove.bg falló: ' + res.status);
+    const blob = await res.blob();
+
+    statusEl.textContent = '⏳ Subiendo a GitHub...';
+
+    // Leer como base64 y subir a GitHub
+    const base64 = await new Promise((res2, rej) => {
+      const reader = new FileReader();
+      reader.onload = e => res2(e.target.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(blob);
+    });
+
+    const filename = 'prod_' + Date.now() + '.png';
+    const path = 'assets/images/products/' + filename;
+    const ghRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+      body: JSON.stringify({ message: 'Imagen producto: ' + filename, content: base64 })
+    });
+    if (!ghRes.ok) throw new Error('Error al subir a GitHub');
+
+    const newUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    urlInput.value = newUrl;
+    previewImage(newUrl);
+    updateLivePreview();
+
+    statusEl.style.background = 'rgba(26,122,69,0.1)';
+    statusEl.style.color = '#1a7a45';
+    statusEl.textContent = '✅ Fondo eliminado y subido';
+    setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+
+  } catch(e) {
+    statusEl.style.background = 'rgba(232,48,63,0.08)';
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '❌ ' + e.message;
+  }
+}
+
 /* ── BACKGROUND REMOVAL (remove.bg API + canvas fallback) ── */
 const REMOVEBG_KEY = 'SvHmgXeMMHLDsThSwKis1Xum';
 
