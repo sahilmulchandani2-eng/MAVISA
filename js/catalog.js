@@ -826,13 +826,14 @@ function priceHTML(p) {
 function productCardHTML(p) {
   const imgs = (p.images && p.images.length > 1) ? p.images : null;
   const slideId = 'slide-' + p.id;
+  const SI = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;height:85%;object-fit:contain;transition:opacity 0.5s;';
   const imageSection = imgs ? `
-    <div class="pc-slider" id="${slideId}" data-current="0">
-      <div class="pc-slides-track">
-        ${imgs.map((src,i) => `<img class="pc-slide-img${i===0?' active':''}" src="${src}" alt="${p.name}" loading="lazy">`).join('')}
+    <div id="${slideId}" data-cur="0" style="position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="flex:1;position:relative;overflow:hidden;">
+        ${imgs.map((src,i)=>`<img src="${src}" alt="${p.name}" loading="lazy" style="${SI}opacity:${i===0?1:0};">`).join('')}
       </div>
-      <div class="pc-dots">
-        ${imgs.map((_,i) => `<span class="pc-dot${i===0?' active':''}" onclick="event.stopPropagation();pcGoTo('${slideId}',${i})"></span>`).join('')}
+      <div style="display:flex;justify-content:center;align-items:center;gap:6px;height:22px;flex-shrink:0;background:rgba(255,255,255,0.6);">
+        ${imgs.map((_,i)=>`<span onclick="event.stopPropagation();pcGoTo('${slideId}',${i})" style="width:8px;height:8px;border-radius:50%;background:${i===0?'#E8303F':'rgba(28,52,97,0.25)'};cursor:pointer;display:inline-block;transition:transform .2s,background .2s;flex-shrink:0;"></span>`).join('')}
       </div>
     </div>
   ` : `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`;
@@ -860,24 +861,28 @@ const _pcTimers = {};
 function pcGoTo(id, idx) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.querySelectorAll('.pc-slide-img').forEach((s,i) => s.classList.toggle('active', i === idx));
-  el.querySelectorAll('.pc-dot').forEach((d,i)   => d.classList.toggle('active', i === idx));
-  el.dataset.current = String(idx);
+  const imgs = el.querySelectorAll('img');
+  const dots = el.querySelectorAll('span[onclick]');
+  imgs.forEach((s,i) => s.style.opacity = i === idx ? '1' : '0');
+  dots.forEach((d,i) => {
+    d.style.background = i === idx ? '#E8303F' : 'rgba(28,52,97,0.25)';
+    d.style.transform  = i === idx ? 'scale(1.4)' : 'scale(1)';
+  });
+  el.dataset.cur = String(idx);
 }
 function pcStartAuto(id, total) {
   if (total <= 1) return;
+  clearInterval(_pcTimers[id]);
   _pcTimers[id] = setInterval(() => {
     const el = document.getElementById(id);
     if (!el) { clearInterval(_pcTimers[id]); return; }
-    const next = ((parseInt(el.dataset.current || 0) + 1) % total);
-    pcGoTo(id, next);
+    pcGoTo(id, (parseInt(el.dataset.cur || 0) + 1) % total);
   }, 2500);
 }
 function initCardSliders() {
-  document.querySelectorAll('.pc-slider').forEach(el => {
-    const total = el.querySelectorAll('.pc-slide-img').length;
-    el.dataset.current = 0;
-    pcStartAuto(el.id, total);
+  document.querySelectorAll('[data-cur]').forEach(el => {
+    const total = el.querySelectorAll('img').length;
+    if (total > 1) pcStartAuto(el.id, total);
   });
 }
 function getFilteredProducts() {
