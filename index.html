@@ -361,6 +361,55 @@
   </div>
 </section>
 
+<!-- ── Marcas ──────────────────────────────────────────────── -->
+<section style="background:#fff;padding:18px 0;border-top:1px solid rgba(28,52,97,0.07);border-bottom:1px solid rgba(28,52,97,0.07);overflow:hidden;">
+  <p style="text-align:center;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:rgba(28,52,97,0.35);margin-bottom:14px;text-transform:uppercase;">Nuestras marcas</p>
+  <div style="position:relative;overflow:hidden;">
+    <!-- Gradientes laterales para efecto de fade -->
+    <div style="position:absolute;left:0;top:0;bottom:0;width:80px;background:linear-gradient(to right,#fff,transparent);z-index:2;pointer-events:none;"></div>
+    <div style="position:absolute;right:0;top:0;bottom:0;width:80px;background:linear-gradient(to left,#fff,transparent);z-index:2;pointer-events:none;"></div>
+    <!-- Track con scroll infinito -->
+    <div id="brands-track" style="display:flex;align-items:center;gap:48px;width:max-content;animation:brandsScroll 28s linear infinite;">
+      <!-- Primera copia -->
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:800;color:#1a1a1a;white-space:nowrap;letter-spacing:-0.02em;">WAHL</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#e8303f;white-space:nowrap;">BaByliss<span style="color:#1a1a1a;">PRO</span></span>
+      <span style="font-family:'Georgia',serif;font-size:1.1rem;font-weight:400;color:#c8a84b;white-space:nowrap;font-style:italic;">Lizze</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;letter-spacing:-0.03em;">JRL</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#1C3461;white-space:nowrap;">Kemei</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;">W<span style="color:#e8303f;">MARK</span></span>
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:800;color:#00a79d;white-space:nowrap;letter-spacing:0.05em;">VGR</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#e8303f;white-space:nowrap;">DORCO</span>
+      <span style="font-family:'Georgia',serif;font-size:0.95rem;font-weight:700;color:#8B4513;white-space:nowrap;font-style:italic;">Suavecito</span>
+      <span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:700;color:#1a1a1a;white-space:nowrap;letter-spacing:0.12em;">AMERICAN CREW</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#fff;background:#1a1a1a;padding:4px 10px;border-radius:50px;white-space:nowrap;">Red One</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;letter-spacing:0.05em;">NISH<span style="display:block;line-height:0.9;font-size:0.85rem;">MAN</span></span>
+      <!-- Separador -->
+      <span style="color:rgba(28,52,97,0.15);font-size:1.5rem;">✦</span>
+      <!-- Segunda copia para loop infinito -->
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:800;color:#1a1a1a;white-space:nowrap;letter-spacing:-0.02em;">WAHL</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#e8303f;white-space:nowrap;">BaByliss<span style="color:#1a1a1a;">PRO</span></span>
+      <span style="font-family:'Georgia',serif;font-size:1.1rem;font-weight:400;color:#c8a84b;white-space:nowrap;font-style:italic;">Lizze</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;letter-spacing:-0.03em;">JRL</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#1C3461;white-space:nowrap;">Kemei</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;">W<span style="color:#e8303f;">MARK</span></span>
+      <span style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:800;color:#00a79d;white-space:nowrap;letter-spacing:0.05em;">VGR</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#e8303f;white-space:nowrap;">DORCO</span>
+      <span style="font-family:'Georgia',serif;font-size:0.95rem;font-weight:700;color:#8B4513;white-space:nowrap;font-style:italic;">Suavecito</span>
+      <span style="font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:700;color:#1a1a1a;white-space:nowrap;letter-spacing:0.12em;">AMERICAN CREW</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#fff;background:#1a1a1a;padding:4px 10px;border-radius:50px;white-space:nowrap;">Red One</span>
+      <span style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:900;color:#1a1a1a;white-space:nowrap;letter-spacing:0.05em;">NISH<span style="display:block;line-height:0.9;font-size:0.85rem;">MAN</span></span>
+      <span style="color:rgba(28,52,97,0.15);font-size:1.5rem;">✦</span>
+    </div>
+  </div>
+</section>
+<style>
+@keyframes brandsScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#brands-track:hover { animation-play-state: paused; }
+</style>
+
 <!-- ── Stats ───────────────────────────────────────────────── -->
 <section class="stats-strip" style="background:var(--navy);border-top:none;border-bottom:none;">
   <div class="container">
