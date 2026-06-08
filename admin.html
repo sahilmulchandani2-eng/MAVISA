@@ -536,7 +536,29 @@
         <div class="card-title">🏷️ Franja de marcas</div>
         <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Logos que aparecen en la banda de scroll automático. Máx. 12 marcas.</p>
         <div id="brands-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
-        <button class="btn" onclick="addBrandSlot()" style="font-size:.82rem;padding:8px 16px;">＋ Agregar marca</button>
+
+        <div id="brand-add-form" style="display:none;background:var(--cream);border:1.5px dashed var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;">
+          <div style="font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:10px;">Nueva marca</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;border:2px dashed var(--border);border-radius:var(--r-sm);cursor:pointer;background:#fff;text-align:center;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="file" accept="image/*" id="brand-file-input" style="display:none;" onchange="handleBrandFile(this)">
+              <span style="font-size:1.4rem;">📁</span>
+              <span style="font-size:.75rem;font-weight:600;color:var(--navy);">Subir desde PC</span>
+            </label>
+            <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border:2px solid var(--border);border-radius:var(--r-sm);background:#fff;">
+              <span style="font-size:1.4rem;text-align:center;">🌐</span>
+              <input type="text" id="brand-url-input" placeholder="https://logo.png"
+                style="padding:7px 9px;border:1.5px solid var(--border);border-radius:6px;font-size:.78rem;font-family:inherit;"
+                onkeydown="if(event.key==='Enter')confirmBrandUrl()">
+              <button onclick="confirmBrandUrl()" style="padding:5px;background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit;">Agregar URL</button>
+            </div>
+          </div>
+          <input type="text" id="brand-name-input" placeholder="Nombre de la marca (ej: WAHL)"
+            style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;box-sizing:border-box;margin-bottom:8px;">
+          <button onclick="document.getElementById('brand-add-form').style.display='none'" style="padding:6px 14px;background:var(--cream);border:1px solid var(--border);border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit;">Cancelar</button>
+        </div>
+
+        <button class="btn" onclick="document.getElementById('brand-add-form').style.display='block'" style="font-size:.82rem;padding:8px 16px;">＋ Agregar marca</button>
         <div id="brands-status" style="display:none;font-size:.78rem;margin-top:10px;padding:6px 10px;border-radius:8px;text-align:center;"></div>
       </div>
 
@@ -2159,14 +2181,46 @@ function renderBrandsList(brands) {
 }
 
 function addBrandSlot() {
+  document.getElementById('brand-add-form').style.display = 'block';
+}
+
+function confirmBrandUrl() {
+  const url = document.getElementById('brand-url-input').value.trim();
+  if (!url) return;
+  const name = document.getElementById('brand-name-input').value.trim();
+  _addBrand(url, name);
+}
+
+async function handleBrandFile(input) {
+  const file = input.files[0]; if (!file) return;
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token primero'); return; }
+  const st = $('brands-status');
+  st.style.display='block'; st.style.background='rgba(28,52,97,.07)'; st.style.color='var(--navy)';
+  st.textContent = '⏳ Subiendo logo...';
+  try {
+    const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(file);});
+    const filename='brand_'+Date.now()+'.'+file.name.split('.').pop();
+    const path='assets/images/brands/'+filename;
+    const gh = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Logo: '+filename,content:base64})});
+    if (!gh.ok) throw new Error('Error GitHub');
+    const url = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    const name = document.getElementById('brand-name-input').value.trim() || file.name.split('.')[0];
+    _addBrand(url, name);
+    st.style.background='rgba(26,122,69,.1)'; st.style.color='#1a7a45';
+    st.textContent='✅ Logo subido'; setTimeout(()=>st.style.display='none',2500);
+  } catch(e) { st.style.background='rgba(232,48,63,.08)'; st.style.color='var(--red)'; st.textContent='❌ '+e.message; }
+}
+
+function _addBrand(url, name) {
   const data = loadHomepageData();
   if (data.brands.length >= 12) { showToast('Máximo 12 marcas'); return; }
-  const url = prompt('Pega la URL del logo:');
-  if (!url) return;
-  const name = prompt('Nombre de la marca:') || '';
-  data.brands.push({ logo: url, name });
+  data.brands.push({ logo: url, name: name || '' });
   saveHomepageData(data);
   renderBrandsList(data.brands);
+  document.getElementById('brand-add-form').style.display = 'none';
+  document.getElementById('brand-url-input').value = '';
+  document.getElementById('brand-name-input').value = '';
 }
 
 function updateBrand(i, key, val) {
@@ -2318,16 +2372,10 @@ async function publishHomepage() {
 
     // 1. Actualizar franja de marcas
     if (data.brands.length > 0) {
-      const brandItems = data.brands.map(b =>
-        `<div style="width:100px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <img src="${b.logo}" alt="${b.name}" style="max-width:100%;max-height:100%;object-fit:contain;opacity:0.7;filter:grayscale(20%);transition:opacity .2s,filter .2s;" onmouseover="this.style.opacity='1';this.style.filter='none'" onmouseout="this.style.opacity='.7';this.style.filter='grayscale(20%)';">
-        </div>`
-      ).join('');
-      const doubledItems = brandItems + brandItems; // loop infinito
-      content = content.replace(
-        /(<div id="brands-track"[^>]*>)[\s\S]*?(<\/div>\s*<\/div>\s*<\/section>\s*<style>)/,
-        `$1${doubledItems}$2`
-      );
+      const chip = (b) => `<div style="width:110px;height:52px;background:#fff;border-radius:10px;border:1px solid rgba(28,52,97,0.09);display:flex;align-items:center;justify-content:center;padding:8px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.04);"><img src="${b.logo}" alt="${b.name}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`;
+      const brandItems = data.brands.map(chip).join('\n      ');
+      const block = `<!--BRANDS_START-->\n      ${brandItems}\n      <!--BRANDS_END-->`;
+      content = content.replace(/<!--BRANDS_START-->[\s\S]*?<!--BRANDS_END-->/g, block);
     }
 
     // 2. Actualizar slides del hero
