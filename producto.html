@@ -240,12 +240,8 @@
           <img id="pd-main-img" src="" alt="Producto principal">
           <div class="pd-zoom-hint">🔍 Pasa el cursor para ampliar</div>
         </div>
-        <!-- Thumbnails placeholder -->
-        <div style="display:flex;gap:10px;margin-top:12px;">
-          <div class="modal-thumb active" style="width:70px;height:70px;border-radius:12px;background:var(--color-surface);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;">
-            <img id="pd-thumb-1" src="" alt="" style="width:80%;height:80%;object-fit:contain;">
-          </div>
-        </div>
+        <!-- Thumbnails galería -->
+        <div id="pd-thumbnails" style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;"></div>
       </div>
 
       <!-- Info -->
@@ -437,13 +433,15 @@
 <script src="js/main.js" defer></script>
 <script src="js/catalog.js"></script>
 <script>
-// Sync thumbnail image
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    const mainSrc = document.getElementById('pd-main-img')?.src;
-    if (mainSrc) document.getElementById('pd-thumb-1').src = mainSrc;
-  }, 200);
-});
+function pdSetMain(src, thumbEl) {
+  const mainImg = document.getElementById('pd-main-img');
+  if (mainImg) mainImg.src = src;
+  // Marcar thumbnail activo
+  document.querySelectorAll('#pd-thumbnails > div').forEach(el => {
+    el.style.borderColor = 'var(--color-border)';
+  });
+  if (thumbEl) thumbEl.style.borderColor = 'var(--accent)';
+}
 </script>
 <!-- ── Modal Cotización ─────────────────────────────────────── -->
 <div class="modal-overlay" id="contact-modal" onclick="if(event.target===this)closeContactModal()" style="display:none;opacity:0;transition:opacity 0.3s;">

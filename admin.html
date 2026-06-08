@@ -637,41 +637,14 @@
         </div>
       </div>
 
-      <div class="section-divider" style="margin-top:8px;">🖼 Imagen del producto</div>
+      <div class="section-divider" style="margin-top:8px;">🖼 Imágenes del producto <span style="font-size:0.75rem;font-weight:400;color:var(--text-3);">(máx. 5 — la primera es la principal)</span></div>
       <div class="form-row cols-1">
         <div class="form-group">
-
-          <!-- Opciones de imagen -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-
-            <!-- Opción 1: Subir desde computador -->
-            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;border:2px dashed var(--border);border-radius:var(--r);cursor:pointer;background:var(--cream);transition:border-color .2s;text-align:center;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
-              <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this)">
-              <span style="font-size:1.8rem;">📁</span>
-              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);">Subir desde el computador</span>
-              <span style="font-size:0.72rem;color:var(--text-3);">JPG, PNG, WEBP</span>
-              <span id="upload-status" style="font-size:0.72rem;color:var(--red);display:none;"></span>
-            </label>
-
-            <!-- Opción 2: Link de internet -->
-            <div style="display:flex;flex-direction:column;gap:8px;padding:16px;border:2px solid var(--border);border-radius:var(--r);background:var(--cream);">
-              <span style="font-size:1.8rem;text-align:center;">🌐</span>
-              <span style="font-size:0.82rem;font-weight:600;color:var(--navy);text-align:center;">Pegar link de imagen</span>
-              <input type="text" id="f-image"
-                style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:0.82rem;font-family:inherit;background:#fff;color:var(--text);"
-                placeholder="https://imagen.jpg"
-                oninput="previewImage(this.value);updateLivePreview()">
-              <button type="button" onclick="removeBgFromUrl()" style="width:100%;padding:8px;background:var(--navy);color:#fff;border:none;border-radius:var(--r-sm);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;">🪄 Quitar fondo</button>
-              <div id="url-bg-status" style="display:none;font-size:0.75rem;text-align:center;padding:4px;border-radius:6px;"></div>
-              <span style="font-size:0.7rem;color:var(--text-3);line-height:1.4;">💡 En Google Imágenes: clic derecho sobre la imagen → <strong>Copiar dirección de imagen</strong></span>
-            </div>
-          </div>
-
-          <!-- Preview -->
-          <div class="img-preview-wrap">
-            <img id="img-preview" src="" alt="Vista previa">
-            <div class="img-preview-hint" id="img-hint">Sube una foto o pega un link para ver la vista previa</div>
-          </div>
+          <!-- Input hidden para compatibilidad -->
+          <input type="hidden" id="f-image">
+          <!-- Grid de hasta 5 slots de imagen -->
+          <div id="img-slots" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;"></div>
+          <div id="upload-status" style="font-size:0.78rem;display:none;padding:6px 10px;border-radius:8px;text-align:center;"></div>
         </div>
       </div>
 
@@ -986,6 +959,7 @@ function openAddModal() {
 
 function clearForm() {
   ['f-name','f-price','f-price-old','f-desc','f-image'].forEach(id => $(id).value = '');
+  productImages = []; renderImageSlots();
   $('f-category').querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
   $('f-badge').value = '';
   $('f-featured').checked = false;
@@ -1008,6 +982,8 @@ function openEdit(id) {
   $('f-price-old').value = p.priceOld || '';
   $('f-desc').value = p.description;
   $('f-image').value = p.image || '';
+  productImages = p.images && p.images.length ? [...p.images] : (p.image ? [p.image] : []);
+  renderImageSlots();
   $('f-featured').checked = !!p.featured;
   $('f-new').checked = !!p.isNew;
   $('f-stock').checked = !!p.inStock;
@@ -1066,8 +1042,8 @@ function saveProduct() {
     badgeLabel: badgeLabel || null,
     description: desc,
     specs,
-    image: $('f-image').value.trim() || 'assets/images/placeholder.svg',
-    images: [$('f-image').value.trim() || 'assets/images/placeholder.svg'],
+    image: productImages[0] || 'assets/images/placeholder.svg',
+    images: productImages.length ? [...productImages] : ['assets/images/placeholder.svg'],
     featured: $('f-featured').checked,
     isNew: $('f-new').checked,
     inStock: $('f-stock').checked,
@@ -1178,6 +1154,125 @@ function updateLivePreview() {
 }
 
 /* ── UPLOAD IMAGE TO GITHUB ──────────────────────────────── */
+/* ── GALERÍA MULTI-IMAGEN (máx 5) ────────────────────────── */
+let productImages = []; // array de URLs, max 5
+
+function renderImageSlots() {
+  const container = document.getElementById('img-slots');
+  if (!container) return;
+  container.innerHTML = '';
+  const max = 5;
+
+  // Slots con imagen
+  productImages.forEach((url, i) => {
+    const slot = document.createElement('div');
+    slot.style.cssText = 'position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;border:2px solid '+(i===0?'var(--accent)':'var(--border)')+';background:var(--cream);';
+    slot.innerHTML = `
+      <img src="${url}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.opacity='.2'">
+      ${i===0?'<span style="position:absolute;top:4px;left:4px;background:var(--accent);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:99px;">PRINCIPAL</span>':''}
+      <div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;">
+        <button onclick="removeBgSlot(${i})" title="Quitar fondo" style="background:var(--navy);color:#fff;border:none;border-radius:6px;width:22px;height:22px;cursor:pointer;font-size:0.7rem;">🪄</button>
+        <button onclick="removeImageSlot(${i})" title="Eliminar" style="background:var(--red);color:#fff;border:none;border-radius:6px;width:22px;height:22px;cursor:pointer;font-size:0.7rem;">✕</button>
+      </div>
+    `;
+    container.appendChild(slot);
+  });
+
+  // Slot para agregar (si hay menos de 5)
+  if (productImages.length < max) {
+    const add = document.createElement('div');
+    add.style.cssText = 'aspect-ratio:1;border-radius:10px;border:2px dashed var(--border);background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:border-color .2s;';
+    add.onmouseover = () => add.style.borderColor = 'var(--navy)';
+    add.onmouseout  = () => add.style.borderColor = 'var(--border)';
+    add.innerHTML = `
+      <span style="font-size:1.4rem;">＋</span>
+      <span style="font-size:0.7rem;color:var(--text-3);text-align:center;">Subir o pegar URL</span>
+      <input type="file" accept="image/*" style="display:none;" onchange="uploadSlotFile(this)">
+      <input type="text" placeholder="https://..." style="width:90%;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:0.7rem;font-family:inherit;" onkeydown="if(event.key==='Enter'){addImageUrl(this.value);this.value=''}" onclick="event.stopPropagation()">
+    `;
+    add.querySelector('input[type=file]').id = 'slot-file-input';
+    add.onclick = (e) => { if (e.target.tagName !== 'INPUT') add.querySelector('input[type=file]').click(); };
+    container.appendChild(add);
+  }
+
+  // Sincronizar f-image con primera imagen
+  const fi = document.getElementById('f-image');
+  if (fi) fi.value = productImages[0] || '';
+  updateLivePreview();
+}
+
+function addImageUrl(url) {
+  url = url.trim();
+  if (!url || productImages.length >= 5) return;
+  productImages.push(url);
+  renderImageSlots();
+}
+
+function removeImageSlot(i) {
+  productImages.splice(i, 1);
+  renderImageSlots();
+}
+
+async function removeBgSlot(i) {
+  const url = productImages[i];
+  if (!url) return;
+  const statusEl = document.getElementById('upload-status');
+  statusEl.style.display = 'block';
+  statusEl.style.background = 'rgba(28,52,97,0.07)';
+  statusEl.style.color = 'var(--navy)';
+  statusEl.textContent = `🪄 Removiendo fondo foto ${i+1}...`;
+  try {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    if (!token) throw new Error('Configura el token primero');
+    const formData = new FormData();
+    formData.append('image_url', url);
+    formData.append('size', 'auto');
+    const res = await fetch('https://api.remove.bg/v1.0/removebg', { method:'POST', headers:{'X-Api-Key':REMOVEBG_KEY}, body:formData });
+    if (!res.ok) throw new Error('remove.bg falló');
+    const blob = await res.blob();
+    const base64 = await new Promise((r,j)=>{ const rd=new FileReader(); rd.onload=e=>r(e.target.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(blob); });
+    const filename = 'prod_'+Date.now()+'.png';
+    const path = 'assets/images/products/'+filename;
+    const ghRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Imagen: '+filename,content:base64})});
+    if (!ghRes.ok) throw new Error('Error GitHub');
+    productImages[i] = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    renderImageSlots();
+    statusEl.style.background = 'rgba(26,122,69,0.1)'; statusEl.style.color='#1a7a45';
+    statusEl.textContent = '✅ Fondo eliminado';
+    setTimeout(()=>statusEl.style.display='none', 2500);
+  } catch(e) {
+    statusEl.style.background='rgba(232,48,63,0.08)'; statusEl.style.color='var(--red)';
+    statusEl.textContent = '❌ '+e.message;
+  }
+}
+
+async function uploadSlotFile(input) {
+  const file = input.files[0];
+  if (!file || productImages.length >= 5) return;
+  const statusEl = document.getElementById('upload-status');
+  statusEl.style.display='block'; statusEl.style.background='rgba(28,52,97,0.07)'; statusEl.style.color='var(--navy)';
+  statusEl.textContent = '🪄 Removiendo fondo y subiendo...';
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { statusEl.style.color='var(--red)'; statusEl.textContent='⚠️ Configura el token primero'; return; }
+  try {
+    let processedBlob;
+    try { processedBlob = await removeImageBackground(file); } catch(e) { processedBlob = file; }
+    const base64 = await new Promise((r,j)=>{ const rd=new FileReader(); rd.onload=e=>r(e.target.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(processedBlob); });
+    const filename = 'prod_'+Date.now()+'.png';
+    const path = 'assets/images/products/'+filename;
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Imagen: '+filename,content:base64})});
+    if (!res.ok) throw new Error('Error GitHub');
+    productImages.push(`https://raw.githubusercontent.com/${GH_REPO}/main/${path}`);
+    renderImageSlots();
+    statusEl.style.background='rgba(26,122,69,0.1)'; statusEl.style.color='#1a7a45';
+    statusEl.textContent='✅ Imagen subida (fondo removido)';
+    setTimeout(()=>statusEl.style.display='none', 2500);
+  } catch(e) {
+    statusEl.style.background='rgba(232,48,63,0.08)'; statusEl.style.color='var(--red)';
+    statusEl.textContent='❌ '+e.message;
+  }
+}
+
 /* ── REMOVE BG DESDE URL ─────────────────────────────────── */
 async function removeBgFromUrl() {
   const urlInput = document.getElementById('f-image');

@@ -865,6 +865,18 @@ function initProductPage() {
   $('#pd-description').textContent=product.description;
   const specsEl=$('#pd-specs'); if(specsEl&&product.specs){specsEl.innerHTML=product.specs.map(s=>`<div class="modal-spec-row"><span class="modal-spec-label">${s.label}</span><span class="modal-spec-value">${s.value}</span></div>`).join('');}
   const mainImg=$('#pd-main-img'); if(mainImg) mainImg.src=product.image;
+
+  // Galería de thumbnails (hasta 5 fotos)
+  const thumbsEl = $('#pd-thumbnails');
+  if (thumbsEl) {
+    const imgs = product.images && product.images.length ? product.images : [product.image];
+    thumbsEl.innerHTML = imgs.map((src, i) => `
+      <div onclick="pdSetMain('${src}',this)"
+        style="width:68px;height:68px;border-radius:10px;background:var(--color-surface);border:2px solid ${i===0?'var(--accent)':'var(--color-border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;flex-shrink:0;">
+        <img src="${src}" alt="Foto ${i+1}" style="width:80%;height:80%;object-fit:contain;" onerror="this.style.opacity='.2'">
+      </div>`).join('');
+  }
+
   $$('.pd-whatsapp').forEach(b=>{ b.href=whatsappUrl('Hola! Me interesa el producto: '+product.name+'. ¿Podría darme más información y el precio actual? 🛒'); });
   const relatedGrid=$('#related-grid'); if(relatedGrid){const related=PRODUCTS_DATA.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4);relatedGrid.innerHTML=related.map(productCardHTML).join('');}
   initScrollAnimations();
