@@ -271,9 +271,9 @@ const PRODUCTS_DATA = [
     "badgeLabel": "Nuevo",
     "description": "AFEITADORA KEMEI TX10\nBOLSILLO\nUSB TIPO C",
     "specs": [],
-    "image": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ2haWRFtWJ4lp7mmnl8GTGf8-R6cL0xcYgQFScrNXFBCWm-SZGPqaVnlP9zcuZOksEFJwDEjeaoVta7PWdAtoIbIk3f3vqtn48m1nm8VMu&usqp=CAc",
+    "image": "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780947090175.png",
     "images": [
-      "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ2haWRFtWJ4lp7mmnl8GTGf8-R6cL0xcYgQFScrNXFBCWm-SZGPqaVnlP9zcuZOksEFJwDEjeaoVta7PWdAtoIbIk3f3vqtn48m1nm8VMu&usqp=CAc"
+      "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780947090175.png"
     ],
     "featured": false,
     "isNew": true,
