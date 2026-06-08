@@ -966,8 +966,7 @@ function clearForm() {
   $('f-new').checked = false;
   $('f-stock').checked = true;
   $('specs-list').innerHTML = '';
-  $('img-preview').style.display = 'none';
-  $('img-hint').style.display = 'block';
+  // img-preview removido (reemplazado por slots)
 }
 
 /* ── EDIT PRODUCT ────────────────────────────────────────── */
@@ -1510,18 +1509,19 @@ async function uploadImageFile(input) {
   }
 }
 
-/* ── IMAGE PREVIEW ───────────────────────────────────────── */
+/* ── IMAGE PREVIEW (legacy, no-op si no hay elementos) ───── */
 function previewImage(url) {
   const img = $('img-preview');
   const hint = $('img-hint');
+  if (!img) return; // elementos removidos, usar slots
   if (url) {
     img.src = url;
     img.style.display = 'block';
-    hint.style.display = 'none';
-    img.onerror = () => { img.style.display='none'; hint.textContent='⚠️ No se pudo cargar la imagen'; hint.style.display='block'; };
+    if (hint) hint.style.display = 'none';
+    img.onerror = () => { img.style.display='none'; if(hint){hint.textContent='⚠️ No se pudo cargar la imagen'; hint.style.display='block';}};
   } else {
     img.style.display = 'none';
-    hint.textContent = 'Ingresa la URL para ver una vista previa';
+    if (hint) hint.textContent = 'Ingresa la URL para ver una vista previa';
     hint.style.display = 'block';
   }
 }
