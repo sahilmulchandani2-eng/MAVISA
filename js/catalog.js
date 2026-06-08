@@ -842,7 +842,7 @@ function productCardHTML(p) {
     onclick="if(!event.target.closest('button,a'))window.location='producto.html?id=${p.id}'"
     style="cursor:pointer;">
     <div class="product-card-image">
-      <div class="product-card-badges" style="z-index:10;position:absolute;top:12px;left:12px;">${badgeHTML(p)}</div>
+      <div class="product-card-badges" style="z-index:10;position:absolute;top:12px;left:12px;transition:opacity .4s;">${badgeHTML(p)}</div>
       <div class="product-card-actions">
         <button class="product-card-action-btn" onclick="openQuickView('${p.id}')" title="Vista rápida">👁</button>
         <a class="product-card-action-btn" href="${whatsappUrl('Hola! Me interesa: '+p.name)}" target="_blank" title="Consultar">💬</a>
@@ -871,6 +871,9 @@ function pcGoTo(id, idx) {
     d.style.transform  = i===idx ? 'scale(1.35)' : 'scale(1)';
     i++;
   }
+  // Badge solo visible en la primera foto
+  const badge = el.closest('.product-card-image')?.querySelector('.product-card-badges');
+  if (badge) badge.style.opacity = idx === 0 ? '1' : '0';
   el.dataset.cur = String(idx);
 }
 function pcStartAuto(id, total) {
