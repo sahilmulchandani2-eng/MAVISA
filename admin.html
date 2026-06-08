@@ -2145,7 +2145,9 @@ function renderBrandsList(brands) {
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
     row.innerHTML = `
-      <img src="${b.logo}" style="height:36px;width:80px;object-fit:contain;border-radius:4px;background:#fff;padding:2px;">
+      <div style="width:90px;height:40px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border);overflow:hidden;padding:4px;">
+        <img src="${b.logo}" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
       <input type="text" value="${b.name}" placeholder="Nombre marca"
         style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
         onchange="updateBrand(${i},'name',this.value)">
@@ -2317,7 +2319,9 @@ async function publishHomepage() {
     // 1. Actualizar franja de marcas
     if (data.brands.length > 0) {
       const brandItems = data.brands.map(b =>
-        `<img src="${b.logo}" alt="${b.name}" style="height:32px;max-width:100px;object-fit:contain;opacity:0.75;filter:grayscale(30%);transition:opacity .2s,filter .2s;" onmouseover="this.style.opacity='1';this.style.filter='none'" onmouseout="this.style.opacity='.75';this.style.filter='grayscale(30%');">`
+        `<div style="width:100px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <img src="${b.logo}" alt="${b.name}" style="max-width:100%;max-height:100%;object-fit:contain;opacity:0.7;filter:grayscale(20%);transition:opacity .2s,filter .2s;" onmouseover="this.style.opacity='1';this.style.filter='none'" onmouseout="this.style.opacity='.7';this.style.filter='grayscale(20%)';">
+        </div>`
       ).join('');
       const doubledItems = brandItems + brandItems; // loop infinito
       content = content.replace(
