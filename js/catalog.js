@@ -828,7 +828,7 @@ function productCardHTML(p) {
   const slideId = 'slide-' + p.id;
   const SI = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;height:85%;object-fit:contain;transition:opacity 0.5s;';
   const imageSection = imgs ? `
-    <div id="${slideId}" data-cur="0" style="position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;">
+    <div id="${slideId}" data-cur="0" style="position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;z-index:1;">
       <div style="flex:1;position:relative;overflow:hidden;">
         ${imgs.map((src,i)=>`<img src="${src}" alt="${p.name}" loading="lazy" style="${SI}opacity:${i===0?1:0};">`).join('')}
       </div>
@@ -877,7 +877,7 @@ function pcStartAuto(id, total) {
     const el = document.getElementById(id);
     if (!el) { clearInterval(_pcTimers[id]); return; }
     pcGoTo(id, (parseInt(el.dataset.cur || 0) + 1) % total);
-  }, 2500);
+  }, 4000);
 }
 function initCardSliders() {
   document.querySelectorAll('[data-cur]').forEach(el => {
