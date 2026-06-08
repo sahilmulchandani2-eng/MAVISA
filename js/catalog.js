@@ -828,12 +828,12 @@ function productCardHTML(p) {
   const sid  = 'sl-' + p.id;
 
   const imageSection = imgs
-    ? `<div id="${sid}" data-cur="0" style="position:absolute;inset:0;z-index:1;overflow:hidden;">
+    ? `<div id="${sid}" data-cur="0" style="position:absolute;inset:0;z-index:1;overflow:hidden;background:#fff;">
         ${imgs.map((src,i) => `<img src="${src}" alt="${p.name}" loading="lazy"
-          style="position:absolute;inset:8%;width:calc(100% - 16%);height:calc(100% - 16%);object-fit:contain;transition:opacity .5s;opacity:${i===0?1:0};">`).join('')}
+          style="position:absolute;inset:6%;width:calc(100% - 12%);height:calc(100% - 12%);object-fit:contain;transition:opacity .5s;opacity:${i===0?1:0};">`).join('')}
         <div style="position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:3;">
           ${imgs.map((_,i) => `<b id="${sid}-d${i}" onclick="event.stopPropagation();pcGoTo('${sid}',${i})"
-            style="width:8px;height:8px;border-radius:50%;display:inline-block;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0;background:${i===0?'#E8303F':'rgba(255,255,255,0.7)'}"></b>`).join('')}
+            style="width:8px;height:8px;border-radius:50%;display:inline-block;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25);flex-shrink:0;background:${i===0?'#E8303F':'rgba(28,52,97,0.2)'}"></b>`).join('')}
         </div>
        </div>`
     : `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`;
@@ -843,10 +843,10 @@ function productCardHTML(p) {
     style="cursor:pointer;">
     <div class="product-card-image">
       <div class="product-card-badges" style="z-index:10;position:absolute;top:12px;left:12px;transition:opacity .4s;">${badgeHTML(p)}</div>
-      <div class="product-card-actions">
+      ${imgs ? '' : `<div class="product-card-actions">
         <button class="product-card-action-btn" onclick="openQuickView('${p.id}')" title="Vista rápida">👁</button>
         <a class="product-card-action-btn" href="${whatsappUrl('Hola! Me interesa: '+p.name)}" target="_blank" title="Consultar">💬</a>
-      </div>
+      </div>`}
       ${imageSection}
     </div>
     <div class="product-card-body">
