@@ -273,7 +273,9 @@ const PRODUCTS_DATA = [
     "specs": [],
     "image": "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780947090175.png",
     "images": [
-      "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780947090175.png"
+      "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780947090175.png",
+      "https://raw.githubusercontent.com/sahilmulchandani2-eng/MAVISA/main/assets/images/products/prod_1780950103920.png",
+      "https://sc04.alicdn.com/kf/H68417697736a471a945dadc9651cfecdK.jpg"
     ],
     "featured": false,
     "isNew": true,
