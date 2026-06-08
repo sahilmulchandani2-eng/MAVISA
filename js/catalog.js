@@ -825,22 +825,24 @@ function priceHTML(p) {
 }
 function productCardHTML(p) {
   const imgs = (p.images && p.images.length > 1) ? p.images : null;
-  const slideId = 'slide-' + p.id;
-  const SI = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;height:85%;object-fit:contain;transition:opacity 0.5s;';
-  const imageSection = imgs ? `
-    <div id="${slideId}" data-cur="0" style="position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;z-index:1;">
-      <div style="flex:1;position:relative;overflow:hidden;">
-        ${imgs.map((src,i)=>`<img src="${src}" alt="${p.name}" loading="lazy" style="${SI}opacity:${i===0?1:0};">`).join('')}
-      </div>
-      <div style="display:flex;justify-content:center;align-items:center;gap:6px;height:22px;flex-shrink:0;background:rgba(255,255,255,0.6);">
-        ${imgs.map((_,i)=>`<span onclick="event.stopPropagation();pcGoTo('${slideId}',${i})" style="width:8px;height:8px;border-radius:50%;background:${i===0?'#E8303F':'rgba(28,52,97,0.25)'};cursor:pointer;display:inline-block;transition:transform .2s,background .2s;flex-shrink:0;"></span>`).join('')}
-      </div>
-    </div>
-  ` : `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`;
+  const sid  = 'sl-' + p.id;
 
-  return `<article class="product-card reveal" data-product-id="${p.id}" onclick="if(!event.target.closest('button,a'))window.location='producto.html?id=${p.id}'" style="cursor:pointer;">
+  const imageSection = imgs
+    ? `<div id="${sid}" data-cur="0" style="position:absolute;inset:0;z-index:1;overflow:hidden;">
+        ${imgs.map((src,i) => `<img src="${src}" alt="${p.name}" loading="lazy"
+          style="position:absolute;inset:8%;width:calc(100% - 16%);height:calc(100% - 16%);object-fit:contain;transition:opacity .5s;opacity:${i===0?1:0};">`).join('')}
+        <div style="position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:3;">
+          ${imgs.map((_,i) => `<b id="${sid}-d${i}" onclick="event.stopPropagation();pcGoTo('${sid}',${i})"
+            style="width:8px;height:8px;border-radius:50%;display:inline-block;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.3);flex-shrink:0;background:${i===0?'#E8303F':'rgba(255,255,255,0.7)'}"></b>`).join('')}
+        </div>
+       </div>`
+    : `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`;
+
+  return `<article class="product-card reveal" data-product-id="${p.id}"
+    onclick="if(!event.target.closest('button,a'))window.location='producto.html?id=${p.id}'"
+    style="cursor:pointer;">
     <div class="product-card-image">
-      <div class="product-card-badges">${badgeHTML(p)}</div>
+      <div class="product-card-badges" style="z-index:10;position:absolute;top:12px;left:12px;">${badgeHTML(p)}</div>
       <div class="product-card-actions">
         <button class="product-card-action-btn" onclick="openQuickView('${p.id}')" title="Vista rápida">👁</button>
         <a class="product-card-action-btn" href="${whatsappUrl('Hola! Me interesa: '+p.name)}" target="_blank" title="Consultar">💬</a>
@@ -861,13 +863,14 @@ const _pcTimers = {};
 function pcGoTo(id, idx) {
   const el = document.getElementById(id);
   if (!el) return;
-  const imgs = el.querySelectorAll('img');
-  const dots = el.querySelectorAll('span[onclick]');
-  imgs.forEach((s,i) => s.style.opacity = i === idx ? '1' : '0');
-  dots.forEach((d,i) => {
-    d.style.background = i === idx ? '#E8303F' : 'rgba(28,52,97,0.25)';
-    d.style.transform  = i === idx ? 'scale(1.4)' : 'scale(1)';
-  });
+  el.querySelectorAll('img').forEach((s,i) => s.style.opacity = i===idx ? '1' : '0');
+  let i = 0;
+  while (document.getElementById(id+'-d'+i)) {
+    const d = document.getElementById(id+'-d'+i);
+    d.style.background = i===idx ? '#E8303F' : 'rgba(255,255,255,0.7)';
+    d.style.transform  = i===idx ? 'scale(1.35)' : 'scale(1)';
+    i++;
+  }
   el.dataset.cur = String(idx);
 }
 function pcStartAuto(id, total) {
