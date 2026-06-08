@@ -827,10 +827,8 @@ function productCardHTML(p) {
   const imgs = (p.images && p.images.length > 1) ? p.images : null;
   const slideId = 'slide-' + p.id;
   const imageSection = imgs ? `
-    <div class="pc-slider" id="${slideId}">
-      <div class="pc-slides">
-        ${imgs.map((src,i) => `<img class="pc-slide-img" src="${src}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`).join('')}
-      </div>
+    <div class="pc-slider" id="${slideId}" data-current="0">
+      ${imgs.map((src,i) => `<img class="pc-slide-img${i===0?' active':''}" src="${src}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`).join('')}
       <div class="pc-dots">
         ${imgs.map((_,i) => `<span class="pc-dot${i===0?' active':''}" onclick="event.stopPropagation();pcGoTo('${slideId}',${i})"></span>`).join('')}
       </div>
@@ -860,10 +858,8 @@ const _pcTimers = {};
 function pcGoTo(id, idx) {
   const el = document.getElementById(id);
   if (!el) return;
-  const slides = el.querySelectorAll('.pc-slide-img');
-  const dots   = el.querySelectorAll('.pc-dot');
-  slides.forEach((s,i) => s.style.opacity = i === idx ? '1' : '0');
-  dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+  el.querySelectorAll('.pc-slide-img').forEach((s,i) => s.classList.toggle('active', i === idx));
+  el.querySelectorAll('.pc-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
   el.dataset.current = idx;
 }
 function pcStartAuto(id, total) {
