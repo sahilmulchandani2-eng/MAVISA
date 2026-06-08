@@ -876,39 +876,45 @@ h1, h2, h3, h4, h5, h6 {
 .pc-slider {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 .pc-slide-img {
   position: absolute;
-  inset: 0;
-  width: 90%;
-  height: 90%;
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  height: 88%;
   object-fit: contain;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
 }
-.pc-slide-img.active { opacity: 1; }
+.pc-slide-img.active {
+  opacity: 1;
+}
 .pc-dots {
   position: absolute;
-  bottom: 8px;
+  bottom: 7px;
   left: 0; right: 0;
   display: flex;
   justify-content: center;
   gap: 5px;
-  z-index: 3;
+  z-index: 4;
+  pointer-events: all;
 }
 .pc-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: rgba(28,52,97,0.25);
+  background: rgba(28,52,97,0.2);
   cursor: pointer;
   transition: background .2s, transform .2s;
+  display: block;
 }
-.pc-dot.active { background: var(--accent); transform: scale(1.3); }
+.pc-dot.active {
+  background: var(--accent);
+  transform: scale(1.35);
+}
 
 .product-card-image {
   position: relative;
