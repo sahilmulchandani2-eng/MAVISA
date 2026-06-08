@@ -2167,8 +2167,8 @@ function renderBrandsList(brands) {
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
     row.innerHTML = `
-      <div style="width:90px;height:40px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border);overflow:hidden;padding:4px;">
-        <img src="${b.logo}" style="max-width:100%;max-height:100%;object-fit:contain;">
+      <div style="width:160px;height:68px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid var(--border);overflow:hidden;padding:6px;">
+        <img src="${b.logo}" style="height:56px;width:auto;max-width:148px;object-fit:contain;display:block;">
       </div>
       <input type="text" value="${b.name}" placeholder="Nombre marca"
         style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
