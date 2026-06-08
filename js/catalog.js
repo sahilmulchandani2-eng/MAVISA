@@ -828,7 +828,9 @@ function productCardHTML(p) {
   const slideId = 'slide-' + p.id;
   const imageSection = imgs ? `
     <div class="pc-slider" id="${slideId}" data-current="0">
-      ${imgs.map((src,i) => `<img class="pc-slide-img${i===0?' active':''}" src="${src}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.3'">`).join('')}
+      <div class="pc-slides-track">
+        ${imgs.map((src,i) => `<img class="pc-slide-img${i===0?' active':''}" src="${src}" alt="${p.name}" loading="lazy">`).join('')}
+      </div>
       <div class="pc-dots">
         ${imgs.map((_,i) => `<span class="pc-dot${i===0?' active':''}" onclick="event.stopPropagation();pcGoTo('${slideId}',${i})"></span>`).join('')}
       </div>
@@ -859,8 +861,8 @@ function pcGoTo(id, idx) {
   const el = document.getElementById(id);
   if (!el) return;
   el.querySelectorAll('.pc-slide-img').forEach((s,i) => s.classList.toggle('active', i === idx));
-  el.querySelectorAll('.pc-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
-  el.dataset.current = idx;
+  el.querySelectorAll('.pc-dot').forEach((d,i)   => d.classList.toggle('active', i === idx));
+  el.dataset.current = String(idx);
 }
 function pcStartAuto(id, total) {
   if (total <= 1) return;
