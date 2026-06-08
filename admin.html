@@ -459,6 +459,9 @@
       <div class="nav-item" id="nav-order" onclick="showSection('order')">
         <span class="nav-icon">⭐</span> Ordenar portada
       </div>
+      <div class="nav-item" id="nav-homepage" onclick="showSection('homepage')">
+        <span class="nav-icon">🏠</span> Homepage
+      </div>
       <a class="nav-item" href="index.html" target="_blank">
         <span class="nav-icon">🌐</span> Ver sitio
       </a>
@@ -515,6 +518,34 @@
           <button class="cat-tab" data-slug="gadgets" onclick="setCatFilter(this)">🎧 Gadgets</button>
         </div>
         <div id="products-grid"></div>
+      </div>
+    </div>
+
+    <!-- Homepage section -->
+    <div id="section-homepage" style="display:none;">
+      <div class="topbar" style="margin-bottom:24px;">
+        <div>
+          <div class="topbar-title">🏠 Homepage</div>
+          <div class="topbar-sub">Gestiona la franja de marcas y el carrusel hero</div>
+        </div>
+        <button class="btn btn-publish" onclick="publishHomepage()">🚀 Publicar homepage</button>
+      </div>
+
+      <!-- FRANJA DE MARCAS -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">🏷️ Franja de marcas</div>
+        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Logos que aparecen en la banda de scroll automático. Máx. 12 marcas.</p>
+        <div id="brands-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+        <button class="btn" onclick="addBrandSlot()" style="font-size:.82rem;padding:8px 16px;">＋ Agregar marca</button>
+        <div id="brands-status" style="display:none;font-size:.78rem;margin-top:10px;padding:6px 10px;border-radius:8px;text-align:center;"></div>
+      </div>
+
+      <!-- CARRUSEL HERO -->
+      <div class="card">
+        <div class="card-title">🎠 Carrusel hero</div>
+        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Slides del cuadrito animado en la portada. Máx. 6 slides.</p>
+        <div id="hero-slides-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+        <button class="btn" onclick="addHeroSlide()" style="font-size:.82rem;padding:8px 16px;">＋ Agregar slide</button>
       </div>
     </div>
 
@@ -1830,11 +1861,12 @@ function downloadCatalog() {
 
 /* ── SECTIONS ────────────────────────────────────────────── */
 function showSection(name) {
-  ['products','order'].forEach(s => {
+  ['products','order','homepage'].forEach(s => {
     $('section-'+s).style.display = s === name ? 'block' : 'none';
     $('nav-'+s)?.classList.toggle('active', s === name);
   });
   if (name === 'order') renderOrderSection();
+  if (name === 'homepage') renderHomepageSection();
 }
 
 /* ── ORDER SECTION ───────────────────────────────────────── */
@@ -2089,6 +2121,233 @@ document.addEventListener('keydown', e => {
     ['product-modal','confirm-modal','export-modal'].forEach(closeModal);
   }
 });
+
+/* ── HOMEPAGE SECTION ────────────────────────────────────── */
+const HP_KEY = 'mavisa_homepage';
+
+function loadHomepageData() {
+  try { return JSON.parse(localStorage.getItem(HP_KEY)) || { brands: [], heroSlides: [] }; }
+  catch(e) { return { brands: [], heroSlides: [] }; }
+}
+function saveHomepageData(data) { localStorage.setItem(HP_KEY, JSON.stringify(data)); }
+
+function renderHomepageSection() {
+  const data = loadHomepageData();
+  renderBrandsList(data.brands);
+  renderHeroSlidesList(data.heroSlides);
+}
+
+/* ── Franja de marcas ── */
+function renderBrandsList(brands) {
+  const list = $('brands-list');
+  list.innerHTML = '';
+  brands.forEach((b, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
+    row.innerHTML = `
+      <img src="${b.logo}" style="height:36px;width:80px;object-fit:contain;border-radius:4px;background:#fff;padding:2px;">
+      <input type="text" value="${b.name}" placeholder="Nombre marca"
+        style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+        onchange="updateBrand(${i},'name',this.value)">
+      <button onclick="removeBgBrand(${i})" title="Quitar fondo logo" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">🪄</button>
+      <button onclick="deleteBrand(${i})" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function addBrandSlot() {
+  const data = loadHomepageData();
+  if (data.brands.length >= 12) { showToast('Máximo 12 marcas'); return; }
+  const url = prompt('Pega la URL del logo:');
+  if (!url) return;
+  const name = prompt('Nombre de la marca:') || '';
+  data.brands.push({ logo: url, name });
+  saveHomepageData(data);
+  renderBrandsList(data.brands);
+}
+
+function updateBrand(i, key, val) {
+  const data = loadHomepageData();
+  data.brands[i][key] = val;
+  saveHomepageData(data);
+}
+
+function deleteBrand(i) {
+  const data = loadHomepageData();
+  data.brands.splice(i, 1);
+  saveHomepageData(data);
+  renderBrandsList(data.brands);
+}
+
+async function removeBgBrand(i) {
+  const data = loadHomepageData();
+  const url = data.brands[i].logo;
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token primero'); return; }
+  const st = $('brands-status');
+  st.style.display='block'; st.style.background='rgba(28,52,97,.07)'; st.style.color='var(--navy)';
+  st.textContent = '🪄 Removiendo fondo...';
+  try {
+    const fd = new FormData(); fd.append('image_url', url); fd.append('size','auto');
+    const res = await fetch('https://api.remove.bg/v1.0/removebg',{method:'POST',headers:{'X-Api-Key':REMOVEBG_KEY},body:fd});
+    if (!res.ok) throw new Error('remove.bg falló');
+    const rawBlob = await res.blob();
+    const blob = await autoCropTransparent(rawBlob);
+    const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(blob);});
+    const filename='brand_'+Date.now()+'.png';
+    const path='assets/images/brands/'+filename;
+    const gh = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Logo marca: '+filename,content:base64})});
+    if (!gh.ok) throw new Error('Error GitHub');
+    data.brands[i].logo = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    saveHomepageData(data);
+    renderBrandsList(data.brands);
+    st.style.background='rgba(26,122,69,.1)'; st.style.color='#1a7a45';
+    st.textContent='✅ Logo actualizado'; setTimeout(()=>st.style.display='none',2500);
+  } catch(e) { st.style.background='rgba(232,48,63,.08)'; st.style.color='var(--red)'; st.textContent='❌ '+e.message; }
+}
+
+/* ── Carrusel Hero ── */
+function renderHeroSlidesList(slides) {
+  const list = $('hero-slides-list');
+  list.innerHTML = '';
+  slides.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:auto 1fr 1fr auto auto auto;gap:8px;align-items:center;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
+    row.innerHTML = `
+      <img src="${s.image}" style="height:48px;width:48px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;">
+      <input type="text" value="${s.name}" placeholder="Nombre producto"
+        style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+        onchange="updateHeroSlide(${i},'name',this.value)">
+      <input type="text" value="${s.price}" placeholder="$69.990"
+        style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+        onchange="updateHeroSlide(${i},'price',this.value)">
+      <button onclick="uploadHeroSlideImage(${i})" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 8px;cursor:pointer;font-size:.75rem;white-space:nowrap;">📁 Foto</button>
+      <button onclick="removeBgHeroSlide(${i})" title="Quitar fondo" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">🪄</button>
+      <button onclick="deleteHeroSlide(${i})" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">✕</button>
+      <input type="file" id="hero-file-${i}" accept="image/*" style="display:none;" onchange="handleHeroFile(this,${i})">
+    `;
+    list.appendChild(row);
+  });
+}
+
+function addHeroSlide() {
+  const data = loadHomepageData();
+  if (data.heroSlides.length >= 6) { showToast('Máximo 6 slides'); return; }
+  data.heroSlides.push({ image: 'assets/images/placeholder.svg', name: 'Nuevo producto', price: '$0' });
+  saveHomepageData(data);
+  renderHeroSlidesList(data.heroSlides);
+}
+
+function updateHeroSlide(i, key, val) {
+  const data = loadHomepageData();
+  data.heroSlides[i][key] = val;
+  saveHomepageData(data);
+}
+
+function deleteHeroSlide(i) {
+  const data = loadHomepageData();
+  data.heroSlides.splice(i, 1);
+  saveHomepageData(data);
+  renderHeroSlidesList(data.heroSlides);
+}
+
+function uploadHeroSlideImage(i) {
+  document.getElementById('hero-file-'+i)?.click();
+}
+
+async function handleHeroFile(input, i) {
+  const file = input.files[0]; if (!file) return;
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token primero'); return; }
+  showToast('🪄 Procesando imagen...');
+  try {
+    let blob; try { blob = await removeImageBackground(file); } catch(e) { blob = file; }
+    blob = await autoCropTransparent(blob);
+    const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(blob);});
+    const filename='hero_'+Date.now()+'.png'; const path='assets/images/hero/'+filename;
+    const gh = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Hero: '+filename,content:base64})});
+    if (!gh.ok) throw new Error('Error GitHub');
+    const data = loadHomepageData();
+    data.heroSlides[i].image = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    saveHomepageData(data);
+    renderHeroSlidesList(data.heroSlides);
+    showToast('✅ Imagen subida');
+  } catch(e) { showToast('❌ '+e.message); }
+}
+
+async function removeBgHeroSlide(i) {
+  const data = loadHomepageData();
+  const url = data.heroSlides[i].image;
+  if (!url || url.includes('placeholder')) { showToast('Sube una imagen primero'); return; }
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token primero'); return; }
+  showToast('🪄 Removiendo fondo...');
+  try {
+    const fd = new FormData(); fd.append('image_url', url); fd.append('size','auto');
+    const res = await fetch('https://api.remove.bg/v1.0/removebg',{method:'POST',headers:{'X-Api-Key':REMOVEBG_KEY},body:fd});
+    if (!res.ok) throw new Error('remove.bg falló');
+    const rawBlob = await res.blob();
+    const blob = await autoCropTransparent(rawBlob);
+    const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(blob);});
+    const filename='hero_'+Date.now()+'.png'; const path='assets/images/hero/'+filename;
+    const gh = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Hero: '+filename,content:base64})});
+    if (!gh.ok) throw new Error('Error GitHub');
+    data.heroSlides[i].image = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    saveHomepageData(data);
+    renderHeroSlidesList(data.heroSlides);
+    showToast('✅ Fondo eliminado');
+  } catch(e) { showToast('❌ '+e.message); }
+}
+
+/* ── Publicar Homepage ── */
+async function publishHomepage() {
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token en "Publicar al sitio"'); return; }
+  const data = loadHomepageData();
+  showToast('📡 Publicando homepage...');
+  try {
+    // Leer index.html actual de GitHub
+    const headers = {'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'};
+    const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`,{headers});
+    if (!getRes.ok) throw new Error('No se pudo leer index.html');
+    const getJson = await getRes.json();
+    let content = decodeURIComponent(escape(atob(getJson.content.replace(/\n/g,''))));
+
+    // 1. Actualizar franja de marcas
+    if (data.brands.length > 0) {
+      const brandItems = data.brands.map(b =>
+        `<img src="${b.logo}" alt="${b.name}" style="height:32px;max-width:100px;object-fit:contain;opacity:0.75;filter:grayscale(30%);transition:opacity .2s,filter .2s;" onmouseover="this.style.opacity='1';this.style.filter='none'" onmouseout="this.style.opacity='.75';this.style.filter='grayscale(30%');">`
+      ).join('');
+      const doubledItems = brandItems + brandItems; // loop infinito
+      content = content.replace(
+        /(<div id="brands-track"[^>]*>)[\s\S]*?(<\/div>\s*<\/div>\s*<\/section>\s*<style>)/,
+        `$1${doubledItems}$2`
+      );
+    }
+
+    // 2. Actualizar slides del hero
+    if (data.heroSlides.length > 0) {
+      const slidesHTML = data.heroSlides.map((s,i) => `
+        <div class="hero-slide${i===0?' active':''}">
+          <img src="${s.image}" alt="${s.name}" style="width:120px;height:120px;object-fit:contain;margin:0 auto 8px;display:block;">
+          <div class="hero-slide-name">${s.name}</div>
+          <div class="hero-slide-price">${s.price}</div>
+        </div>`).join('');
+      const dotsHTML = data.heroSlides.map((_,i) =>
+        `<span class="hero-dot${i===0?' active':''}"></span>`).join('');
+      content = content.replace(
+        /(id="hero-carousel"[^>]*>)[\s\S]*?(<\/div>\s*<!-- Floating)/,
+        `$1${slidesHTML}<div class="hero-dots">${dotsHTML}</div></div><!-- Floating`
+      );
+    }
+
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+    const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`,{method:'PUT',headers,body:JSON.stringify({message:'Homepage actualizada — '+new Date().toLocaleString('es-CL'),content:encoded,sha:getJson.sha})});
+    if (!putRes.ok) throw new Error('Error al subir');
+    showToast('✅ Homepage publicada — actualizará en ~30 seg');
+  } catch(e) { showToast('❌ '+e.message); }
+}
 </script>
 </body>
 </html>
