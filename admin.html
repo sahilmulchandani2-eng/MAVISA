@@ -2245,7 +2245,11 @@ async function removeBgBrand(i) {
   try {
     const fd = new FormData(); fd.append('image_url', url); fd.append('size','auto');
     const res = await fetch('https://api.remove.bg/v1.0/removebg',{method:'POST',headers:{'X-Api-Key':REMOVEBG_KEY},body:fd});
-    if (!res.ok) throw new Error('remove.bg falló');
+    if (!res.ok) {
+      let errMsg = 'remove.bg falló ('+res.status+')';
+      try { const j = await res.json(); errMsg += ': '+(j.errors?.[0]?.title || JSON.stringify(j)); } catch(e){}
+      throw new Error(errMsg);
+    }
     const rawBlob = await res.blob();
     const blob = await autoCropTransparent(rawBlob);
     const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(blob);});
