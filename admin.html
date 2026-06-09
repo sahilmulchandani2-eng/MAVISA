@@ -1232,13 +1232,11 @@ async function autoCropTransparent(blob, padding = 12) {
       maxX = Math.min(c.width, maxX + padding); maxY = Math.min(c.height, maxY + padding);
       const w = maxX - minX, h = maxY - minY;
       if (w <= 0 || h <= 0) { c.toBlob(resolve, 'image/png'); return; }
-      // Crear canvas cuadrado con el crop centrado
-      const size = Math.max(w, h);
+      // Crop rectangular exacto (sin padding de cuadrado que achica logos horizontales)
       const out = document.createElement('canvas');
-      out.width = size; out.height = size;
+      out.width = w; out.height = h;
       const octx = out.getContext('2d');
-      const offX = Math.floor((size - w) / 2), offY = Math.floor((size - h) / 2);
-      octx.drawImage(c, minX, minY, w, h, offX, offY, w, h);
+      octx.drawImage(c, minX, minY, w, h, 0, 0, w, h);
       out.toBlob(resolve, 'image/png');
     };
     img.onerror = () => resolve(blob);
