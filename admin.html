@@ -454,19 +454,19 @@
     </div>
     <nav class="sidebar-nav">
       <div class="nav-item active" id="nav-products" onclick="showSection('products')">
-        <span class="nav-icon">📦</span> Productos
+        <span class="nav-icon">📦</span> Mis Productos
       </div>
       <div class="nav-item" id="nav-order" onclick="showSection('order')">
-        <span class="nav-icon">⭐</span> Ordenar portada
+        <span class="nav-icon">⭐</span> Portada del sitio
       </div>
       <div class="nav-item" id="nav-homepage" onclick="showSection('homepage')">
-        <span class="nav-icon">🏠</span> Homepage
+        <span class="nav-icon">🎨</span> Apariencia
       </div>
       <a class="nav-item" href="index.html" target="_blank">
-        <span class="nav-icon">🌐</span> Ver sitio
+        <span class="nav-icon">🌐</span> Ver mi sitio web
       </a>
       <div class="nav-item" onclick="openExport()">
-        <span class="nav-icon">💾</span> Exportar catálogo
+        <span class="nav-icon">💾</span> Exportar respaldo
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -481,8 +481,8 @@
     <!-- Top bar -->
     <div class="topbar">
       <div>
-        <div class="topbar-title">Gestión de Productos</div>
-        <div class="topbar-sub">Agrega, edita y administra tu catálogo</div>
+        <div class="topbar-title">Mis Productos</div>
+        <div class="topbar-sub">Aquí aparecen todos tus productos. Agrega, edita o elimina cuando quieras.</div>
       </div>
       <button class="btn btn-primary" onclick="openAddModal()">
         ＋ Agregar Producto
@@ -492,6 +492,7 @@
     <!-- Stats -->
     <div class="stats-row" id="stats-row"></div>
 
+
     <!-- Products card -->
     <div id="section-products">
       <div class="card">
@@ -500,7 +501,7 @@
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="text" class="search-input" placeholder="🔍  Buscar producto…" oninput="filterProducts(this.value)">
             <button class="btn btn-export btn-sm" onclick="openExport()">💾 Exportar</button>
-            <button class="btn btn-primary btn-sm" onclick="openPublishModal()" style="background:var(--red);border-color:var(--red);">🚀 Publicar al sitio</button>
+            <button class="btn btn-primary" onclick="openPublishModal()" style="background:var(--red);border-color:var(--red);font-size:.95rem;padding:10px 22px;">🚀 Publicar cambios en el sitio</button>
           </div>
         </div>
         <!-- Category filter tabs -->
@@ -525,20 +526,20 @@
     <div id="section-homepage" style="display:none;">
       <div class="topbar" style="margin-bottom:24px;">
         <div>
-          <div class="topbar-title">🏠 Homepage</div>
-          <div class="topbar-sub">Gestiona la franja de marcas y el carrusel hero</div>
+          <div class="topbar-title">🎨 Apariencia del sitio</div>
+          <div class="topbar-sub">Aquí personalizas cómo se ve la portada del sitio web.</div>
         </div>
-        <button class="btn btn-publish" onclick="publishHomepage()">🚀 Publicar homepage</button>
+        <button class="btn btn-publish" onclick="publishHomepage()" style="font-size:.95rem;padding:12px 24px;">🚀 Publicar cambios en el sitio</button>
       </div>
 
       <!-- FRANJA DE MARCAS -->
       <div class="card" style="margin-bottom:24px;">
-        <div class="card-title">🏷️ Franja de marcas</div>
-        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Logos que aparecen en la banda de scroll automático. Máx. 12 marcas.</p>
+        <div class="card-title">🏷️ Logos de marcas</div>
+        <p style="font-size:.85rem;color:var(--text-2);margin-bottom:16px;">Son los logos que se mueven automáticamente en la página principal. Agrega hasta 12 marcas.</p>
         <div id="brands-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
 
         <div id="brand-add-form" style="display:none;background:var(--cream);border:1.5px dashed var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;">
-          <div style="font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:10px;">Nueva marca</div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:10px;">¿Cómo querés agregar el logo?</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
             <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;border:2px dashed var(--border);border-radius:var(--r-sm);cursor:pointer;background:#fff;text-align:center;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">
               <input type="file" accept="image/*" id="brand-file-input" style="display:none;" onchange="handleBrandFile(this)">
@@ -547,10 +548,10 @@
             </label>
             <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border:2px solid var(--border);border-radius:var(--r-sm);background:#fff;">
               <span style="font-size:1.4rem;text-align:center;">🌐</span>
-              <input type="text" id="brand-url-input" placeholder="https://logo.png"
+              <input type="text" id="brand-url-input" placeholder="Pega aquí el link de la imagen del logo"
                 style="padding:7px 9px;border:1.5px solid var(--border);border-radius:6px;font-size:.78rem;font-family:inherit;"
                 onkeydown="if(event.key==='Enter')confirmBrandUrl()">
-              <button onclick="confirmBrandUrl()" style="padding:5px;background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit;">Agregar URL</button>
+              <button onclick="confirmBrandUrl()" style="padding:7px;background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:.82rem;cursor:pointer;font-family:inherit;">✓ Usar este link</button>
             </div>
           </div>
           <input type="text" id="brand-name-input" placeholder="Nombre de la marca (ej: WAHL)"
@@ -558,23 +559,23 @@
           <button onclick="document.getElementById('brand-add-form').style.display='none'" style="padding:6px 14px;background:var(--cream);border:1px solid var(--border);border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit;">Cancelar</button>
         </div>
 
-        <button class="btn" onclick="document.getElementById('brand-add-form').style.display='block'" style="font-size:.82rem;padding:8px 16px;">＋ Agregar marca</button>
+        <button class="btn" onclick="document.getElementById('brand-add-form').style.display='block'" style="font-size:.9rem;padding:10px 20px;">＋ Agregar logo de marca</button>
         <div id="brands-status" style="display:none;font-size:.78rem;margin-top:10px;padding:6px 10px;border-radius:8px;text-align:center;"></div>
       </div>
 
       <!-- BURBUJAS FLOTANTES -->
       <div class="card">
-        <div class="card-title">🫧 Burbujas flotantes</div>
-        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Las 4 chips que flotan alrededor del carrusel. Edita el emoji, nombre y precio.</p>
+        <div class="card-title">💬 Mini tarjetas de productos</div>
+        <p style="font-size:.85rem;color:var(--text-2);margin-bottom:16px;">Son las 4 tarjetitas que flotan alrededor de la imagen principal en la portada. Puedes cambiar el ícono, el nombre y el precio.</p>
         <div id="chips-list" style="display:flex;flex-direction:column;gap:10px;"></div>
       </div>
 
       <!-- CARRUSEL HERO -->
       <div class="card">
-        <div class="card-title">🎠 Carrusel hero</div>
-        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Slides del cuadrito animado en la portada. Máx. 6 slides.</p>
+        <div class="card-title">🖼️ Fotos principales de la portada</div>
+        <p style="font-size:.85rem;color:var(--text-2);margin-bottom:16px;">Son las fotos que se muestran en el cuadrado animado de la portada. Puedes poner hasta 6 productos con su foto y precio.</p>
         <div id="hero-slides-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
-        <button class="btn" onclick="addHeroSlide()" style="font-size:.82rem;padding:8px 16px;">＋ Agregar slide</button>
+        <button class="btn" onclick="addHeroSlide()" style="font-size:.9rem;padding:10px 20px;">＋ Agregar foto</button>
       </div>
     </div>
 
@@ -582,8 +583,8 @@
     <div id="section-order" style="display:none;">
       <div class="topbar" style="margin-bottom:24px;">
         <div>
-          <div class="topbar-title">Ordenar portada</div>
-          <div class="topbar-sub">Busca un producto y arrástralo al panel, o usa el botón +</div>
+          <div class="topbar-title">⭐ Portada del sitio</div>
+          <div class="topbar-sub">Elige qué productos aparecen destacados en la portada. Arrastra o usa el botón + para agregarlos.</div>
         </div>
         <div style="display:flex;gap:10px;">
           <button class="btn btn-primary" onclick="saveOrder()" style="background:var(--red);border-color:var(--red);">💾 Guardar orden</button>
@@ -596,7 +597,7 @@
         <!-- COL 1: Todos los productos -->
         <div class="card" style="position:sticky;top:20px;">
           <div class="card-header" style="flex-direction:column;align-items:stretch;gap:10px;">
-            <div class="card-title">📦 Todos los productos</div>
+            <div class="card-title">📦 Todos mis productos</div>
             <input type="text" class="search-input" style="width:100%;" placeholder="🔍 Buscar producto..." oninput="filterPool(this.value)" id="pool-search">
           </div>
           <div id="product-pool" style="display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding:4px 0;"></div>
@@ -613,7 +614,7 @@
             ondragover="event.preventDefault();this.classList.add('drop-active')"
             ondragleave="this.classList.remove('drop-active')"
             ondrop="dropToZone(event,'featured')">
-            <div class="drop-hint" id="hint-featured">Arrastra productos aquí</div>
+            <div class="drop-hint" id="hint-featured">👆 Arrastra productos aquí o usa el botón +</div>
           </div>
         </div>
 
@@ -648,7 +649,7 @@
     <div style="display:grid;grid-template-columns:1fr 300px;gap:0;overflow:hidden;border-radius:0 0 16px 16px;">
     <div class="modal-body" style="overflow-y:auto;max-height:75vh;border-right:1.5px solid var(--border);">
 
-      <div class="section-divider">📋 Información básica</div>
+      <div class="section-divider">1️⃣ Datos del producto</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Nombre del producto *</label>
@@ -675,11 +676,11 @@
           <input type="number" class="form-control" id="f-price" placeholder="29990" min="0" oninput="updateLivePreview()">
         </div>
         <div class="form-group">
-          <label class="form-label">Precio anterior (tachado)</label>
+          <label class="form-label">Precio original <span style="font-weight:400;font-size:.78rem;color:var(--text-3);">(para mostrar que tiene descuento — opcional)</span></label>
           <input type="number" class="form-control" id="f-price-old" placeholder="39990 (opcional)" min="0" oninput="updateLivePreview()">
         </div>
         <div class="form-group">
-          <label class="form-label">Etiqueta (badge)</label>
+          <label class="form-label">¿Tiene etiqueta especial?</label>
           <select class="form-control" id="f-badge" onchange="updateLivePreview()">
             <option value="">Sin etiqueta</option>
             <option value="new|Nuevo">🟢 Nuevo</option>
@@ -693,11 +694,11 @@
       <div class="form-row cols-1">
         <div class="form-group">
           <label class="form-label">Descripción *</label>
-          <textarea class="form-control" id="f-desc" placeholder="Describe el producto, sus características principales y beneficios…" oninput="updateLivePreview()"></textarea>
+          <textarea class="form-control" id="f-desc" placeholder="Ej: Plancha de vapor con placa de titanio. Temperatura ajustable de 150°C a 230°C. Cable de 1.8m. Incluye estuche de viaje." oninput="updateLivePreview()"></textarea>
         </div>
       </div>
 
-      <div class="section-divider" style="margin-top:8px;">🖼 Imágenes del producto <span style="font-size:0.75rem;font-weight:400;color:var(--text-3);">(máx. 5 — la primera es la principal)</span></div>
+      <div class="section-divider" style="margin-top:8px;">2️⃣ Fotos del producto <span style="font-size:0.75rem;font-weight:400;color:var(--text-3);">(hasta 5 fotos — la primera es la que más se ve)</span></div>
       <div class="form-row cols-1">
         <div class="form-group">
           <!-- Input hidden para compatibilidad -->
@@ -708,29 +709,29 @@
         </div>
       </div>
 
-      <div class="section-divider" style="margin-top:8px;">📊 Especificaciones técnicas</div>
+      <div class="section-divider" style="margin-top:8px;">3️⃣ Características del producto <span style="font-size:0.75rem;font-weight:400;color:var(--text-3);">(opcional — peso, dimensiones, etc.)</span></div>
       <div class="specs-list" id="specs-list"></div>
-      <button class="add-spec-btn" onclick="addSpecRow()">＋ Agregar especificación</button>
+      <button class="add-spec-btn" onclick="addSpecRow()">＋ Agregar característica</button>
 
-      <div class="section-divider" style="margin-top:20px;">⚙️ Configuración</div>
+      <div class="section-divider" style="margin-top:20px;">4️⃣ ¿Dónde aparece en el sitio?</div>
       <div class="toggle-row">
         <div>
-          <div class="toggle-label">Producto Destacado</div>
-          <div class="toggle-desc">Aparece en la sección principal del inicio</div>
+          <div class="toggle-label">⭐ Mostrar como DESTACADO</div>
+          <div class="toggle-desc">Aparece en la sección "Más populares" de la portada</div>
         </div>
         <label class="toggle"><input type="checkbox" id="f-featured"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
         <div>
-          <div class="toggle-label">Recién llegado</div>
-          <div class="toggle-desc">Aparece en la sección "Lo último en llegar"</div>
+          <div class="toggle-label">🆕 Mostrar como NUEVO</div>
+          <div class="toggle-desc">Aparece en la sección "Últimos en llegar" de la portada</div>
         </div>
         <label class="toggle"><input type="checkbox" id="f-new"><span class="toggle-slider"></span></label>
       </div>
       <div class="toggle-row">
         <div>
-          <div class="toggle-label">En stock</div>
-          <div class="toggle-desc">Disponible para cotización</div>
+          <div class="toggle-label">✅ Disponible para cotizar</div>
+          <div class="toggle-desc">El producto aparece activo y se puede consultar</div>
         </div>
         <label class="toggle"><input type="checkbox" id="f-stock" checked><span class="toggle-slider"></span></label>
       </div>
@@ -739,7 +740,7 @@
 
     <!-- LIVE PREVIEW PANEL -->
     <div style="background:#F0EBE0;padding:20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;max-height:75vh;">
-      <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8A9BB0;margin-bottom:4px;">Vista previa del card</div>
+      <div style="font-size:0.82rem;font-weight:700;color:#8A9BB0;margin-bottom:8px;">👁 Así se verá tu producto en el sitio</div>
 
       <!-- Product Card Preview -->
       <div id="live-preview-card" style="background:#fff;border:1px solid rgba(28,52,97,0.12);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(28,52,97,0.10);">
@@ -772,7 +773,7 @@
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('product-modal')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveProduct()">💾 Guardar producto</button>
+      <button class="btn btn-primary" onclick="saveProduct()" style="font-size:1rem;padding:12px 28px;">✅ Guardar producto</button>
     </div>
   </div>
 </div>
@@ -818,25 +819,21 @@
 <div class="overlay" id="publish-modal" onclick="if(event.target===this)closeModal('publish-modal')">
   <div class="modal" style="max-width:480px;">
     <div class="modal-header">
-      <div class="modal-title">🚀 Publicar al sitio</div>
+      <div class="modal-title">🚀 Actualizar el sitio web</div>
       <div class="modal-close" onclick="closeModal('publish-modal')">✕</div>
     </div>
     <div class="modal-body">
       <div id="publish-status" style="display:none;padding:14px;border-radius:8px;margin-bottom:16px;font-size:.88rem;font-weight:600;"></div>
-      <p style="font-size:.88rem;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
-        Al publicar, los productos se subirán automáticamente a GitHub y el sitio se actualizará en ~30 segundos.
-      </p>
+      <p style="font-size:.95rem;color:var(--text-2);margin-bottom:16px;line-height:1.7;">Al presionar publicar, el sitio web se actualizará automáticamente en menos de 1 minuto con todos tus cambios. ✅</p>
       <div class="form-group">
-        <label class="form-label">GitHub Token <span style="color:var(--text-3);font-weight:400;">(se guarda en este dispositivo)</span></label>
-        <input type="password" class="form-control" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <div style="font-size:.78rem;color:var(--text-3);margin-top:6px;">
-          Obtén un token en GitHub → Settings → Developer settings → Personal access tokens → repo ✓
-        </div>
+        <label class="form-label">Clave de acceso <span style="color:var(--text-3);font-weight:400;">(solo se ingresa una vez, se guarda en este dispositivo)</span></label>
+        <input type="password" class="form-control" id="gh-token" placeholder="Ingresa tu clave de acceso...">
+        <div style="font-size:.82rem;color:var(--text-3);margin-top:6px;">Si ya la ingresaste antes, este campo aparece vacío pero sigue guardada. Solo debes llenarlo la primera vez.</div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('publish-modal')">Cancelar</button>
-      <button class="btn btn-primary" id="publish-btn" onclick="publishToGitHub()" style="background:var(--red);border-color:var(--red);">🚀 Publicar ahora</button>
+      <button class="btn btn-primary" id="publish-btn" onclick="publishToGitHub()" style="background:var(--red);border-color:var(--red);font-size:1rem;padding:12px 28px;">🚀 Actualizar sitio ahora</button>
     </div>
   </div>
 </div>
@@ -2340,7 +2337,7 @@ function renderHeroSlidesList(slides) {
       </div>
       <!-- Fila 2: URL + acciones -->
       <div style="display:flex;gap:8px;align-items:center;padding:0 12px 10px;">
-        <input type="text" id="hero-url-${i}" placeholder="🔗 Pegar URL de imagen desde Google..."
+        <input type="text" id="hero-url-${i}" placeholder="🔗 Pegar link de la foto (desde Google Imágenes o cualquier sitio)..."
           style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff;"
           onkeydown="if(event.key==='Enter')heroUrlApply(${i})">
         <button onclick="heroUrlApply(${i})" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:.8rem;white-space:nowrap;flex-shrink:0;">⚡ Aplicar</button>
