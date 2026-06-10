@@ -2470,10 +2470,10 @@ async function publishHomepage() {
     // 0. Actualizar burbujas flotantes
     const chips = data.chips || DEFAULT_CHIPS;
     const CHIP_POSITIONS = {
-      'top-left':    'position:absolute;top:-15px;left:-150px',
-      'bottom-left': 'position:absolute;bottom:10px;left:-160px',
-      'top-right':   'position:absolute;top:-15px;right:-160px',
-      'bottom-right':'position:absolute;bottom:10px;right:-150px'
+      'top-left':    'position:absolute;top:0px;left:-130px',
+      'bottom-left': 'position:absolute;bottom:20px;left:-135px',
+      'top-right':   'position:absolute;top:0px;right:-130px',
+      'bottom-right':'position:absolute;bottom:20px;right:-135px'
     };
     const CHIP_ANIMS = ['5s ease-in-out 0.5s','6s ease-in-out 1s','5.5s ease-in-out 0.3s','4.5s ease-in-out 1.5s'];
     const chipsHTML = chips.map((c,i) => `
