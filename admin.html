@@ -2270,23 +2270,64 @@ function renderHeroSlidesList(slides) {
   const list = $('hero-slides-list');
   list.innerHTML = '';
   slides.forEach((s, i) => {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:grid;grid-template-columns:auto 1fr 1fr auto auto auto;gap:8px;align-items:center;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
-    row.innerHTML = `
-      <img src="${s.image}" style="height:48px;width:48px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;">
-      <input type="text" value="${s.name}" placeholder="Nombre producto"
-        style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
-        onchange="updateHeroSlide(${i},'name',this.value)">
-      <input type="text" value="${s.price}" placeholder="$69.990"
-        style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
-        onchange="updateHeroSlide(${i},'price',this.value)">
-      <button onclick="uploadHeroSlideImage(${i})" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 8px;cursor:pointer;font-size:.75rem;white-space:nowrap;">📁 Foto</button>
-      <button onclick="removeBgHeroSlide(${i})" title="Quitar fondo" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">🪄</button>
-      <button onclick="deleteHeroSlide(${i})" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;">✕</button>
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:var(--cream);border-radius:var(--r-sm);border:1px solid var(--border);overflow:hidden;';
+    wrap.innerHTML = `
+      <!-- Fila 1: preview + datos + eliminar -->
+      <div style="display:grid;grid-template-columns:72px 1fr 1fr auto;gap:8px;align-items:center;padding:10px 12px;">
+        <img src="${s.image}" id="hero-prev-${i}" style="height:64px;width:64px;object-fit:contain;border-radius:10px;background:#fff;padding:4px;border:1px solid var(--border);">
+        <input type="text" value="${s.name}" placeholder="Nombre producto"
+          style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+          onchange="updateHeroSlide(${i},'name',this.value)">
+        <input type="text" value="${s.price}" placeholder="$69.990"
+          style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+          onchange="updateHeroSlide(${i},'price',this.value)">
+        <button onclick="deleteHeroSlide(${i})" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.8rem;flex-shrink:0;">✕</button>
+      </div>
+      <!-- Fila 2: URL + acciones -->
+      <div style="display:flex;gap:8px;align-items:center;padding:0 12px 10px;">
+        <input type="text" id="hero-url-${i}" placeholder="🔗 Pegar URL de imagen desde Google..."
+          style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff;"
+          onkeydown="if(event.key==='Enter')heroUrlApply(${i})">
+        <button onclick="heroUrlApply(${i})" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:.8rem;white-space:nowrap;flex-shrink:0;">⚡ Aplicar</button>
+        <button onclick="uploadHeroSlideImage(${i})" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.8rem;flex-shrink:0;">📁</button>
+        <button onclick="removeBgHeroSlide(${i})" title="Quitar fondo a imagen actual" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.8rem;flex-shrink:0;">🪄</button>
+      </div>
       <input type="file" id="hero-file-${i}" accept="image/*" style="display:none;" onchange="handleHeroFile(this,${i})">
     `;
-    list.appendChild(row);
+    list.appendChild(wrap);
   });
+}
+
+async function heroUrlApply(i) {
+  const urlInput = document.getElementById('hero-url-'+i);
+  const url = urlInput.value.trim();
+  if (!url) { showToast('Pega una URL primero'); return; }
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { alert('Configura el token primero'); return; }
+  showToast('⚡ Procesando imagen...');
+  try {
+    const fd = new FormData(); fd.append('image_url', url); fd.append('size','auto');
+    const res = await fetch('https://api.remove.bg/v1.0/removebg',{method:'POST',headers:{'X-Api-Key':REMOVEBG_KEY},body:fd});
+    if (!res.ok) {
+      let errMsg = 'remove.bg falló ('+res.status+')';
+      try { const j = await res.json(); errMsg += ': '+(j.errors?.[0]?.title || JSON.stringify(j)); } catch(e){}
+      throw new Error(errMsg);
+    }
+    const rawBlob = await res.blob();
+    const blob = await autoCropTransparent(rawBlob);
+    const base64 = await new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(blob);});
+    const filename='hero_'+Date.now()+'.png'; const path='assets/images/hero/'+filename;
+    const gh = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify({message:'Hero: '+filename,content:base64})});
+    if (!gh.ok) throw new Error('Error GitHub');
+    const data = loadHomepageData();
+    const newUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+    data.heroSlides[i].image = newUrl;
+    saveHomepageData(data);
+    document.getElementById('hero-prev-'+i).src = newUrl;
+    urlInput.value = '';
+    showToast('✅ Imagen lista');
+  } catch(e) { showToast('❌ '+e.message); }
 }
 
 function addHeroSlide() {
