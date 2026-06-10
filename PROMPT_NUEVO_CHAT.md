@@ -23,8 +23,10 @@ Deploy: Vercel (auto-deploy al hacer push a `main`)
 ## Flujo admin → frontend
 
 1. Admin guarda productos en `localStorage` (`mavisa_admin_products`)
-2. "Publicar al sitio" lee `catalog.js` de GitHub, reemplaza `PRODUCTS_DATA` y hace push vía GitHub API
-3. **Publicar homepage** (`publishHomepage()`) lee `index.html` de GitHub, reemplaza los bloques marcados con `<!--BRANDS_START-->...<!--BRANDS_END-->` y `<!--HERO_START-->...<!--HERO_END-->` y hace push
+2. **Publicar al sitio** → lee `catalog.js` de GitHub, reemplaza `PRODUCTS_DATA` y hace push vía GitHub API
+3. **Publicar homepage** (`publishHomepage()`) → lee `index.html` de GitHub, reemplaza bloques con marcadores:
+   - `<!--BRANDS_START-->...<!--BRANDS_END-->` → franja de marcas (genera `<img class="brand-logo">` duplicado para loop)
+   - Hero slides también se actualizan
 4. Vercel redeploy en ~30 segundos
 
 Push siempre con:
@@ -32,65 +34,94 @@ Push siempre con:
 git add . && git commit -m "mensaje" && git pull --rebase origin main && git push origin main
 ```
 
-Si hay lock files atascados (error frecuente desde el sandbox):
+Si hay lock files atascados (pasa seguido desde el sandbox):
 ```bash
 rm -f .git/index.lock .git/HEAD.lock && rm -rf .git/rebase-merge
 ```
 
 ---
 
-## Lo que se implementó y corrigió en esta sesión
+## Credenciales / Keys
 
-### Franja de marcas (index.html)
-- **Loop infinito roto** → corregido matemáticamente: se usa `margin-right` en cada `.brand-logo` en vez de `gap` en el flex container. Así `-50%` cae exactamente al inicio del set 2. Fórmula: `N × (width + margin-right)` = total de un set, y `-50%` del total del track = exactamente un set.
-- **Fotos opacas** → eliminado `opacity:0.75` y `filter:grayscale(30%)` de todos los logos (eran 14 imgs, corregido con `replace_all`)
-- **Tamaños desiguales** → CSS actual: `.brand-logo { width:auto; height:auto; max-width:140px; max-height:52px; min-width:60px; min-height:32px; margin-right:88px; object-fit:contain; }`
-- **GPU acceleration** → agregado `will-change:transform` al `#brands-track`
-
-### `publishHomepage()` en admin.html
-- **Bug crítico encontrado y corregido**: la función buscaba marcadores `<!--BRANDS_START-->` que NO existían en `index.html` → los logos del admin nunca llegaban al sitio
-- **Fix aplicado**:
-  1. Se agregaron los marcadores `<!--BRANDS_START-->` y `<!--BRANDS_END-->` dentro del `#brands-track` en `index.html`
-  2. Se actualizó `publishHomepage()` para generar `<img class="brand-logo">` (en vez de `<div><img></div>`) y para duplicar automáticamente el set de logos (necesario para el loop infinito CSS)
-
-### `autoCropTransparent()` en admin.html
-- **Bug corregido**: la función creaba un canvas **cuadrado** (`Math.max(w, h)`) re-agregando espacio transparente arriba/abajo para logos horizontales como DSP → logos se achicaban más después de 🪄
-- **Fix**: output rectangular exacto, sin padding de cuadrado
-
-### Admin — preview de marcas
-- Contenedor del preview agrandado de `90×40px` → `160×68px` con `height:56px` en la imagen
-
-### remove.bg error
-- Mejorado el mensaje de error: ahora muestra el código HTTP y detalle del error (ej: `402 - No credits`, `400 - URL not accessible`)
+- `REMOVEBG_KEY = 'SvHmgXeMMHLDsThSwKis1Xum'`
+- `GH_REPO = 'sahilmulchandani2-eng/MAVISA'`
+- GitHub token guardado en `localStorage` del admin (`mavisa_gh_token`)
 
 ---
 
-## Estado actual de la franja de marcas
+## Lo que se implementó y corrigió (historial completo)
 
-Los logos en `index.html` están hardcodeados en el track Y controlados por los marcadores para el admin. Cada vez que se usa **🚀 Publicar homepage** desde el admin, el HTML del track se regenera con los logos actuales del localStorage, duplicados para el loop.
+### Franja de marcas — index.html
+- **Loop infinito** → corregido con `margin-right` en cada `.brand-logo` en vez de `gap` en el flex. Fórmula exacta: `N × (width + margin-right)` = un set, `-50%` del total = un set exacto
+- **Opacidad/grayscale** → eliminados `opacity:0.75` y `filter:grayscale(30%)` de los 14 imgs
+- **GPU** → `will-change:transform` en `#brands-track`
+- **CSS actual de logos:**
+```css
+.brand-logo {
+  width: auto; height: auto;
+  max-width: 140px; max-height: 52px;
+  min-width: 60px; min-height: 32px;
+  margin-right: 88px;
+  object-fit: contain;
+  opacity: 1; filter: none;
+}
+```
 
-**Logos actuales** (en localStorage del admin, pendiente verificar que todos carguen):
-- DSP, KEMEI, VGR, Sonifer, Starlux, BOMA, ACKILISS, Cosmos
+### publishHomepage() — admin.html
+- **Bug crítico corregido**: buscaba `<!--BRANDS_START-->` que no existía → los logos del admin nunca llegaban al sitio
+- **Fix**: marcadores agregados en `index.html` dentro del `#brands-track`, y `publishHomepage()` genera `<img class="brand-logo">` duplicado automáticamente para el loop infinito
 
-**Problema pendiente**: logos con distinta proporción visual (Starlux/Kemei grandes vs. Sonifer/DSP chicos). Causa: los archivos PNG/JPG de algunos logos tienen mucho espacio transparente alrededor del logo real. La solución correcta es usar el botón **🪄** en cada logo desde el admin (después del fix de autoCropTransparent rectangular, ahora recorta correctamente sin achicar).
+### autoCropTransparent() — admin.html
+- **Bug corregido**: creaba canvas **cuadrado** re-agregando espacio transparente para logos horizontales
+- **Fix**: output rectangular exacto sin padding de cuadrado
 
-**Nota sobre remove.bg**: si aparece error `402`, significa que los créditos de la API están agotados (`REMOVEBG_KEY = 'SvHmgXeMMHLDsThSwKis1Xum'`). En ese caso hay que recargar créditos o usar una nueva key.
+### Admin — preview de marcas
+- Contenedor agrandado de `90×40px` → `160×68px`
+
+### remove.bg error handling
+- Mejorado para mostrar código HTTP real (402 = sin créditos, 400 = URL inaccesible)
+
+### Limpieza de imágenes
+- Eliminados ~5MB de archivos huérfanos: carpeta `imagenes/` vieja, 14 productos sin usar, favicons duplicados, `logo.svg`, categorías sin `-v3`
+
+### Categorías — index.html
+- **Nuevas imágenes** agregadas: `barberia-v3.png`, `mascotas-v3.png`, `salud-v3.png`, `herramientas-v3.png`
+- **Fix de zoom**: cambiado de `width/height %` (no funcionaba predeciblemente en flex) a `transform:scale()` que da control real y directo
+- **Escala actual de cada categoría:**
+  - Electrodomésticos: `scale(1.05)`
+  - Belleza: `scale(1.10)`
+  - Barbería: `scale(1.20)`
+  - Hobbies: `scale(1.15)`
+  - Mascotas: `scale(1.51)`
+  - Salud: `scale(1.05)`
+
+---
+
+## Estado actual de imágenes en assets/images/categories/
+```
+barberia-v3.png      ← nueva, en uso
+belleza-v3.png       ← en uso
+electrodomesticos-v3.png ← en uso
+hobbies-v3.png       ← en uso
+mascotas-v3.png      ← nueva, en uso
+salud-v3.png         ← nueva, en uso
+herramientas-v3.png  ← nueva, SIN tarjeta en index.html todavía
+hobbies.png          ← duplicado viejo (pendiente borrar)
+```
 
 ---
 
 ## Pendientes / próximos pasos
 
-1. **Verificar que publishHomepage funciona** — después del fix de marcadores, presionar 🚀 en el admin y confirmar que los logos correctos aparecen en el sitio
-2. **Normalizar tamaños de logos** — usar 🪄 en cada logo que se vea chico (VGR, Sonifer, DSP) para recortar espacio transparente. Con el fix de autoCrop rectangular ya no se achican
-3. **Agregar logo Cosmos desde el admin** — el SVG está en `assets/images/brands/cosmos-innovation.svg`. Subirlo desde la sección 🏠 Homepage del admin
-4. **Imágenes reales de productos** — actualmente tienen SVG placeholder
-5. **Prueba completa del flujo** admin → publicar → verificar en sitio
-6. **Logos con fondo negro (ACKILISS)** — aplicar 🪄 para eliminar el fondo negro si se quiere logo transparente
+1. **Ajustar escala de Salud y Hobbies** — pendiente revisión visual, solo se ajustaron Barbería y Mascotas hasta ahora
+2. **Agregar tarjeta de Herramientas** — imagen `herramientas-v3.png` lista, falta agregar la `<a class="category-card">` en index.html
+3. **Franja de marcas — verificar publicación** — después del fix de marcadores, confirmar que 🚀 Publicar homepage actualiza correctamente los logos
+4. **Logos pequeños (DSP, VGR, Sonifer)** — usar 🪄 en el admin para recortar espacio transparente. Con el fix de autoCrop rectangular ya no se achican
+5. **Agregar logo Cosmos** — subir desde admin 🏠 Homepage (SVG está en `assets/images/brands/cosmos-innovation.svg`)
+6. **Imágenes reales de productos** — actualmente placeholders SVG
+7. **Borrar `hobbies.png`** — duplicado viejo sin usar en categories/
 
 ---
 
-## Credenciales / Keys en el código
-
-- `REMOVEBG_KEY = 'SvHmgXeMMHLDsThSwKis1Xum'`
-- `GH_REPO = 'sahilmulchandani2-eng/MAVISA'`
-- GitHub token guardado en localStorage del admin (`mavisa_gh_token`)
+## Nota importante sobre el sandbox
+El sandbox de Claude tiene restricciones de permisos para borrar archivos y a veces para hacer git push. Siempre que falle un `rm` o un `git push`, correrlo directamente desde la terminal del Mac del usuario.
