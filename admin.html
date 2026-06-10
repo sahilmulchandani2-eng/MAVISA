@@ -562,6 +562,13 @@
         <div id="brands-status" style="display:none;font-size:.78rem;margin-top:10px;padding:6px 10px;border-radius:8px;text-align:center;"></div>
       </div>
 
+      <!-- BURBUJAS FLOTANTES -->
+      <div class="card">
+        <div class="card-title">🫧 Burbujas flotantes</div>
+        <p style="font-size:.82rem;color:var(--text-2);margin-bottom:16px;">Las 4 chips que flotan alrededor del carrusel. Edita el emoji, nombre y precio.</p>
+        <div id="chips-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+
       <!-- CARRUSEL HERO -->
       <div class="card">
         <div class="card-title">🎠 Carrusel hero</div>
@@ -2145,16 +2152,63 @@ document.addEventListener('keydown', e => {
 /* ── HOMEPAGE SECTION ────────────────────────────────────── */
 const HP_KEY = 'mavisa_homepage';
 
+const DEFAULT_CHIPS = [
+  { emoji:'🧸', name:'Juguetes RC',      price:'$49.990',  pos:'top-left' },
+  { emoji:'⌚', name:'Smartwatch Pro',   price:'$129.990', pos:'bottom-left' },
+  { emoji:'🏠', name:'Smart Home',       price:'$159.990', pos:'top-right' },
+  { emoji:'💅', name:'Belleza & Cuidado',price:'$44.990',  pos:'bottom-right' }
+];
+
 function loadHomepageData() {
-  try { return JSON.parse(localStorage.getItem(HP_KEY)) || { brands: [], heroSlides: [] }; }
-  catch(e) { return { brands: [], heroSlides: [] }; }
+  try {
+    const d = JSON.parse(localStorage.getItem(HP_KEY)) || {};
+    return { brands: d.brands||[], heroSlides: d.heroSlides||[], chips: d.chips||DEFAULT_CHIPS };
+  }
+  catch(e) { return { brands:[], heroSlides:[], chips: DEFAULT_CHIPS }; }
 }
 function saveHomepageData(data) { localStorage.setItem(HP_KEY, JSON.stringify(data)); }
 
 function renderHomepageSection() {
   const data = loadHomepageData();
   renderBrandsList(data.brands);
+  renderChipsList(data.chips);
   renderHeroSlidesList(data.heroSlides);
+}
+
+/* ── Burbujas flotantes ── */
+const CHIP_POS_LABEL = { 'top-left':'↖ Arriba izquierda','bottom-left':'↙ Abajo izquierda','top-right':'↗ Arriba derecha','bottom-right':'↘ Abajo derecha' };
+
+function renderChipsList(chips) {
+  const list = $('chips-list');
+  list.innerHTML = '';
+  chips.forEach((c, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:36px 1fr 110px auto;gap:8px;align-items:center;background:var(--cream);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);';
+    row.innerHTML = `
+      <input type="text" value="${c.emoji}" maxlength="4"
+        style="text-align:center;font-size:1.3rem;padding:4px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;"
+        onclick="this.select()" title="Haz clic y pega un emoji"
+        onchange="updateChip(${i},'emoji',this.value)">
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:0.65rem;color:var(--text-2);font-weight:600;">${CHIP_POS_LABEL[c.pos]}</div>
+        <input type="text" value="${c.name}" placeholder="Nombre"
+          style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+          onchange="updateChip(${i},'name',this.value)">
+      </div>
+      <input type="text" value="${c.price}" placeholder="$49.990"
+        style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;"
+        onchange="updateChip(${i},'price',this.value)">
+      <div style="font-size:1.4rem;opacity:0.4;text-align:center;">${c.emoji}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function updateChip(i, key, val) {
+  const data = loadHomepageData();
+  data.chips[i][key] = val;
+  saveHomepageData(data);
+  renderChipsList(data.chips);
 }
 
 /* ── Franja de marcas ── */
@@ -2412,6 +2466,24 @@ async function publishHomepage() {
     if (!getRes.ok) throw new Error('No se pudo leer index.html');
     const getJson = await getRes.json();
     let content = decodeURIComponent(escape(atob(getJson.content.replace(/\n/g,''))));
+
+    // 0. Actualizar burbujas flotantes
+    const chips = data.chips || DEFAULT_CHIPS;
+    const CHIP_POSITIONS = {
+      'top-left':    'position:absolute;top:-15px;left:-150px',
+      'bottom-left': 'position:absolute;bottom:10px;left:-160px',
+      'top-right':   'position:absolute;top:-15px;right:-160px',
+      'bottom-right':'position:absolute;bottom:10px;right:-150px'
+    };
+    const CHIP_ANIMS = ['5s ease-in-out 0.5s','6s ease-in-out 1s','5.5s ease-in-out 0.3s','4.5s ease-in-out 1.5s'];
+    const chipsHTML = chips.map((c,i) => `
+          <div class="glass hero-chip" style="${CHIP_POSITIONS[c.pos]};padding:12px 16px;border-radius:16px;animation:float-y-slow ${CHIP_ANIMS[i]} infinite;">
+            <div style="font-size:1.2rem;margin-bottom:2px;">${c.emoji}</div>
+            <div style="font-size:0.7rem;color:var(--text-secondary);font-weight:600;">${c.name}</div>
+            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);">${c.price}</div>
+          </div>`).join('');
+    content = content.replace(/<!--CHIPS_START-->[\s\S]*?<!--CHIPS_END-->/,
+      `<!--CHIPS_START-->${chipsHTML}\n          <!--CHIPS_END-->`);
 
     // 1. Actualizar franja de marcas
     if (data.brands.length > 0) {
