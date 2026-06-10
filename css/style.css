@@ -2376,10 +2376,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 65% !important;
     object-fit: contain !important;
   }
-  /* Fallback: si la imagen no carga, mostrar emoji de categoría */
-  .product-card-image img[style*="opacity"] {
-    display: none !important;
-  }
+  /* Fallback: si la imagen no carga */
   .product-card-body {
     padding: 12px !important;
   }
