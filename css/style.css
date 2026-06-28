@@ -2061,13 +2061,13 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  background: linear-gradient(135deg, rgba(28,52,97,0.18) 0%, rgba(42,78,138,0.10) 50%, rgba(255,255,255,0.70) 100%);
-  border: 1px solid rgba(28,52,97,0.22);
-  border-radius: 14px;
-  padding: 12px 20px;
-  box-shadow: 0 8px 24px -16px rgba(28,52,97,0.40);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.82);
+  border: 1.5px solid rgba(28,52,97,0.18);
+  border-radius: 16px;
+  padding: 14px 22px;
+  box-shadow: 0 4px 20px rgba(28,52,97,0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .hero-eyebrow-mark {
   width: 9px;
@@ -2102,16 +2102,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 .hero-accent-word {
   white-space: nowrap;
-  background: linear-gradient(90deg, #E8303F 0%, #ff6b7a 40%, #c0001f 70%, #E8303F 100%);
-  background-size: 250% auto;
+  background: linear-gradient(90deg, #E8303F 0%, #ff6b7a 25%, #1C3461 55%, #2563A8 75%, #E8303F 100%);
+  background-size: 300% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: hero-accent-shimmer 2.8s linear infinite;
+  animation: hero-accent-shimmer 3.5s linear infinite;
 }
 @keyframes hero-accent-shimmer {
   0%   { background-position: 0% center; }
-  100% { background-position: 250% center; }
+  100% { background-position: 300% center; }
 }
 /* Chips de cristal flotantes — ocultos en el refresh (look más limpio) */
 .hero-chip { display: none !important; }
