@@ -145,7 +145,7 @@
 
     <!-- RIGHT: social + cotizar -->
     <div class="nav-actions">
-      <button class="nav-cotizar" onclick="openContactModal()">✉️ Cotizar</button>
+      <button class="nav-cotizar" onclick="openContactModal()"><i data-lucide="mail"></i> Cotizar</button>
       <div class="nav-social-icons">
         <a href="https://wa.me/56956654167?text=Hola!%20Me%20interesa%20conocer%20sus%20productos." class="nav-icon-btn nav-whatsapp-btn" target="_blank" aria-label="WhatsApp">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -224,14 +224,8 @@
 </div>
 
 <!-- ── HERO ────────────────────────────────────────────────── -->
-<section class="hero grid-bg" style="position:relative;min-height:clamp(420px,70vh,100vh);display:flex;align-items:center;overflow:hidden;background:var(--color-bg);padding-top:112px;">
-  <!-- Gradient orbs -->
-  <div style="position:absolute;top:-10%;left:-5%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(28,52,97,0.09) 0%,transparent 70%);pointer-events:none;"></div>
-  <div style="position:absolute;bottom:-15%;right:-5%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(232,48,63,0.06) 0%,transparent 70%);pointer-events:none;"></div>
-  <div style="position:absolute;top:40%;left:40%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.05) 0%,transparent 70%);pointer-events:none;"></div>
-  <canvas id="particles-canvas" style="opacity:0.03;"></canvas>
-  <!-- Grain texture overlay -->
-  <div class="hero-grain-overlay"></div>
+<section class="hero" style="position:relative;min-height:clamp(420px,70vh,100vh);display:flex;align-items:center;overflow:hidden;background:var(--color-bg);padding-top:112px;">
+  <!-- hero limpio: sin orbes, partículas ni grain -->
 
   <div class="container" style="position:relative;z-index:2;padding-top:20px;padding-bottom:40px;">
     <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
@@ -239,14 +233,17 @@
       <!-- Left: Copy -->
       <div>
         <div class="hero-animate-1">
-          <span class="section-label" style="background:rgba(28,52,97,0.18);border-color:rgba(28,52,97,0.40);color:var(--navy);font-size:0.72rem;font-weight:700;letter-spacing:0.06em;padding:10px 16px;border-radius:999px;border-width:1.5px;display:inline-flex;flex-direction:column;align-items:center;gap:5px;">
-            <span>⭐ Productos Premium · Mall ZOFRI Iquique · Módulos 35 y 45</span>
-            <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;">Importadora y Exportadora S.V. Ltda.</span>
-          </span>
+          <div class="hero-eyebrow">
+            <span class="hero-eyebrow-mark"></span>
+            <span class="hero-eyebrow-lines">
+              <span class="hero-eyebrow-text">Productos Premium · Mall ZOFRI Iquique · Módulos 35 y 45</span>
+              <span class="hero-eyebrow-sub">Importadora y Exportadora S.V. Ltda.</span>
+            </span>
+          </div>
         </div>
-        <h1 class="hero-animate-2" style="font-size:clamp(3rem,3.5vw,3.8rem);font-family:var(--font-heading);font-weight:900;line-height:1.04;letter-spacing:-0.035em;margin:20px 0 24px;">
+        <h1 class="hero-animate-2" style="font-size:clamp(3rem,3.5vw,3.8rem);font-family:var(--font-heading);font-weight:900;line-height:1.04;letter-spacing:-0.035em;margin:18px 0 22px;color:var(--navy);">
           Todo para ti y tu hogar<br>
-          <span class="gradient-animated" style="white-space:nowrap;">en un solo lugar</span>
+          en un <span class="hero-accent-word">solo lugar</span>
         </h1>
         <p class="hero-animate-3" style="font-size:1.15rem;color:var(--text-secondary);line-height:1.75;margin-bottom:36px;max-width:480px;">
           Lo que entra a tu hogar importa. Electrodomésticos, electrónica y productos de belleza de primera calidad, <strong style="color:var(--navy)">solo en Mall ZOFRI Iquique.</strong>
@@ -256,7 +253,7 @@
             Ver Catálogo <span style="margin-left:4px">→</span>
           </a>
           <a href="https://wa.me/56956654167?text=Hola!%20Me%20interesa%20conocer%20sus%20productos." class="btn btn-whatsapp btn-lg" target="_blank">
-            💬 Consultar ahora
+            <i data-lucide="message-circle"></i> Consultar ahora
           </a>
         </div>
         <!-- How it works — segmented control -->
@@ -264,15 +261,15 @@
           <div class="hs-pill" id="hs-pill">
             <div class="hs-slider" id="hs-slider"></div>
             <button class="hs-tab active" onclick="hsPick(0)">
-              <span class="hs-tab-icon">🛍️</span>
+              <span class="hs-tab-icon"><i data-lucide="shopping-bag"></i></span>
               <span class="hs-tab-label">Elige</span>
             </button>
             <button class="hs-tab" onclick="hsPick(1)">
-              <span class="hs-tab-icon">💬</span>
+              <span class="hs-tab-icon"><i data-lucide="message-circle"></i></span>
               <span class="hs-tab-label">Consulta</span>
             </button>
             <button class="hs-tab" onclick="hsPick(2)">
-              <span class="hs-tab-icon">🏪</span>
+              <span class="hs-tab-icon"><i data-lucide="store"></i></span>
               <span class="hs-tab-label">Visítanos</span>
             </button>
           </div>
@@ -284,8 +281,8 @@
 
       <!-- Right: Hero Visual -->
       <div class="hero-animate-5 hero-visual-col" style="position:relative;display:flex;align-items:center;justify-content:center;">
-        <!-- Glow ring — azul marino -->
-        <div style="position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(28,52,97,0.35) 0%,rgba(232,48,63,0.08) 60%,transparent 80%);animation:glow-pulse 4s ease-in-out infinite;"></div>
+        <!-- Halo suave estático (sin pulso) -->
+        <div style="position:absolute;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(28,52,97,0.10) 0%,transparent 70%);pointer-events:none;"></div>
 
         <!-- Central product display -->
         <div style="position:relative;width:380px;height:380px;display:flex;align-items:center;justify-content:center;">
@@ -349,11 +346,6 @@
     </div>
   </div>
 
-  <!-- Scroll indicator -->
-  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.4;animation:hero-fade-in 1s ease 1.5s both;">
-    <span style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-secondary);">Scroll</span>
-    <div style="width:1px;height:40px;background:linear-gradient(var(--accent),transparent);"></div>
-  </div>
 </section>
 
 <!-- ── Marcas ──────────────────────────────────────────────── -->

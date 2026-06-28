@@ -21,6 +21,22 @@
 /* ── Google Fonts ─────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+/* ── Fraunces Variable Font ───────────────────────────────── */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../assets/fonts/Fraunces.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../assets/fonts/Fraunces-Italic.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* ── CSS Custom Properties ────────────────────────────────── */
 :root {
   /* Brand Colors — Crema + Navy (tarjeta de presentación) */
@@ -54,8 +70,8 @@
   --text-muted:        #8A9BB0;   /* navy suave */
 
   /* Typography */
-  --font-body:         'DM Sans', sans-serif;
-  --font-heading:      'Raleway', sans-serif;
+  --font-body:         'Fraunces', 'DM Sans', sans-serif;
+  --font-heading:      'Fraunces', 'Raleway', sans-serif;
 
   /* Sizing */
   --ticker-h:          40px;
@@ -766,13 +782,14 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
 }
 .btn-primary {
-  background: var(--grad-main);
+  background: var(--accent);
   color: #fff;
-  box-shadow: var(--shadow-accent);
+  box-shadow: 0 10px 26px -8px rgba(232,48,63,0.50);
 }
 .btn-primary:hover {
+  background: #D11F2E;
   transform: translateY(-2px);
-  box-shadow: 0 16px 48px rgba(0,212,255,0.35);
+  box-shadow: 0 16px 36px -10px rgba(232,48,63,0.58);
 }
 .btn-secondary {
   background: rgba(255,255,255,0.06);
@@ -2035,8 +2052,66 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero carousel dark style */
 .hero-carousel-dark {
   background: linear-gradient(145deg, #0f2347, var(--navy));
-  box-shadow: 0 40px 100px rgba(10,18,40,0.65), 0 0 0 1px rgba(232,48,63,0.15);
+  box-shadow: 0 36px 80px -28px rgba(10,18,40,0.55), 0 0 0 1px rgba(201,168,76,0.30);
 }
+
+/* ── Refresh 2026 — Hero ──────────────────────────────────── */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(28,52,97,0.14);
+  border-radius: 14px;
+  padding: 12px 20px;
+  box-shadow: 0 8px 24px -16px rgba(28,52,97,0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hero-eyebrow-mark {
+  width: 9px;
+  height: 9px;
+  background: var(--accent-3);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.14);
+}
+.hero-eyebrow-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hero-eyebrow-text {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--navy);
+  line-height: 1.3;
+}
+.hero-eyebrow-sub {
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+.hero-accent-word {
+  color: var(--accent);
+  white-space: nowrap;
+}
+/* Chips de cristal flotantes — ocultos en el refresh (look más limpio) */
+.hero-chip { display: none !important; }
+
+/* Íconos Lucide reemplazando emojis (control segmentado, botones, nav) */
+.hs-tab-icon { display: inline-flex; align-items: center; justify-content: center; }
+.hs-tab-icon svg { width: 17px; height: 17px; stroke-width: 2; color: var(--navy); transition: color 0.3s; }
+.hs-tab.active .hs-tab-icon svg { color: #fff; }
+.btn-lg > svg { width: 18px; height: 18px; }
+.nav-cotizar > svg { width: 15px; height: 15px; }
 .hero-carousel-dark .hero-slide-name {
   color: rgba(255,255,255,0.9);
 }
