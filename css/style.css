@@ -163,10 +163,12 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 .text-gradient {
-  background: var(--grad-text);
+  background: linear-gradient(90deg, #E8303F 0%, #ff6b7a 20%, #1C3461 45%, #2563A8 65%, #E8303F 100%);
+  background-size: 300% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: hero-accent-shimmer 4.5s linear infinite;
 }
 .text-accent   { color: var(--accent); }
 .text-muted    { color: var(--text-secondary); }
