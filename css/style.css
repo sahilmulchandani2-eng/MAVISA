@@ -124,7 +124,7 @@ html {
 }
 body {
   font-family: var(--font-body);
-  background: var(--color-bg);
+  background: linear-gradient(135deg,#c8d9eb 0%,#e4e0d8 55%,#F0EBE0 100%) fixed;
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
@@ -3309,7 +3309,7 @@ a.contact-strip-item:hover { background: rgba(28,52,97,0.04); }
 .contact-location-text strong { color: var(--text-primary); }
 
 /* Map */
-.contact-map-section { background: var(--color-bg-2); border-top: 1px solid var(--color-border); }
+.contact-map-section { background: transparent; border-top: 1px solid var(--color-border); }
 .contact-map-wrap {
   border-radius: var(--radius-xl);
   overflow: hidden;
