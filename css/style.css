@@ -2113,8 +2113,7 @@ h1, h2, h3, h4, h5, h6 {
   0%   { background-position: 0% center; }
   100% { background-position: 300% center; }
 }
-/* Chips de cristal flotantes — ocultos en el refresh (look más limpio) */
-.hero-chip { display: none !important; }
+/* Chips de cristal flotantes — visibles */
 
 /* Íconos Lucide reemplazando emojis (control segmentado, botones, nav) */
 .hs-tab-icon { display: inline-flex; align-items: center; justify-content: center; }
