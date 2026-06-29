@@ -2116,6 +2116,15 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
   animation: hero-accent-shimmer 3.5s linear infinite;
 }
+/* Shimmer para fondos oscuros: rojo → salmón → dorado → rojo */
+.accent-shimmer-dark {
+  background: linear-gradient(90deg, #E8303F 0%, #ff8c6b 22%, #FFD87A 45%, #ff6b7a 68%, #E8303F 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: hero-accent-shimmer 3.5s linear infinite;
+}
 @keyframes hero-accent-shimmer {
   0%   { background-position: 0% center; }
   100% { background-position: 300% center; }
