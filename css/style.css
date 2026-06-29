@@ -1908,7 +1908,8 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  background: linear-gradient(90deg, transparent 0%, #E8303F 40%, #ff6b7a 50%, #E8303F 60%, transparent 100%);
+  box-shadow: 0 0 8px 1px rgba(232,48,63,0.35);
 }
 .page-hero-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
