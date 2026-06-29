@@ -1895,7 +1895,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Page Hero ────────────────────────────────────────────── */
 .page-hero {
   padding: calc(var(--header-total) + 60px) 0 60px;
-  background: linear-gradient(135deg,#c8d9eb 0%,#e4e0d8 55%,#F0EBE0 100%);
+  background: transparent;
   position: relative;
   text-align: center;
 }
