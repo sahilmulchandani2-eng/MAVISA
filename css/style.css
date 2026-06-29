@@ -124,7 +124,7 @@ html {
 }
 body {
   font-family: var(--font-body);
-  background: linear-gradient(135deg,#c8d9eb 0%,#e4e0d8 55%,#F0EBE0 100%);
+  background: #F0EBE0;
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
@@ -1895,7 +1895,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Page Hero ────────────────────────────────────────────── */
 .page-hero {
   padding: calc(var(--header-total) + 60px) 0 60px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(28,52,97,0.18) 0%, transparent 60%);
+  background: linear-gradient(135deg,#c8d9eb 0%,#e4e0d8 55%,#F0EBE0 100%);
   position: relative;
   text-align: center;
 }
