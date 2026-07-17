@@ -465,6 +465,9 @@
       <a class="nav-item" href="index.html" target="_blank">
         <span class="nav-icon">🌐</span> Ver mi sitio web
       </a>
+      <div class="nav-item" id="nav-photos" onclick="showSection('photos')">
+        <span class="nav-icon">📸</span> Subir fotos
+      </div>
       <div class="nav-item" onclick="openExport()">
         <span class="nav-icon">💾</span> Exportar respaldo
       </div>
@@ -581,6 +584,46 @@
         <p style="font-size:.85rem;color:var(--text-2);margin-bottom:16px;">Son las fotos que se muestran en el cuadrado animado de la portada. Puedes poner hasta 6 productos con su foto y precio.</p>
         <div id="hero-slides-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
         <button class="btn" onclick="addHeroSlide()" style="font-size:.9rem;padding:10px 20px;">＋ Agregar foto</button>
+      </div>
+    </div>
+
+    <!-- Photos section -->
+    <div id="section-photos" style="display:none;">
+      <div class="topbar" style="margin-bottom:24px;">
+        <div>
+          <div class="topbar-title">📸 Subir fotos en lote</div>
+          <div class="topbar-sub">Arrastra o selecciona varias imágenes a la vez. Cada una se sube al sitio y obtienes su URL para asignarla.</div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:#fff;border:1.5px solid var(--border);padding:8px 14px;border-radius:var(--r);font-size:0.85rem;font-weight:600;color:var(--navy);white-space:nowrap;">
+          <input type="checkbox" id="skip-bg-removal" style="width:16px;height:16px;cursor:pointer;" checked>
+          🪄 Quitar fondo automáticamente
+        </label>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <!-- Drop zone -->
+        <div id="photos-drop-zone"
+          style="border:2.5px dashed var(--border);border-radius:14px;padding:52px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:0;"
+          onclick="$('bulk-file-input').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--navy)';this.style.background='rgba(28,52,97,0.03)'"
+          ondragleave="this.style.borderColor='var(--border)';this.style.background=''"
+          ondrop="handleBulkDrop(event)">
+          <div style="font-size:3rem;margin-bottom:12px;">🖼️</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Arrastra tus fotos aquí</div>
+          <div style="font-size:0.85rem;color:var(--text-3);">o haz clic para seleccionar · Puedes elegir varias a la vez</div>
+          <input type="file" id="bulk-file-input" accept="image/*" multiple style="display:none" onchange="handleBulkFiles(this.files)">
+        </div>
+      </div>
+
+      <!-- Cola de subida -->
+      <div id="bulk-queue" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Fotos subidas <span id="bulk-done-count" style="color:var(--text-3);font-size:0.9rem;"></span></div>
+            <button onclick="clearBulkQueue()" style="padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:0.82rem;cursor:pointer;color:var(--text-2);">Limpiar lista</button>
+          </div>
+          <div id="bulk-queue-list" style="display:flex;flex-direction:column;gap:10px;padding:16px;"></div>
+        </div>
       </div>
     </div>
 
@@ -879,6 +922,7 @@
         <ol style="padding-left:18px;font-size:0.88rem;color:var(--text-2);line-height:1.8;">
           <li>Descarga la <strong>plantilla CSV</strong> y ábrela en Excel.</li>
           <li>Llena una fila por producto. Las columnas con <strong>*</strong> son obligatorias.</li>
+          <li>En la columna <strong>imagen_url</strong> pega la URL de cada foto (opcional — puedes subirlas desde "📸 Subir fotos").</li>
           <li>Guarda como <strong>.csv</strong> y súbela aquí.</li>
           <li>Revisa la vista previa y confirma la importación.</li>
         </ol>
@@ -890,7 +934,7 @@
       <!-- Columnas disponibles -->
       <div style="font-size:0.78rem;color:var(--text-3);margin-bottom:16px;">
         <strong style="color:var(--text-2);">Columnas:</strong>
-        nombre* · categoria* · precio* · precio_anterior · descripcion* · destacado · nuevo · stock<br>
+        nombre* · categoria* · precio* · precio_anterior · descripcion* · destacado · nuevo · stock · imagen_url<br>
         <strong style="color:var(--text-2);">Categorías válidas:</strong>
         Electrodomésticos · Belleza · Barbería · Hobbies · Mascotas · Salud · Juguetes · Gadgets · Hogar · Tecnología Hogar
       </div>
@@ -1964,7 +2008,7 @@ function downloadCatalog() {
 
 /* ── SECTIONS ────────────────────────────────────────────── */
 function showSection(name) {
-  ['products','order','homepage'].forEach(s => {
+  ['products','order','homepage','photos'].forEach(s => {
     $('section-'+s).style.display = s === name ? 'block' : 'none';
     $('nav-'+s)?.classList.toggle('active', s === name);
   });
@@ -2256,9 +2300,9 @@ function openImportModal() {
 }
 
 function downloadCSVTemplate() {
-  const header = 'nombre,categoria,precio,precio_anterior,descripcion,destacado,nuevo,stock';
-  const example = 'Licuadora 1200W,Electrodomésticos,29990,,Potente licuadora de alta velocidad con jarra de vidrio,no,si,si';
-  const example2 = 'Crema Hidratante SPF50,Belleza,12990,15990,Crema de día con protección solar,si,no,si';
+  const header = 'nombre,categoria,precio,precio_anterior,descripcion,destacado,nuevo,stock,imagen_url';
+  const example = 'Licuadora 1200W,Electrodomésticos,29990,,Potente licuadora de alta velocidad con jarra de vidrio,no,si,si,https://...url-de-la-foto...';
+  const example2 = 'Crema Hidratante SPF50,Belleza,12990,15990,Crema de día con protección solar,si,no,si,';
   const blob = new Blob([header + '\n' + example + '\n' + example2], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2301,6 +2345,7 @@ function parseImportCSV(text) {
     const precioRaw= (cols[idx('precio')]          || '').trim().replace(/\./g,'').replace(/,/g,'.');
     const precioAnt= (cols[idx('precio_anterior')] || '').trim().replace(/\./g,'').replace(/,/g,'.');
     const desc     = (cols[idx('descripcion')]     || '').trim();
+    const imagenUrl= (cols[idx('imagen_url')]      || '').trim();
     const destaca  = (cols[idx('destacado')]       || 'no').trim().toLowerCase();
     const nuevo    = (cols[idx('nuevo')]           || 'no').trim().toLowerCase();
     const stock    = (cols[idx('stock')]           || 'si').trim().toLowerCase();
@@ -2331,8 +2376,8 @@ function parseImportCSV(text) {
       description: desc,
       specs: [],
       badge: null, badgeLabel: null,
-      image: 'assets/images/placeholder.svg',
-      images: ['assets/images/placeholder.svg'],
+      image: imagenUrl || 'assets/images/placeholder.svg',
+      images: imagenUrl ? [imagenUrl] : ['assets/images/placeholder.svg'],
       featured: ['si','sí','yes','1','true'].includes(destaca),
       isNew:    ['si','sí','yes','1','true'].includes(nuevo),
       inStock:  !['no','0','false'].includes(stock),
@@ -2378,6 +2423,115 @@ function executeImport() {
   closeModal('import-modal');
   showToast(`✅ ${importedRows.length} productos importados`);
   importedRows = [];
+}
+
+/* ── BULK PHOTO UPLOAD ───────────────────────────────────── */
+let bulkItems = []; // { id, file, status, url, name }
+
+function handleBulkDrop(e) {
+  e.preventDefault();
+  const zone = $('photos-drop-zone');
+  zone.style.borderColor = 'var(--border)';
+  zone.style.background = '';
+  const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+  if (files.length) handleBulkFiles(files);
+}
+
+function handleBulkFiles(files) {
+  const arr = [...files];
+  if (!arr.length) return;
+  const token = localStorage.getItem(GH_TOKEN_KEY);
+  if (!token) { showToast('⚠️ Configura el token de GitHub primero (en "Publicar")','error'); return; }
+
+  arr.forEach(file => {
+    const id = 'bi_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    bulkItems.push({ id, file, status: 'pending', url: null, name: file.name });
+  });
+
+  $('bulk-queue').style.display = 'block';
+  renderBulkQueue();
+  processBulkQueue();
+}
+
+async function processBulkQueue() {
+  const pending = bulkItems.filter(i => i.status === 'pending');
+  for (const item of pending) {
+    item.status = 'uploading';
+    renderBulkQueue();
+    try {
+      const skipBg = !$('skip-bg-removal').checked;
+      let blob = item.file;
+      if (!skipBg) {
+        try { blob = await removeImageBackground(item.file); } catch(e) { /* sigue sin remover */ }
+      }
+      const base64 = await new Promise((res, rej) => {
+        const rd = new FileReader();
+        rd.onload = e => res(e.target.result.split(',')[1]);
+        rd.onerror = rej;
+        rd.readAsDataURL(blob);
+      });
+      const ext = skipBg ? (item.file.name.split('.').pop() || 'jpg') : 'png';
+      const filename = 'prod_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '.' + ext;
+      const path = 'assets/images/products/' + filename;
+      const token = localStorage.getItem(GH_TOKEN_KEY);
+      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+        body: JSON.stringify({ message: 'Foto: ' + filename, content: base64 })
+      });
+      if (!res.ok) throw new Error('Error GitHub ' + res.status);
+      item.url = `https://raw.githubusercontent.com/${GH_REPO}/main/${path}`;
+      item.status = 'done';
+    } catch(e) {
+      item.status = 'error';
+      item.error = e.message;
+    }
+    renderBulkQueue();
+  }
+}
+
+function renderBulkQueue() {
+  const done  = bulkItems.filter(i => i.status === 'done').length;
+  const total = bulkItems.length;
+  $('bulk-done-count').textContent = `(${done}/${total})`;
+
+  $('bulk-queue-list').innerHTML = bulkItems.map(item => `
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;background:${item.status==='done'?'rgba(26,122,69,0.06)':item.status==='error'?'rgba(232,48,63,0.06)':'rgba(28,52,97,0.04)'};">
+      ${item.status === 'done'
+        ? `<img src="${item.url}" style="width:52px;height:52px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;flex-shrink:0;" onerror="this.style.display='none'">`
+        : `<div style="width:52px;height:52px;border-radius:8px;background:rgba(28,52,97,0.08);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">${item.status==='uploading'?'⏳':item.status==='error'?'❌':'🖼️'}</div>`
+      }
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.88rem;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
+        <div style="font-size:0.78rem;color:var(--text-3);margin-top:2px;">
+          ${item.status==='pending'?'En espera…':item.status==='uploading'?'Subiendo…':item.status==='error'?`Error: ${item.error}`:'✅ Subida exitosa'}
+        </div>
+        ${item.url ? `<div style="font-size:0.72rem;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">${item.url}</div>` : ''}
+      </div>
+      ${item.url ? `
+        <button onclick="copyBulkUrl('${item.url}', this)"
+          style="flex-shrink:0;padding:7px 14px;border:1.5px solid var(--navy);border-radius:8px;background:#fff;color:var(--navy);font-weight:600;font-size:0.8rem;cursor:pointer;white-space:nowrap;">
+          📋 Copiar URL
+        </button>` : ''}
+    </div>
+  `).join('');
+}
+
+function copyBulkUrl(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ Copiada';
+    btn.style.background = 'rgba(26,122,69,0.1)';
+    btn.style.borderColor = '#1a7a45';
+    btn.style.color = '#1a7a45';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background=''; btn.style.borderColor=''; btn.style.color=''; }, 1800);
+  });
+}
+
+function clearBulkQueue() {
+  bulkItems = bulkItems.filter(i => i.status !== 'done');
+  if (!bulkItems.length) $('bulk-queue').style.display = 'none';
+  renderBulkQueue();
 }
 
 function splitCSVLine(line, sep) {
